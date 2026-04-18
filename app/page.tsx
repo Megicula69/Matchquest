@@ -1,65 +1,94 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import React, { useEffect, useState } from 'react';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { MainLayout } from '../src/components/Layout';
+import { HomePage, FindPage, EventsPage, MePage, StoryPage } from '../src/views';
+import { useLocalStorage } from '../src/hooks/useLocalStorage';
+import { UserProfile } from '../src/types';
+import onboardingStyles from '../src/components/Onboarding/Onboarding.module.css';
+
+const Onboarding: React.FC<{ onComplete: (username: string, game: string) => void }> = ({ onComplete }) => {
+  const [user, setUser] = useState('');
+  const [game, setGame] = useState('');
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className={onboardingStyles.onboardingContainer}>
+      <div className={onboardingStyles.onboardingCard}>
+        <h1>ARENA ACCESS</h1>
+        <div className={onboardingStyles.inputField}>
+          <label>IDENTITY TAG</label>
+          <input
+            value={user}
+            onChange={(e) => setUser(e.target.value)}
+            placeholder="Enter username..."
+          />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+        <div className={onboardingStyles.inputField}>
+          <label>PRIMARY SPECIALIZATION</label>
+          <select
+            value={game}
+            onChange={(e) => setGame(e.target.value)}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <option value="">Select a title...</option>
+            <option value="Valorant">Valorant</option>
+            <option value="League of Legends">League of Legends</option>
+            <option value="CS:GO">CS:GO</option>
+            <option value="Apex Legends">Apex Legends</option>
+            <option value="Dota 2">Dota 2</option>
+          </select>
         </div>
-      </main>
+        <button
+          className={onboardingStyles.enterBtn}
+          disabled={!user || !game}
+          onClick={() => onComplete(user, game)}
+        >
+          ENTER ARENA
+        </button>
+      </div>
     </div>
+  );
+};
+
+export default function App() {
+  const [profile, setProfile] = useLocalStorage<UserProfile | null>('mq_profile', null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  if (!profile) {
+    return (
+      <Onboarding
+        onComplete={(username, favoriteGame) => {
+          setProfile({
+            username,
+            favoriteGame,
+            arenaScore: 1000,
+            rank: 'Bronze I',
+            stats: { kda: '0.0', winRate: '0%', tournaments: 0, reputation: 100 },
+            onboarded: true
+          });
+        }}
+      />
+    );
+  }
+
+  return (
+    <HashRouter>
+      <MainLayout>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/find" element={<FindPage />} />
+          <Route path="/events" element={<EventsPage />} />
+          <Route path="/me" element={<MePage />} />
+          <Route path="/story" element={<StoryPage />} />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </MainLayout>
+    </HashRouter>
   );
 }

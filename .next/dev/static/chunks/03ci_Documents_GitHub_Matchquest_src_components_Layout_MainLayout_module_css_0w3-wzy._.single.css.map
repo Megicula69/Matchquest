@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 1, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/OneDrive/Documents/GitHub/Matchquest/src/components/Layout/MainLayout.module.css"],"sourcesContent":[".container {\r\n    display: flex;\r\n    min-height: 100vh;\r\n    width: 100%;\r\n}\r\n\r\n.mainContent {\r\n    flex: 1;\r\n    width: 100%;\r\n}\r\n\r\n.scrollArea {\r\n    padding: 1.5rem;\r\n    max-width: 1400px;\r\n    margin: 0 auto;\r\n}\r\n\r\n@media (min-width: 768px) {\r\n    .mainContent {\r\n        margin-left: 260px;\r\n        /* Space for desktop sidebar */\r\n        padding-bottom: 0;\r\n    }\r\n\r\n    .scrollArea {\r\n        padding: 3rem;\r\n    }\r\n}\r\n\r\n@media (max-width: 767px) {\r\n    .mainContent {\r\n        padding-bottom: 64px;\r\n        /* Space for mobile bottom bar */\r\n    }\r\n}"],"names":[],"mappings":"AAAA;;;;;;AAMA;;;;;AAKA;;;;;;AAMA;EACI;;;;;EAMA;;;;;AAKJ;EACI"}}]
+}

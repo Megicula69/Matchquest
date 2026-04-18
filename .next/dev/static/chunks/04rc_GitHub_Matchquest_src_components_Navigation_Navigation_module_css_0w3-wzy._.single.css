@@ -1,0 +1,113 @@
+/* [project]/OneDrive/Documents/GitHub/Matchquest/src/components/Navigation/Navigation.module.css [app-client] (css) */
+.Navigation-module__fB5HcG__sidebar {
+  background-color: var(--surface);
+  border-right: 1px solid var(--surface2);
+  z-index: 100;
+  flex-direction: column;
+  width: 260px;
+  height: 100vh;
+  padding: 2rem 1.5rem;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+@media (min-width: 768px) {
+  .Navigation-module__fB5HcG__sidebar {
+    display: flex;
+  }
+}
+
+.Navigation-module__fB5HcG__logo {
+  font-family: var(--font-rajdhani);
+  gap: .2rem;
+  margin-bottom: 3rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  display: flex;
+}
+
+.Navigation-module__fB5HcG__match {
+  color: var(--text);
+}
+
+.Navigation-module__fB5HcG__quest {
+  color: var(--cyan);
+}
+
+.Navigation-module__fB5HcG__nav {
+  flex-direction: column;
+  flex: 1;
+  gap: .5rem;
+  display: flex;
+}
+
+.Navigation-module__fB5HcG__navItem {
+  color: var(--muted);
+  transition: var(--transition);
+  font-family: var(--font-rajdhani);
+  text-transform: uppercase;
+  border-radius: 8px;
+  align-items: center;
+  gap: 1rem;
+  padding: .75rem 1rem;
+  font-weight: 600;
+  display: flex;
+}
+
+.Navigation-module__fB5HcG__navItem:hover {
+  background-color: var(--surface2);
+  color: var(--text);
+}
+
+.Navigation-module__fB5HcG__navItem.Navigation-module__fB5HcG__active {
+  background-color: var(--cyan);
+  color: var(--background);
+}
+
+.Navigation-module__fB5HcG__footer {
+  border-top: 1px solid var(--surface2);
+  font-family: var(--font-mono);
+  color: var(--muted);
+  margin-top: auto;
+  padding-top: 1rem;
+  font-size: .9rem;
+}
+
+.Navigation-module__fB5HcG__score {
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.Navigation-module__fB5HcG__bottomBar {
+  background-color: var(--surface);
+  border-top: 1px solid var(--surface2);
+  z-index: 100;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  height: 64px;
+  display: flex;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
+
+@media (min-width: 768px) {
+  .Navigation-module__fB5HcG__bottomBar {
+    display: none;
+  }
+}
+
+.Navigation-module__fB5HcG__mobileNavItem {
+  color: var(--muted);
+  transition: var(--transition);
+  padding: 10px;
+}
+
+.Navigation-module__fB5HcG__mobileNavItem.Navigation-module__fB5HcG__active {
+  color: var(--cyan);
+}
+
+/*# sourceMappingURL=04rc_GitHub_Matchquest_src_components_Navigation_Navigation_module_css_0w3-wzy._.single.css.map*/

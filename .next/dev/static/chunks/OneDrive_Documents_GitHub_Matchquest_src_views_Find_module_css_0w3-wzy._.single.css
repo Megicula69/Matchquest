@@ -1,0 +1,446 @@
+/* [project]/OneDrive/Documents/GitHub/Matchquest/src/views/Find.module.css [app-client] (css) */
+.Find-module__qqaQDW__container {
+  gap: 2rem;
+  height: calc(100vh - 120px);
+  display: flex;
+}
+
+.Find-module__qqaQDW__mainArea {
+  flex-direction: column;
+  flex: 1;
+  align-items: center;
+  display: flex;
+}
+
+.Find-module__qqaQDW__modeToggle {
+  background-color: var(--surface);
+  border: 1px solid var(--surface2);
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  padding: 4px;
+  display: flex;
+}
+
+.Find-module__qqaQDW__modeBtn {
+  font-family: var(--font-rajdhani);
+  color: var(--muted);
+  transition: var(--transition);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: .8rem;
+  font-weight: 700;
+}
+
+.Find-module__qqaQDW__activeMode {
+  background-color: var(--surface2);
+  color: var(--cyan);
+}
+
+.Find-module__qqaQDW__cardContainer {
+  flex-direction: column;
+  flex: 1;
+  justify-content: center;
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+}
+
+.Find-module__qqaQDW__playerCard {
+  background-color: var(--surface);
+  border: 1px solid var(--surface2);
+  box-shadow: var(--shadow);
+  border-radius: 20px;
+  flex-direction: column;
+  display: flex;
+  overflow: hidden;
+}
+
+.Find-module__qqaQDW__cardImage {
+  background-color: var(--surface2);
+  height: 350px;
+  position: relative;
+}
+
+.Find-module__qqaQDW__cardImage img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.Find-module__qqaQDW__rankBadge {
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  font-family: var(--font-mono);
+  color: var(--gold);
+  border: 1px solid var(--gold);
+  background-color: #0009;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: .75rem;
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+}
+
+.Find-module__qqaQDW__cardContent {
+  padding: 1.5rem;
+}
+
+.Find-module__qqaQDW__cardHeader {
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: .5rem;
+  display: flex;
+}
+
+.Find-module__qqaQDW__cardHeader h3 {
+  font-size: 1.5rem;
+}
+
+.Find-module__qqaQDW__repBadge {
+  color: var(--cyan);
+  font-family: var(--font-mono);
+  align-items: center;
+  gap: 4px;
+  font-size: .8rem;
+  display: flex;
+}
+
+.Find-module__qqaQDW__bio {
+  color: var(--muted);
+  margin-bottom: 1rem;
+  font-size: .9rem;
+  line-height: 1.4;
+}
+
+.Find-module__qqaQDW__tags {
+  flex-wrap: wrap;
+  gap: 8px;
+  display: flex;
+}
+
+.Find-module__qqaQDW__tag {
+  background-color: var(--surface2);
+  font-size: .75rem;
+  font-family: var(--font-mono);
+  color: var(--text);
+  border-radius: 4px;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  display: flex;
+}
+
+.Find-module__qqaQDW__cardActions {
+  border-top: 1px solid var(--surface2);
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  display: flex;
+}
+
+.Find-module__qqaQDW__passBtn, .Find-module__qqaQDW__matchBtn {
+  width: 64px;
+  height: 64px;
+  transition: var(--transition);
+  border: 2px solid #0000;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.Find-module__qqaQDW__passBtn {
+  color: var(--red);
+  background-color: #e8334a1a;
+}
+
+.Find-module__qqaQDW__matchBtn {
+  color: var(--cyan);
+  background-color: #00c9e01a;
+}
+
+.Find-module__qqaQDW__passBtn:hover {
+  background-color: var(--red);
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.Find-module__qqaQDW__matchBtn:hover {
+  background-color: var(--cyan);
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.Find-module__qqaQDW__filterToggle {
+  background-color: var(--surface);
+  border: 1px solid var(--surface2);
+  font-family: var(--font-rajdhani);
+  color: var(--muted);
+  border-radius: 8px;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2rem;
+  padding: 12px 24px;
+  font-weight: 700;
+  display: flex;
+}
+
+.Find-module__qqaQDW__matchesList {
+  background-color: var(--surface);
+  border: 1px solid var(--surface2);
+  border-radius: 12px;
+  flex-direction: column;
+  width: 300px;
+  padding: 1.5rem;
+  display: flex;
+}
+
+.Find-module__qqaQDW__sectionTitle {
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+}
+
+.Find-module__qqaQDW__matchesScroll {
+  flex-direction: column;
+  flex: 1;
+  gap: .75rem;
+  display: flex;
+  overflow-y: auto;
+}
+
+.Find-module__qqaQDW__matchItem {
+  cursor: pointer;
+  transition: var(--transition);
+  border-radius: 8px;
+  align-items: center;
+  gap: 1rem;
+  padding: 10px;
+  display: flex;
+}
+
+.Find-module__qqaQDW__matchItem:hover {
+  background-color: var(--surface2);
+}
+
+.Find-module__qqaQDW__matchAvatar {
+  border-radius: 10px;
+  width: 44px;
+  height: 44px;
+}
+
+.Find-module__qqaQDW__matchInfo {
+  flex: 1;
+}
+
+.Find-module__qqaQDW__matchName {
+  font-size: .95rem;
+  font-weight: 600;
+}
+
+.Find-module__qqaQDW__matchSub {
+  color: var(--muted);
+  font-size: .75rem;
+}
+
+.Find-module__qqaQDW__msgIcon {
+  color: var(--cyan);
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.Find-module__qqaQDW__matchItem:hover .Find-module__qqaQDW__msgIcon {
+  opacity: 1;
+}
+
+.Find-module__qqaQDW__filterOverlay {
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  background-color: #000c;
+  justify-content: flex-end;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.Find-module__qqaQDW__filterPanel {
+  background-color: var(--surface);
+  flex-direction: column;
+  width: 100%;
+  max-width: 400px;
+  height: 100%;
+  padding: 2rem;
+  animation: .3s Find-module__qqaQDW__slideInRight;
+  display: flex;
+}
+
+.Find-module__qqaQDW__filterHeader {
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  display: flex;
+}
+
+.Find-module__qqaQDW__filterBody {
+  flex: 1;
+}
+
+.Find-module__qqaQDW__filterGroup {
+  margin-bottom: 2rem;
+}
+
+.Find-module__qqaQDW__filterGroup label {
+  font-family: var(--font-mono);
+  color: var(--muted);
+  margin-bottom: 1rem;
+  font-size: .9rem;
+  display: block;
+}
+
+.Find-module__qqaQDW__filterGroup input[type="range"] {
+  width: 100%;
+  accent-color: var(--cyan);
+}
+
+.Find-module__qqaQDW__toggleRow {
+  border-bottom: 1px solid var(--surface2);
+  cursor: pointer;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  display: flex;
+}
+
+.Find-module__qqaQDW__applyBtn {
+  background-color: var(--cyan);
+  color: var(--background);
+  font-weight: 700;
+  font-family: var(--font-rajdhani);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.Find-module__qqaQDW__chatOverlay {
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  z-index: 300;
+  background-color: #000c;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.Find-module__qqaQDW__chatModal {
+  background-color: var(--surface);
+  border-radius: 20px;
+  flex-direction: column;
+  width: 100%;
+  max-width: 480px;
+  height: 600px;
+  display: flex;
+  overflow: hidden;
+}
+
+.Find-module__qqaQDW__chatHeader {
+  background-color: var(--surface2);
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  display: flex;
+}
+
+.Find-module__qqaQDW__chatUser {
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+  display: flex;
+}
+
+.Find-module__qqaQDW__chatUser img {
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+}
+
+.Find-module__qqaQDW__chatBody {
+  flex-direction: column;
+  flex: 1;
+  gap: 1rem;
+  padding: 1.5rem;
+  display: flex;
+  overflow-y: auto;
+}
+
+.Find-module__qqaQDW__msgBubble {
+  border-radius: 12px;
+  max-width: 80%;
+  padding: 12px 16px;
+  font-size: .9rem;
+  position: relative;
+}
+
+.Find-module__qqaQDW__msgMe {
+  background-color: var(--cyan);
+  color: var(--background);
+  border-bottom-right-radius: 2px;
+  align-self: flex-end;
+}
+
+.Find-module__qqaQDW__msgThem {
+  background-color: var(--surface2);
+  color: var(--text);
+  border-bottom-left-radius: 2px;
+  align-self: flex-start;
+}
+
+.Find-module__qqaQDW__msgTime {
+  opacity: .6;
+  text-align: right;
+  margin-top: 4px;
+  font-size: .65rem;
+}
+
+.Find-module__qqaQDW__chatFooter {
+  border-top: 1px solid var(--surface2);
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  display: flex;
+}
+
+.Find-module__qqaQDW__chatFooter input {
+  background-color: var(--background);
+  border: 1px solid var(--surface2);
+  color: var(--text);
+  border-radius: 10px;
+  outline: none;
+  flex: 1;
+  padding: 10px 16px;
+}
+
+.Find-module__qqaQDW__chatFooter input:focus {
+  border-color: var(--cyan);
+}
+
+.Find-module__qqaQDW__chatFooter button {
+  color: var(--cyan);
+}
+
+@media (max-width: 768px) {
+  .Find-module__qqaQDW__filterPanel {
+    border-radius: 24px 24px 0 0;
+    align-self: flex-end;
+    height: 80vh;
+    animation: .3s Find-module__qqaQDW__slideInUp;
+  }
+}
+
+/*# sourceMappingURL=OneDrive_Documents_GitHub_Matchquest_src_views_Find_module_css_0w3-wzy._.single.css.map*/

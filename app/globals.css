@@ -1,26 +1,136 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap');
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0a0c14;
+  --surface: #141826;
+  --surface2: #1a1f35;
+  --red: #e8334a;
+  --cyan: #00c9e0;
+  --gold: #f0a500;
+  --violet: #9b6dff;
+  --text: #e8eaf2;
+  --muted: #7a8099;
+
+  --font-rajdhani: 'Rajdhani', sans-serif;
+  --font-barlow: 'Barlow', sans-serif;
+  --font-mono: 'Share Tech Mono', monospace;
+
+  --transition: all 0.3s ease;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  background-color: var(--background);
+  color: var(--text);
+  font-family: var(--font-barlow);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-rajdhani);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+  color: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--surface2);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes slideInUp {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+/* Responsive Utilities */
+.mobile-only {
+  display: flex;
+}
+
+.desktop-only {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .mobile-only {
+    display: none;
+  }
+
+  .desktop-only {
+    display: flex;
+  }
 }

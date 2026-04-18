@@ -1,0 +1,82 @@
+/* [project]/OneDrive/Documents/GitHub/Matchquest/src/components/Onboarding/Onboarding.module.css [app-client] (css) */
+.Onboarding-module__5ycZWG__onboardingContainer {
+  background-color: var(--background);
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 1rem;
+  display: flex;
+}
+
+.Onboarding-module__5ycZWG__onboardingCard {
+  background-color: var(--surface);
+  border: 1px solid var(--surface2);
+  border-radius: 20px;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 440px;
+  padding: 2.5rem;
+  display: flex;
+  box-shadow: 0 20px 50px #00000080;
+}
+
+.Onboarding-module__5ycZWG__onboardingCard h1 {
+  text-align: center;
+  color: var(--text);
+  margin-bottom: 1rem;
+  font-size: 2rem;
+}
+
+.Onboarding-module__5ycZWG__inputField {
+  flex-direction: column;
+  gap: .5rem;
+  display: flex;
+}
+
+.Onboarding-module__5ycZWG__inputField label {
+  font-family: var(--font-mono);
+  color: var(--muted);
+  font-size: .75rem;
+}
+
+.Onboarding-module__5ycZWG__inputField input, .Onboarding-module__5ycZWG__inputField select {
+  background-color: var(--background);
+  border: 1px solid var(--surface2);
+  width: 100%;
+  color: var(--text);
+  font-family: var(--font-barlow);
+  border-radius: 8px;
+  outline: none;
+  padding: 1rem;
+}
+
+.Onboarding-module__5ycZWG__inputField input:focus, .Onboarding-module__5ycZWG__inputField select:focus {
+  border-color: var(--cyan);
+}
+
+.Onboarding-module__5ycZWG__enterBtn {
+  background-color: var(--cyan);
+  width: 100%;
+  color: var(--background);
+  font-family: var(--font-rajdhani);
+  transition: var(--transition);
+  border-radius: 8px;
+  margin-top: 1rem;
+  padding: 1.25rem;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.Onboarding-module__5ycZWG__enterBtn:hover:not(:disabled) {
+  opacity: .9;
+  transform: scale(.98);
+}
+
+.Onboarding-module__5ycZWG__enterBtn:disabled {
+  background-color: var(--surface2);
+  color: var(--muted);
+  cursor: not-allowed;
+}
+
+/*# sourceMappingURL=04rc_GitHub_Matchquest_src_components_Onboarding_Onboarding_module_css_0w3-wzy._.single.css.map*/

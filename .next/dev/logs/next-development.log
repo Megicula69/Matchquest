@@ -1,0 +1,23 @@
+{"timestamp":"00:00:01.255","source":"Server","level":"LOG","message":""}
+{"timestamp":"00:00:09.414","source":"Server","level":"LOG","message":"○ Compiling / ..."}
+{"timestamp":"00:00:13.166","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:05:59.952","source":"Server","level":"LOG","message":"✓ Compiled in 30ms"}
+{"timestamp":"00:06:01.947","source":"Server","level":"LOG","message":"✓ Compiled in 15ms"}
+{"timestamp":"00:06:09.929","source":"Server","level":"LOG","message":"✓ Compiled in 14ms"}
+{"timestamp":"00:23:30.999","source":"Server","level":"LOG","message":"✓ Compiled in 12ms"}
+{"timestamp":"00:23:49.620","source":"Server","level":"LOG","message":"✓ Compiled in 15ms"}
+{"timestamp":"00:23:51.640","source":"Server","level":"LOG","message":"✓ Compiled in 12ms"}
+{"timestamp":"00:24:01.888","source":"Server","level":"LOG","message":"✓ Compiled in 68ms"}
+{"timestamp":"00:24:25.505","source":"Server","level":"LOG","message":"✓ Compiled in 23ms"}
+{"timestamp":"00:37:19.246","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:37:29.886","source":"Browser","level":"ERROR","message":"uncaughtError: TypeError: Cannot read properties of undefined (reading 'map')"}
+{"timestamp":"00:37:29.889","source":"Server","level":"ERROR","message":"[browser] \"\\u001b[31mUncaught TypeError: Cannot read properties of undefined (reading 'map')\\u001b[39m\\n\\u001b[31m    at StoryPage (src/views/Story.tsx:140:49)\\n    at App (app/page.tsx:88:41)\\u001b[39m\\n  \\u001b[90m138 |\\u001b[0m                         <h2 className={styles.title}>\\u001b[33mSTORY\\u001b[0m \\u001b[33mQUESTS\\u001b[0m</h2>\\n  \\u001b[90m139 |\\u001b[0m                         <div className={styles.questGrid}>\\n\\u001b[31m\\u001b[1m>\\u001b[0m \\u001b[90m140 |\\u001b[0m                             {state.activeQuests.map(quest => (\\n  \\u001b[90m    |\\u001b[0m                                                 \\u001b[31m\\u001b[1m^\\u001b[0m\\n  \\u001b[90m141 |\\u001b[0m                                 <div key={quest.id} className={\\u001b[32m`\\u001b[0m${styles.questCard\\u001b[32m} \\u001b[0m${quest.isCompleted ? st...\\n  \\u001b[90m142 |\\u001b[0m                                     <div className={styles.questInfo}>\\n  \\u001b[90m143 |\\u001b[0m                                         <div className={styles.questHeader}>\""}
+{"timestamp":"00:37:29.889","source":"Browser","level":"ERROR","message":"\u001b[31mUncaught TypeError: Cannot read properties of undefined (reading 'map')\u001b[39m\n\u001b[31m    at StoryPage (src/views/Story.tsx:140:49)\n    at App (app/page.tsx:88:41)\u001b[39m\n  \u001b[90m138 |\u001b[0m                         <h2 className={styles.title}>\u001b[33mSTORY\u001b[0m \u001b[33mQUESTS\u001b[0m</h2>\n  \u001b[90m139 |\u001b[0m                         <div className={styles.questGrid}>\n\u001b[31m\u001b[1m>\u001b[0m \u001b[90m140 |\u001b[0m                             {state.activeQuests.map(quest => (\n  \u001b[90m    |\u001b[0m                                                 \u001b[31m\u001b[1m^\u001b[0m\n  \u001b[90m141 |\u001b[0m                                 <div key={quest.id} className={\u001b[32m`\u001b[0m${styles.questCard\u001b[32m} \u001b[0m${quest.isCompleted ? st...\n  \u001b[90m142 |\u001b[0m                                     <div className={styles.questInfo}>\n  \u001b[90m143 |\u001b[0m                                         <div className={styles.questHeader}>"}
+{"timestamp":"00:37:42.890","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:38:16.078","source":"Server","level":"LOG","message":"✓ Compiled in 20ms"}
+{"timestamp":"00:38:18.115","source":"Server","level":"LOG","message":"✓ Compiled in 14ms"}
+{"timestamp":"00:38:29.350","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:38:46.078","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:39:40.011","source":"Server","level":"LOG","message":"✓ Compiled in 10ms"}
+{"timestamp":"00:39:42.120","source":"Server","level":"LOG","message":"✓ Compiled in 17ms"}
+{"timestamp":"00:39:55.789","source":"Server","level":"LOG","message":"✓ Compiled in 54ms"}

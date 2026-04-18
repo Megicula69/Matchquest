@@ -1,0 +1,443 @@
+.container {
+    display: flex;
+    gap: 2rem;
+    height: calc(100vh - 120px);
+}
+
+.mainArea {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.modeToggle {
+    display: flex;
+    background-color: var(--surface);
+    padding: 4px;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    border: 1px solid var(--surface2);
+}
+
+.modeBtn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: var(--font-rajdhani);
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: var(--muted);
+    transition: var(--transition);
+}
+
+.activeMode {
+    background-color: var(--surface2);
+    color: var(--cyan);
+}
+
+.cardContainer {
+    flex: 1;
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.playerCard {
+    background-color: var(--surface);
+    border: 1px solid var(--surface2);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+}
+
+.cardImage {
+    position: relative;
+    height: 350px;
+    background-color: var(--surface2);
+}
+
+.cardImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.rankBadge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+}
+
+.cardContent {
+    padding: 1.5rem;
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.cardHeader h3 {
+    font-size: 1.5rem;
+}
+
+.repBadge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--cyan);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+}
+
+.bio {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag {
+    background-color: var(--surface2);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.cardActions {
+    display: flex;
+    padding: 1.5rem;
+    gap: 1.5rem;
+    justify-content: center;
+    border-top: 1px solid var(--surface2);
+}
+
+.passBtn,
+.matchBtn {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    border: 2px solid transparent;
+}
+
+.passBtn {
+    background-color: rgba(232, 51, 74, 0.1);
+    color: var(--red);
+}
+
+.matchBtn {
+    background-color: rgba(0, 201, 224, 0.1);
+    color: var(--cyan);
+}
+
+.passBtn:hover {
+    background-color: var(--red);
+    color: white;
+    transform: scale(1.1);
+}
+
+.matchBtn:hover {
+    background-color: var(--cyan);
+    color: white;
+    transform: scale(1.1);
+}
+
+.filterToggle {
+    margin-top: 2rem;
+    padding: 12px 24px;
+    background-color: var(--surface);
+    border: 1px solid var(--surface2);
+    border-radius: 8px;
+    font-family: var(--font-rajdhani);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+}
+
+.matchesList {
+    width: 300px;
+    background-color: var(--surface);
+    border-radius: 12px;
+    border: 1px solid var(--surface2);
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+}
+
+.sectionTitle {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.matchesScroll {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.matchItem {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.matchItem:hover {
+    background-color: var(--surface2);
+}
+
+.matchAvatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+}
+
+.matchInfo {
+    flex: 1;
+}
+
+.matchName {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.matchSub {
+    font-size: 0.75rem;
+    color: var(--muted);
+}
+
+.msgIcon {
+    color: var(--cyan);
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.matchItem:hover .msgIcon {
+    opacity: 1;
+}
+
+/* Filter Panel */
+.filterOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.filterPanel {
+    width: 100%;
+    max-width: 400px;
+    height: 100%;
+    background-color: var(--surface);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    animation: slideInRight 0.3s ease;
+}
+
+.filterHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+}
+
+.filterBody {
+    flex: 1;
+}
+
+.filterGroup {
+    margin-bottom: 2rem;
+}
+
+.filterGroup label {
+    display: block;
+    margin-bottom: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--muted);
+}
+
+.filterGroup input[type="range"] {
+    width: 100%;
+    accent-color: var(--cyan);
+}
+
+.toggleRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--surface2);
+    cursor: pointer;
+}
+
+.applyBtn {
+    background-color: var(--cyan);
+    color: var(--background);
+    padding: 1rem;
+    border-radius: 8px;
+    font-weight: 700;
+    font-family: var(--font-rajdhani);
+}
+
+/* Chat Modal */
+.chatOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
+    z-index: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chatModal {
+    width: 100%;
+    max-width: 480px;
+    height: 600px;
+    background-color: var(--surface);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.chatHeader {
+    padding: 1rem 1.5rem;
+    background-color: var(--surface2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chatUser {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+}
+
+.chatUser img {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+}
+
+.chatBody {
+    flex: 1;
+    padding: 1.5rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.msgBubble {
+    max-width: 80%;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    position: relative;
+}
+
+.msgMe {
+    align-self: flex-end;
+    background-color: var(--cyan);
+    color: var(--background);
+    border-bottom-right-radius: 2px;
+}
+
+.msgThem {
+    align-self: flex-start;
+    background-color: var(--surface2);
+    color: var(--text);
+    border-bottom-left-radius: 2px;
+}
+
+.msgTime {
+    font-size: 0.65rem;
+    opacity: 0.6;
+    margin-top: 4px;
+    text-align: right;
+}
+
+.chatFooter {
+    padding: 1rem 1.5rem;
+    display: flex;
+    gap: 1rem;
+    border-top: 1px solid var(--surface2);
+}
+
+.chatFooter input {
+    flex: 1;
+    background-color: var(--background);
+    border: 1px solid var(--surface2);
+    padding: 10px 16px;
+    border-radius: 10px;
+    color: var(--text);
+    outline: none;
+}
+
+.chatFooter input:focus {
+    border-color: var(--cyan);
+}
+
+.chatFooter button {
+    color: var(--cyan);
+}
+
+@media (max-width: 768px) {
+    .filterPanel {
+        height: 80vh;
+        animation: slideInUp 0.3s ease;
+        align-self: flex-end;
+        border-radius: 24px 24px 0 0;
+    }
+}

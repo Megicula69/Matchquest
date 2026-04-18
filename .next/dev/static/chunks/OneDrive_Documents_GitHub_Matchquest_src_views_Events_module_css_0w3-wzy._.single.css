@@ -1,0 +1,427 @@
+/* [project]/OneDrive/Documents/GitHub/Matchquest/src/views/Events.module.css [app-client] (css) */
+.Events-module__v0O8LW__container {
+  flex-direction: column;
+  gap: 2rem;
+  display: flex;
+}
+
+.Events-module__v0O8LW__header {
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  display: flex;
+}
+
+.Events-module__v0O8LW__title {
+  color: var(--text);
+  font-size: 2rem;
+}
+
+.Events-module__v0O8LW__viewToggle {
+  background-color: var(--surface);
+  border: 1px solid var(--surface2);
+  border-radius: 8px;
+  padding: 4px;
+  display: flex;
+}
+
+.Events-module__v0O8LW__viewToggle button {
+  font-family: var(--font-rajdhani);
+  color: var(--muted);
+  transition: var(--transition);
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: .8rem;
+  font-weight: 700;
+}
+
+.Events-module__v0O8LW__viewToggle button.Events-module__v0O8LW__active {
+  background-color: var(--surface2);
+  color: var(--cyan);
+}
+
+.Events-module__v0O8LW__eventList {
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  display: grid;
+}
+
+.Events-module__v0O8LW__eventCard {
+  background-color: var(--surface);
+  border: 1px solid var(--surface2);
+  cursor: pointer;
+  transition: var(--transition);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.Events-module__v0O8LW__eventCard:hover {
+  border-color: var(--cyan);
+  transform: translateY(-5px);
+}
+
+.Events-module__v0O8LW__eventImg {
+  height: 180px;
+  position: relative;
+}
+
+.Events-module__v0O8LW__eventImg img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.Events-module__v0O8LW__statusBadge {
+  font-size: .7rem;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-weight: 700;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.Events-module__v0O8LW__UPCOMING {
+  background-color: var(--cyan);
+  color: var(--background);
+}
+
+.Events-module__v0O8LW__ONGOING {
+  background-color: var(--red);
+  color: #fff;
+}
+
+.Events-module__v0O8LW__COMPLETED {
+  background-color: var(--surface2);
+  color: var(--muted);
+}
+
+.Events-module__v0O8LW__eventContent {
+  padding: 1.25rem;
+}
+
+.Events-module__v0O8LW__eventGame {
+  font-family: var(--font-mono);
+  color: var(--cyan);
+  text-transform: uppercase;
+  margin-bottom: .5rem;
+  font-size: .75rem;
+}
+
+.Events-module__v0O8LW__eventTitle {
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+}
+
+.Events-module__v0O8LW__eventMeta {
+  color: var(--muted);
+  gap: 1rem;
+  font-size: .85rem;
+  display: flex;
+}
+
+.Events-module__v0O8LW__eventMeta span {
+  align-items: center;
+  gap: 4px;
+  display: flex;
+}
+
+.Events-module__v0O8LW__mapView {
+  background-color: var(--surface);
+  border: 1px solid var(--surface2);
+  border-radius: 20px;
+  height: 600px;
+  padding: 2rem;
+}
+
+.Events-module__v0O8LW__mapContainer {
+  background-color: var(--background);
+  background-image: linear-gradient(#00c9e00d 1px, #0000 1px), linear-gradient(90deg, #00c9e00d 1px, #0000 1px);
+  background-size: 40px 40px;
+  border-radius: 12px;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.Events-module__v0O8LW__mapPin {
+  cursor: pointer;
+  z-index: 10;
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+.Events-module__v0O8LW__pinPulse {
+  background-color: var(--cyan);
+  opacity: .2;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: 2s infinite Events-module__v0O8LW__pulse;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes Events-module__v0O8LW__pulse {
+  0% {
+    opacity: .5;
+    transform: translate(-50%, -50%)scale(.5);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%)scale(2);
+  }
+}
+
+.Events-module__v0O8LW__pinLabel {
+  background-color: var(--surface);
+  white-space: nowrap;
+  border: 1px solid var(--surface2);
+  font-size: .7rem;
+  font-family: var(--font-rajdhani);
+  border-radius: 4px;
+  margin-top: 5px;
+  padding: 4px 10px;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.Events-module__v0O8LW__bracketView {
+  padding-bottom: 1rem;
+  overflow-x: auto;
+}
+
+.Events-module__v0O8LW__bracketContainer {
+  gap: 3rem;
+  min-width: 800px;
+  display: flex;
+}
+
+.Events-module__v0O8LW__round {
+  flex: 1;
+}
+
+.Events-module__v0O8LW__roundTitle {
+  font-family: var(--font-mono);
+  color: var(--muted);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.Events-module__v0O8LW__matches {
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 2rem;
+  height: 100%;
+  display: flex;
+}
+
+.Events-module__v0O8LW__match {
+  background-color: var(--surface);
+  border: 1px solid var(--surface2);
+  border-radius: 8px;
+  width: 180px;
+  overflow: hidden;
+}
+
+.Events-module__v0O8LW__team {
+  border-bottom: 1px solid var(--surface2);
+  justify-content: space-between;
+  align-items: center;
+  padding: .75rem;
+  display: flex;
+}
+
+.Events-module__v0O8LW__team:last-child {
+  border-bottom: none;
+}
+
+.Events-module__v0O8LW__teamName {
+  font-size: .85rem;
+  font-weight: 600;
+}
+
+.Events-module__v0O8LW__team input {
+  background: var(--background);
+  border: 1px solid var(--surface2);
+  width: 40px;
+  color: var(--text);
+  text-align: center;
+  font-family: var(--font-mono);
+  border-radius: 4px;
+  font-size: .8rem;
+}
+
+.Events-module__v0O8LW__winner .Events-module__v0O8LW__teamName {
+  color: var(--gold);
+}
+
+.Events-module__v0O8LW__overlay {
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  z-index: 500;
+  background-color: #000c;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.Events-module__v0O8LW__modal {
+  background-color: var(--surface);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 540px;
+  max-height: 90vh;
+  position: relative;
+  overflow-y: auto;
+}
+
+.Events-module__v0O8LW__headerImage {
+  object-fit: cover;
+  width: 100%;
+  height: 200px;
+}
+
+.Events-module__v0O8LW__closeBtn {
+  background: #00000080;
+  border-radius: 50%;
+  padding: 8px;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.Events-module__v0O8LW__modalBody {
+  padding: 2.5rem;
+}
+
+.Events-module__v0O8LW__modalTitle {
+  margin-bottom: 1rem;
+  font-size: 1.75rem;
+}
+
+.Events-module__v0O8LW__modalMeta {
+  color: var(--muted);
+  flex-direction: column;
+  gap: .5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+}
+
+.Events-module__v0O8LW__modalMeta span {
+  align-items: center;
+  gap: 8px;
+  font-size: .9rem;
+  display: flex;
+}
+
+.Events-module__v0O8LW__modalDesc {
+  color: var(--text);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.Events-module__v0O8LW__primaryBtn {
+  background-color: var(--cyan);
+  width: 100%;
+  color: var(--background);
+  font-family: var(--font-rajdhani);
+  transition: var(--transition);
+  border-radius: 12px;
+  padding: 1.25rem;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.Events-module__v0O8LW__primaryBtn:hover {
+  opacity: .9;
+  transform: scale(.98);
+}
+
+.Events-module__v0O8LW__primaryBtn:disabled {
+  background-color: var(--surface2);
+  color: var(--muted);
+}
+
+.Events-module__v0O8LW__stepTitle {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1.25rem;
+}
+
+.Events-module__v0O8LW__inputGroup {
+  margin-bottom: 1.5rem;
+}
+
+.Events-module__v0O8LW__inputGroup label {
+  font-family: var(--font-mono);
+  color: var(--muted);
+  margin-bottom: .5rem;
+  font-size: .75rem;
+  display: block;
+}
+
+.Events-module__v0O8LW__inputGroup input {
+  background-color: var(--background);
+  border: 1px solid var(--surface2);
+  width: 100%;
+  color: var(--text);
+  border-radius: 8px;
+  outline: none;
+  padding: 12px 16px;
+}
+
+.Events-module__v0O8LW__rosterGrid {
+  flex-direction: column;
+  gap: .5rem;
+  margin-bottom: 2rem;
+  display: flex;
+}
+
+.Events-module__v0O8LW__successStep {
+  text-align: center;
+}
+
+.Events-module__v0O8LW__successStep h2 {
+  margin: 1.5rem 0 .5rem;
+}
+
+.Events-module__v0O8LW__successStep p {
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+.Events-module__v0O8LW__registeredStatus {
+  color: var(--cyan);
+  font-family: var(--font-rajdhani);
+  background-color: #00c9e01a;
+  border-radius: 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 1.5rem;
+  font-weight: 700;
+  display: flex;
+}
+
+@media (min-width: 768px) {
+  .Events-module__v0O8LW__eventList {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/*# sourceMappingURL=OneDrive_Documents_GitHub_Matchquest_src_views_Events_module_css_0w3-wzy._.single.css.map*/
