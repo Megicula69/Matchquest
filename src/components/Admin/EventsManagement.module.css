@@ -1,0 +1,281 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  animation: fadeIn 0.5s ease;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.title {
+  font-family: var(--font-rajdhani);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.viewToggle {
+  display: flex;
+  background: var(--surface);
+  padding: 4px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 201, 224, 0.1);
+}
+
+.toggleBtn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toggleBtn.active {
+  background: rgba(0, 201, 224, 0.1);
+  color: var(--cyan);
+}
+
+.mainGrid {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 24px;
+}
+
+/* Event Cards */
+.eventsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.eventCard {
+  background: rgba(20, 24, 38, 0.8);
+  border: 1px solid rgba(0, 201, 224, 0.06);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.eventCard:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0, 201, 224, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.banner {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  background: var(--surface2);
+}
+
+.cardBody {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.eventTitle {
+  font-family: var(--font-rajdhani);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  text-transform: uppercase;
+}
+
+.metaRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.icon {
+  color: var(--cyan);
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 1px solid rgba(0, 201, 224, 0.06);
+  margin-top: 4px;
+}
+
+.tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  background: rgba(0, 201, 224, 0.1);
+  color: var(--cyan);
+}
+
+.registration {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Calendar Section */
+.calendarCard {
+  background: rgba(20, 24, 38, 0.8);
+  border: 1px solid rgba(0, 201, 224, 0.06);
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.calHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.calTitle {
+  font-family: var(--font-rajdhani);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  text-transform: uppercase;
+}
+
+.calGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.calDayHead {
+  font-size: 10px;
+  color: var(--muted);
+  text-align: center;
+  padding: 8px 0;
+  font-family: var(--font-mono);
+}
+
+.calDay {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--text);
+  border-radius: 8px;
+  cursor: pointer;
+  position: relative;
+}
+
+.calDay:hover {
+  background: var(--surface2);
+}
+
+.calDay.active {
+  background: rgba(0, 201, 224, 0.1);
+  color: var(--cyan);
+  font-weight: 700;
+  border: 1px solid rgba(0, 201, 224, 0.2);
+}
+
+.eventDot {
+  position: absolute;
+  bottom: 4px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 6px var(--cyan);
+}
+
+/* Reminders List */
+.remindersList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.reminder {
+  background: var(--surface2);
+  padding: 12px;
+  border-radius: 12px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.remIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(0, 201, 224, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cyan);
+}
+
+.remContent {
+  flex: 1;
+}
+
+.remTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.remTime {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* Modal / Create Event Form Area */
+.qrArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 24px;
+  background: var(--surface2);
+  border-radius: 16px;
+  border: 1px dashed rgba(0, 201, 224, 0.3);
+}
+
+.qrCode {
+  width: 150px;
+  height: 150px;
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+@media (max-width: 1024px) {
+  .mainGrid {
+    grid-template-columns: 1fr;
+  }
+}

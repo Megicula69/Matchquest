@@ -1,3 +1,9 @@
 {
+  "/admin/community/page": "app/admin/community/page.js",
+  "/admin/matchmaking/page": "app/admin/matchmaking/page.js",
+  "/admin/page": "app/admin/page.js",
+  "/admin/simulation/page": "app/admin/simulation/page.js",
+  "/admin/tournaments/page": "app/admin/tournaments/page.js",
+  "/admin/users/page": "app/admin/users/page.js",
   "/page": "app/page.js"
 }
