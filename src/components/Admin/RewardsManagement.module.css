@@ -1,0 +1,222 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  animation: fadeIn 0.5s ease;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.title {
+  font-family: var(--font-rajdhani);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.mainGrid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sectionTitle {
+  font-family: var(--font-rajdhani);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Achievement Grid */
+.achievementGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.achievementCard {
+  background: rgba(20, 24, 38, 0.8);
+  border: 1px solid rgba(0, 201, 224, 0.1);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  gap: 16px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.achievementCard:hover {
+  transform: scale(1.02);
+  border-color: var(--cyan);
+  box-shadow: 0 0 20px rgba(0, 201, 224, 0.1);
+}
+
+.badgeIcon {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  background: var(--surface2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+  flex-shrink: 0;
+  border: 1px solid rgba(240, 165, 0, 0.2);
+  box-shadow: inset 0 0 10px rgba(240, 165, 0, 0.1);
+}
+
+.cardContent {
+  flex: 1;
+}
+
+.badgeTitle {
+  font-family: var(--font-rajdhani);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.badgeDesc {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.cardMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.xpBadge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  background: rgba(0, 201, 224, 0.1);
+  color: var(--cyan);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.rarity {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-family: var(--font-mono);
+}
+
+.common { color: var(--muted); }
+.rare { color: var(--cyan); text-shadow: 0 0 5px var(--cyan); }
+.epic { color: var(--violet); text-shadow: 0 0 5px var(--violet); }
+.legendary { color: var(--gold); text-shadow: 0 0 8px var(--gold); }
+
+/* Sidebar Sections */
+.sidebarSection {
+  background: rgba(20, 24, 38, 0.8);
+  border: 1px solid rgba(0, 201, 224, 0.06);
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.missionItem {
+  background: var(--surface2);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.missionHeader {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.progressBar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cyan), var(--violet));
+  border-radius: 3px;
+}
+
+/* Leaderboard */
+.leaderboard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.playerRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  background: var(--surface2);
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+.rank {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--cyan);
+  width: 20px;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.playerName {
+  flex: 1;
+  font-weight: 600;
+}
+
+.playerXP {
+  font-family: var(--font-mono);
+  color: var(--gold);
+}
+
+@media (max-width: 1024px) {
+  .mainGrid {
+    grid-template-columns: 1fr;
+  }
+}

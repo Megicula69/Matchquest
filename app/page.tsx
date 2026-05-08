@@ -1,94 +1,39 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from 'react';
-import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { MainLayout } from '../src/components/Layout';
-import { HomePage, FindPage, EventsPage, MePage, StoryPage } from '../src/views';
-import { useLocalStorage } from '../src/hooks/useLocalStorage';
-import { UserProfile } from '../src/types';
-import onboardingStyles from '../src/components/Onboarding/Onboarding.module.css';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '../src/context/AuthContext';
+import { Loader2 } from 'lucide-react';
 
-const Onboarding: React.FC<{ onComplete: (username: string, game: string) => void }> = ({ onComplete }) => {
-  const [user, setUser] = useState('');
-  const [game, setGame] = useState('');
-
-  return (
-    <div className={onboardingStyles.onboardingContainer}>
-      <div className={onboardingStyles.onboardingCard}>
-        <h1>ARENA ACCESS</h1>
-        <div className={onboardingStyles.inputField}>
-          <label>IDENTITY TAG</label>
-          <input
-            value={user}
-            onChange={(e) => setUser(e.target.value)}
-            placeholder="Enter username..."
-          />
-        </div>
-        <div className={onboardingStyles.inputField}>
-          <label>PRIMARY SPECIALIZATION</label>
-          <select
-            value={game}
-            onChange={(e) => setGame(e.target.value)}
-          >
-            <option value="">Select a title...</option>
-            <option value="Valorant">Valorant</option>
-            <option value="League of Legends">League of Legends</option>
-            <option value="CS:GO">CS:GO</option>
-            <option value="Apex Legends">Apex Legends</option>
-            <option value="Dota 2">Dota 2</option>
-          </select>
-        </div>
-        <button
-          className={onboardingStyles.enterBtn}
-          disabled={!user || !game}
-          onClick={() => onComplete(user, game)}
-        >
-          ENTER ARENA
-        </button>
-      </div>
-    </div>
-  );
-};
-
-export default function App() {
-  const [profile, setProfile] = useLocalStorage<UserProfile | null>('mq_profile', null);
-  const [mounted, setMounted] = useState(false);
+export default function RootPage() {
+  const { isLoggedIn, user, isLoading } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
-
-  if (!profile) {
-    return (
-      <Onboarding
-        onComplete={(username, favoriteGame) => {
-          setProfile({
-            username,
-            favoriteGame,
-            arenaScore: 1000,
-            rank: 'Bronze I',
-            stats: { kda: '0.0', winRate: '0%', tournaments: 0, reputation: 100 },
-            onboarded: true
-          });
-        }}
-      />
-    );
-  }
+    if (!isLoading) {
+      if (isLoggedIn) {
+        if (user?.role === 'admin') {
+          router.push('/admin');
+        } else {
+          router.push('/user');
+        }
+      } else {
+        router.push('/login');
+      }
+    }
+  }, [isLoggedIn, user, isLoading, router]);
 
   return (
-    <HashRouter>
-      <MainLayout>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/find" element={<FindPage />} />
-          <Route path="/events" element={<EventsPage />} />
-          <Route path="/me" element={<MePage />} />
-          <Route path="/story" element={<StoryPage />} />
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </MainLayout>
-    </HashRouter>
+    <div style={{ 
+      height: '100vh', display: 'flex', alignItems: 'center', 
+      justifyContent: 'center', background: '#05070a', color: 'var(--cyan)' 
+    }}>
+      <div style={{ textAlign: 'center' }}>
+        <Loader2 className="animate-spin" size={48} />
+        <p style={{ marginTop: '16px', fontFamily: 'var(--font-rajdhani)', textTransform: 'uppercase', letterSpacing: '2px' }}>
+          Syncing with Arena...
+        </p>
+      </div>
+    </div>
   );
 }

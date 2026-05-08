@@ -1,9 +1,11 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, Search, Calendar, User, BookOpen } from 'lucide-react';
+import { Home, Search, Calendar, User, BookOpen, LogOut } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 import styles from './Navigation.module.css';
 
 export const Sidebar: React.FC = () => {
+    const { logout } = useAuth();
     return (
         <aside className={`${styles.sidebar} desktop-only`}>
             <div className={styles.logo}>
@@ -33,7 +35,21 @@ export const Sidebar: React.FC = () => {
                 </NavLink>
             </nav>
             <div className={styles.footer}>
-                Arena Score: <span className={styles.score}>1,240</span>
+                <div style={{ marginBottom: '16px' }}>
+                    Arena Score: <span className={styles.score}>1,240</span>
+                </div>
+                <button 
+                    onClick={logout}
+                    style={{ 
+                        width: '100%', padding: '12px', background: 'rgba(232, 51, 74, 0.1)',
+                        border: '1px solid rgba(232, 51, 74, 0.2)', borderRadius: '10px',
+                        color: '#e8334a', display: 'flex', alignItems: 'center', gap: '10px',
+                        cursor: 'pointer', fontFamily: 'var(--font-rajdhani)', fontWeight: 700,
+                        textTransform: 'uppercase', fontSize: '12px'
+                    }}
+                >
+                    <LogOut size={16} /> Logout
+                </button>
             </div>
         </aside>
     );

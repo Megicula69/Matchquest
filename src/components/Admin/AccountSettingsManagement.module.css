@@ -1,0 +1,322 @@
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  animation: fadeIn 0.4s ease;
+}
+
+.header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 24px;
+}
+
+.title {
+  font-family: var(--font-rajdhani);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+}
+
+.subtitle {
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.mainGrid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 32px;
+}
+
+/* Sidebar Navigation */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tabBtn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.tabBtn:hover {
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text);
+}
+
+.tabBtn.active {
+  background: rgba(0, 201, 224, 0.08);
+  border-color: rgba(0, 201, 224, 0.2);
+  color: var(--cyan);
+}
+
+.tabIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tabLabel {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.tabChevron {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.tabBtn.active .tabChevron {
+  opacity: 1;
+}
+
+/* Content Area */
+.content {
+  background: rgba(20, 24, 38, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 24px;
+  padding: 40px;
+}
+
+.sectionTitle {
+  font-family: var(--font-rajdhani);
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.subTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+}
+
+.inputStack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.inputWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.input {
+  background: var(--surface);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 12px 16px;
+  color: var(--text);
+  font-size: 14px;
+  width: 100%;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.input:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 10px rgba(0, 201, 224, 0.1);
+}
+
+.relative {
+  position: relative;
+}
+
+.passwordToggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.strengthMeter {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 2px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.strengthBar {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.helperText {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.05);
+  margin: 32px 0;
+}
+
+/* Toggle Card */
+.toggleCard {
+  background: rgba(10, 12, 20, 0.4);
+  padding: 20px;
+  border-radius: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.toggleLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.toggleDesc {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* Switch Toggle */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.switch input { opacity: 0; width: 0; height: 0; }
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: var(--surface2);
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: var(--muted);
+  transition: .4s;
+  border-radius: 50%;
+}
+
+.switch input:checked + .slider { background-color: var(--cyan); }
+.switch input:checked + .slider:before { transform: translateX(20px); background-color: #0a0c14; }
+
+/* Session List */
+.sessionList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sessionItem {
+  background: rgba(10, 12, 20, 0.4);
+  padding: 16px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.sessionIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+}
+
+.sessionInfo { flex: 1; }
+.sessionTitle { font-size: 14px; font-weight: 600; color: var(--text); }
+.sessionMeta { font-size: 11px; color: var(--muted); }
+.sessionStatus { font-size: 11px; font-weight: 700; color: #22c55e; text-transform: uppercase; }
+
+/* Footer */
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.btnPrimary, .btnOutline, .btnDangerOutline, .btnSmall {
+  font-family: var(--font-rajdhani);
+  font-weight: 700;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btnPrimary { background: var(--cyan); border: none; color: #0a0c14; }
+.btnPrimary:hover { box-shadow: 0 0 20px rgba(0, 201, 224, 0.4); transform: translateY(-1px); }
+
+.btnOutline { background: transparent; border: 1px solid rgba(255, 255, 255, 0.1); color: var(--text); }
+.btnOutline:hover { background: rgba(255, 255, 255, 0.05); }
+
+.btnDangerOutline { background: transparent; border: 1px solid rgba(232, 51, 74, 0.2); color: var(--red); }
+.btnDangerOutline:hover { background: rgba(232, 51, 74, 0.05); }
+
+.btnSmall { padding: 6px 12px; border-radius: 8px; font-size: 11px; color: var(--muted); border: 1px solid rgba(255, 255, 255, 0.1); background: transparent; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 900px) {
+  .mainGrid { grid-template-columns: 1fr; }
+}

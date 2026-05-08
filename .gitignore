@@ -1,1 +1,12 @@
 node_modules
+.next
+out
+build
+.env*.local
+.vercel
+.vscode
+.idea
+*.swp
+*.swo
+.DS_Store
+Thumbs.db

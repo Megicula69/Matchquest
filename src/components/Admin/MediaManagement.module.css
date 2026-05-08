@@ -1,0 +1,204 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  animation: fadeIn 0.5s ease;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.title {
+  font-family: var(--font-rajdhani);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.uploadArea {
+  background: rgba(20, 24, 38, 0.6);
+  border: 2px dashed rgba(0, 201, 224, 0.2);
+  border-radius: 20px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.uploadArea:hover {
+  background: rgba(0, 201, 224, 0.05);
+  border-color: var(--cyan);
+}
+
+.uploadIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(0, 201, 224, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cyan);
+  margin-bottom: 8px;
+}
+
+.uploadTitle {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.uploadText {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* Media Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.mediaCard {
+  background: rgba(20, 24, 38, 0.8);
+  border: 1px solid rgba(0, 201, 224, 0.06);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.mediaCard:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0, 201, 224, 0.2);
+}
+
+.thumbnailContainer {
+  width: 100%;
+  aspect-ratio: 16/10;
+  background: var(--surface2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.typeBadge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(10, 12, 20, 0.8);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--cyan);
+  text-transform: uppercase;
+}
+
+.cardFooter {
+  padding: 12px;
+}
+
+.fileName {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+}
+
+.fileMeta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+}
+
+.actions {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 12, 20, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  backdrop-filter: blur(4px);
+}
+
+.mediaCard:hover .actions {
+  opacity: 1;
+}
+
+.actionBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--surface);
+  border: 1px solid rgba(0, 201, 224, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.actionBtn:hover {
+  background: var(--cyan);
+  color: #0a0c14;
+}
+
+.deleteBtn:hover {
+  background: var(--red);
+  color: white;
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.filterBtn {
+  padding: 8px 16px;
+  background: var(--surface);
+  border: 1px solid rgba(0, 201, 224, 0.1);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.filterBtn.active {
+  background: rgba(0, 201, 224, 0.1);
+  color: var(--cyan);
+  border-color: var(--cyan);
+}

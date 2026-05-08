@@ -1,0 +1,708 @@
+/* ===== Dashboard Grid ===== */
+.dashboardGrid {
+  display: grid;
+  gap: 20px;
+  animation: fadeIn 0.5s ease;
+}
+
+/* ===== Section Headers ===== */
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.sectionTitle {
+  font-family: var(--font-rajdhani);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.sectionAction {
+  font-size: 12px;
+  color: var(--cyan);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  transition: var(--transition);
+}
+
+.sectionAction:hover {
+  color: var(--text);
+}
+
+/* ===== Stats Cards Grid ===== */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.statCard {
+  background: rgba(20, 24, 38, 0.8);
+  border: 1px solid rgba(0, 201, 224, 0.06);
+  border-radius: 14px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+.statCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-start), var(--accent-end));
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0, 201, 224, 0.15);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.statCard:hover::before {
+  opacity: 1;
+}
+
+.statCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.statIcon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+  opacity: 0.9;
+  color: #0a0c14;
+}
+
+.statTrend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.statTrend.up {
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.statTrend.down {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.statValue {
+  font-family: var(--font-rajdhani);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.statLabel {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* ===== Charts Section ===== */
+.chartsRow {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+.chartCard {
+  background: rgba(20, 24, 38, 0.8);
+  border: 1px solid rgba(0, 201, 224, 0.06);
+  border-radius: 14px;
+  padding: 24px;
+  transition: var(--transition);
+}
+
+.chartCard:hover {
+  border-color: rgba(0, 201, 224, 0.12);
+}
+
+.chartHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.chartTitle {
+  font-family: var(--font-rajdhani);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.chartTabs {
+  display: flex;
+  gap: 4px;
+  background: var(--surface2);
+  border-radius: 8px;
+  padding: 3px;
+}
+
+.chartTab {
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: var(--font-barlow);
+}
+
+.chartTab.active {
+  background: rgba(0, 201, 224, 0.15);
+  color: var(--cyan);
+}
+
+.chartTab:hover:not(.active) {
+  color: var(--text);
+}
+
+/* SVG Chart Area */
+.chartArea {
+  width: 100%;
+  height: 220px;
+  position: relative;
+}
+
+.chartSvg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Bar chart for game distribution */
+.barChartArea {
+  width: 100%;
+  height: 220px;
+}
+
+.gameBar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.gameLabel {
+  font-size: 12px;
+  color: var(--muted);
+  min-width: 90px;
+  font-weight: 500;
+}
+
+.gameBarTrack {
+  flex: 1;
+  height: 28px;
+  background: var(--surface2);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.gameBarFill {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+}
+
+.gameBarValue {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(10, 12, 20, 0.8);
+  font-family: var(--font-mono);
+}
+
+/* ===== Bottom Grid ===== */
+.bottomGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+/* ===== Activity Feed ===== */
+.feedCard {
+  background: rgba(20, 24, 38, 0.8);
+  border: 1px solid rgba(0, 201, 224, 0.06);
+  border-radius: 14px;
+  padding: 24px;
+  max-height: 380px;
+  display: flex;
+  flex-direction: column;
+}
+
+.feedList {
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.feedList::-webkit-scrollbar {
+  display: none;
+}
+
+.feedItem {
+  display: flex;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(0, 201, 224, 0.04);
+  animation: fadeIn 0.3s ease;
+}
+
+.feedItem:last-child {
+  border-bottom: none;
+}
+
+.feedDot {
+  width: 8px;
+  height: 8px;
+  min-width: 8px;
+  border-radius: 50%;
+  margin-top: 6px;
+}
+
+.feedDot.green {
+  background: #22c55e;
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.4);
+}
+
+.feedDot.cyan {
+  background: var(--cyan);
+  box-shadow: 0 0 8px rgba(0, 201, 224, 0.4);
+}
+
+.feedDot.violet {
+  background: var(--violet);
+  box-shadow: 0 0 8px rgba(155, 109, 255, 0.4);
+}
+
+.feedDot.gold {
+  background: var(--gold);
+  box-shadow: 0 0 8px rgba(240, 165, 0, 0.4);
+}
+
+.feedDot.red {
+  background: var(--red);
+  box-shadow: 0 0 8px rgba(232, 51, 74, 0.4);
+}
+
+.feedContent {
+  flex: 1;
+}
+
+.feedText {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.feedText strong {
+  color: var(--cyan);
+  font-weight: 600;
+}
+
+.feedTime {
+  font-size: 11px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  margin-top: 2px;
+}
+
+/* ===== Tournaments Widget ===== */
+.tournamentsCard {
+  background: rgba(20, 24, 38, 0.8);
+  border: 1px solid rgba(0, 201, 224, 0.06);
+  border-radius: 14px;
+  padding: 24px;
+  max-height: 380px;
+  display: flex;
+  flex-direction: column;
+}
+
+.tournamentItem {
+  padding: 14px;
+  background: var(--surface2);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.tournamentItem:hover {
+  background: rgba(26, 31, 53, 0.9);
+  border: 1px solid rgba(0, 201, 224, 0.1);
+  margin: -1px;
+  margin-bottom: 9px;
+}
+
+.tournamentItem:last-child {
+  margin-bottom: 0;
+}
+
+.tournamentTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.tournamentName {
+  font-family: var(--font-rajdhani);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tournamentStatus {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  font-family: var(--font-mono);
+  letter-spacing: 1px;
+}
+
+.tournamentStatus.live {
+  background: rgba(232, 51, 74, 0.15);
+  color: var(--red);
+}
+
+.tournamentStatus.upcoming {
+  background: rgba(0, 201, 224, 0.12);
+  color: var(--cyan);
+}
+
+.tournamentStatus.registering {
+  background: rgba(240, 165, 0, 0.12);
+  color: var(--gold);
+}
+
+.tournamentMeta {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.tournamentMeta span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ===== System Status ===== */
+.statusCard {
+  background: rgba(20, 24, 38, 0.8);
+  border: 1px solid rgba(0, 201, 224, 0.06);
+  border-radius: 14px;
+  padding: 24px;
+  max-height: 380px;
+  display: flex;
+  flex-direction: column;
+}
+
+.statusList {
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.statusItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(0, 201, 224, 0.04);
+}
+
+.statusItem:last-child {
+  border-bottom: none;
+}
+
+.statusLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.statusIndicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.statusIndicator.online {
+  background: #22c55e;
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+  animation: pulse 2s infinite;
+}
+
+.statusIndicator.warning {
+  background: var(--gold);
+  box-shadow: 0 0 8px rgba(240, 165, 0, 0.5);
+}
+
+.statusIndicator.offline {
+  background: var(--red);
+  box-shadow: 0 0 8px rgba(232, 51, 74, 0.5);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.statusName {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.statusValue {
+  font-size: 12px;
+  font-family: var(--font-mono);
+  color: var(--muted);
+}
+
+/* ===== Announcements ===== */
+.announcementsCard {
+  background: rgba(20, 24, 38, 0.8);
+  border: 1px solid rgba(0, 201, 224, 0.06);
+  border-radius: 14px;
+  padding: 24px;
+  grid-column: span 2;
+}
+
+.announcementItem {
+  display: flex;
+  gap: 14px;
+  padding: 14px;
+  background: var(--surface2);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  transition: var(--transition);
+}
+
+.announcementItem:hover {
+  background: rgba(26, 31, 53, 0.9);
+}
+
+.announcementItem:last-child {
+  margin-bottom: 0;
+}
+
+.announcementIcon {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.announcementIcon.update {
+  background: rgba(0, 201, 224, 0.12);
+  color: var(--cyan);
+}
+
+.announcementIcon.alert {
+  background: rgba(232, 51, 74, 0.12);
+  color: var(--red);
+}
+
+.announcementIcon.event {
+  background: rgba(155, 109, 255, 0.12);
+  color: var(--violet);
+}
+
+.announcementContent {
+  flex: 1;
+}
+
+.announcementTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.announcementDesc {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.announcementTime {
+  font-size: 11px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  white-space: nowrap;
+  margin-top: 2px;
+}
+
+/* ===== Welcome Banner ===== */
+.welcomeBanner {
+  background: linear-gradient(135deg, rgba(0, 201, 224, 0.08), rgba(155, 109, 255, 0.08));
+  border: 1px solid rgba(0, 201, 224, 0.1);
+  border-radius: 16px;
+  padding: 28px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.welcomeBanner::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(0, 201, 224, 0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.welcomeLeft h1 {
+  font-family: var(--font-rajdhani);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.welcomeLeft p {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.welcomeLeft p strong {
+  color: var(--cyan);
+}
+
+.welcomeRight {
+  display: flex;
+  gap: 24px;
+}
+
+.welcomeStat {
+  text-align: center;
+}
+
+.welcomeStatValue {
+  font-family: var(--font-rajdhani);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--cyan);
+  line-height: 1;
+}
+
+.welcomeStatLabel {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: var(--font-mono);
+  margin-top: 4px;
+}
+
+/* ===== Bottom Announcements Row ===== */
+.bottomRow {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 1200px) {
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .bottomGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .chartsRow {
+    grid-template-columns: 1fr;
+  }
+
+  .bottomRow {
+    grid-template-columns: 1fr;
+  }
+
+  .announcementsCard {
+    grid-column: span 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .bottomGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .welcomeBanner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .welcomeRight {
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  .statValue {
+    font-size: 26px;
+  }
+}
