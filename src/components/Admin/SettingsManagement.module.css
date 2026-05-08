@@ -364,3 +364,211 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Theme & Styling Specific Styles */
+.themeGridOuter {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 32px;
+}
+
+.themeControls {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.themeModeRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.modeBtn {
+  background: var(--surface);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.modeBtn.active {
+  background: rgba(0, 201, 224, 0.08);
+  border-color: var(--cyan);
+  color: var(--cyan);
+  box-shadow: 0 0 15px rgba(0, 201, 224, 0.2);
+}
+
+.modeBtn span {
+  font-family: var(--font-rajdhani);
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+/* Accent Picker */
+.accentGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.accentCircle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 2px solid transparent;
+}
+
+.accentCircle:hover {
+  transform: scale(1.1);
+}
+
+.accentCircle.active {
+  border-color: #fff;
+  box-shadow: 0 0 15px currentColor;
+}
+
+.colorInput {
+  width: 100%;
+  height: 40px;
+  background: var(--surface);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* Live Preview Panel */
+.livePreview {
+  background: rgba(10, 12, 20, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 24px;
+  height: fit-content;
+  position: sticky;
+  top: 0;
+}
+
+.previewTitle {
+  font-family: var(--font-rajdhani);
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.previewDashboard {
+  width: 100%;
+  aspect-ratio: 4/3;
+  background: var(--background);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.previewSidebar {
+  width: 40px;
+  background: var(--surface);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 8px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.previewLogo {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: var(--cyan);
+  color: #000;
+  font-size: 8px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.previewNavItem {
+  width: 100%;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 4px;
+  border-left: 2px solid transparent;
+}
+
+.previewMain {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.previewTopbar {
+  height: 32px;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+}
+
+.previewSearch { width: 80px; height: 16px; background: rgba(255, 255, 255, 0.05); border-radius: 4px; }
+.previewAvatar { width: 16px; height: 16px; background: rgba(255, 255, 255, 0.1); border-radius: 4px; }
+
+.previewContent {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+}
+
+.previewGrid { display: flex; gap: 8px; }
+
+.previewCard {
+  flex: 1;
+  background: var(--card-bg);
+  backdrop-filter: blur(var(--blur));
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.previewBar { height: 6px; background: rgba(255, 255, 255, 0.1); border-radius: 3px; }
+
+.previewTableHead { height: 8px; background: rgba(255, 255, 255, 0.05); border-radius: 4px; margin-bottom: 6px; }
+.previewTableRow { height: 6px; background: rgba(255, 255, 255, 0.02); border-radius: 3px; margin-bottom: 4px; }
+
+.previewButton {
+  margin-top: auto;
+  background: var(--cyan);
+  color: #000;
+  font-size: 8px;
+  font-weight: 800;
+  padding: 8px;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.previewNote {
+  font-size: 10px;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 12px;
+}

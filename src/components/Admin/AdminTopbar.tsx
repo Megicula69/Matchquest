@@ -18,6 +18,7 @@ import {
   CalendarDays,
   History,
 } from 'lucide-react';
+import { useTheme } from '../../context/ThemeContext';
 import styles from './AdminTopbar.module.css';
 
 interface AdminTopbarProps {
@@ -35,7 +36,7 @@ export default function AdminTopbar({
   onNewAnnouncement,
   onNewEvent,
 }: AdminTopbarProps) {
-  const [darkMode, setDarkMode] = useState(true);
+  const { config, setMode } = useTheme();
   const [showQuickCreate, setShowQuickCreate] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const quickCreateRef = useRef<HTMLDivElement>(null);
@@ -125,10 +126,11 @@ export default function AdminTopbar({
         {/* Theme Toggle */}
         <button
           className={styles.themeToggle}
-          onClick={() => setDarkMode(!darkMode)}
+          onClick={() => setMode(config.mode === 'dark' ? 'light' : 'dark')}
           id="admin-theme-toggle"
         >
-          {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+          {config.mode === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+          <div className={styles.ripple} />
         </button>
 
         <div className={styles.divider} />
