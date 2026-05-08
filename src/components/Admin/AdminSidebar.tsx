@@ -23,6 +23,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import LogoutModal from './LogoutModal';
+import { useAuth } from '../../context/AuthContext';
 import styles from './AdminSidebar.module.css';
 
 interface NavItem {
@@ -89,6 +90,7 @@ export default function AdminSidebar({
   onMobileClose,
 }: AdminSidebarProps) {
   const pathname = usePathname();
+  const { logout } = useAuth();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const isActive = (item: NavItem) => {
@@ -157,7 +159,7 @@ export default function AdminSidebar({
         isOpen={showLogoutModal} 
         onClose={() => setShowLogoutModal(false)}
         onConfirm={() => {
-          console.log('Logging out...');
+          logout();
           setShowLogoutModal(false);
         }}
       />

@@ -19,6 +19,7 @@ import {
   History,
 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
+import { useAuth } from '../../context/AuthContext';
 import styles from './AdminTopbar.module.css';
 
 interface AdminTopbarProps {
@@ -37,6 +38,7 @@ export default function AdminTopbar({
   onNewEvent,
 }: AdminTopbarProps) {
   const { config, setMode } = useTheme();
+  const { logout } = useAuth();
   const [showQuickCreate, setShowQuickCreate] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const quickCreateRef = useRef<HTMLDivElement>(null);
@@ -162,6 +164,7 @@ export default function AdminTopbar({
               <div className={styles.profileDropdownDivider} />
               <div
                 className={`${styles.profileDropdownItem} ${styles.danger}`}
+                onClick={logout}
               >
                 <LogOut size={16} /> Sign Out
               </div>
