@@ -8,6 +8,7 @@ import {
   Calendar, LayoutGrid, List
 } from 'lucide-react';
 import styles from './EventsManagement.module.css';
+import CreateEventModal from './CreateEventModal';
 
 interface CampusEvent {
   id: string;
@@ -32,6 +33,17 @@ const mockEvents: CampusEvent[] = [
 export default function EventsManagement() {
   const [view, setView] = useState<'grid' | 'calendar'>('grid');
   const [selectedDay, setSelectedDay] = useState(8);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [eventList, setEventList] = useState(mockEvents);
+  const [toast, setToast] = useState<string | null>(null);
+
+  const handleCreateEvent = (newEvent: any) => {
+    setEventList(prev => [newEvent, ...prev]);
+    setToast('Event published successfully!');
+    setTimeout(() => setToast(null), 3000);
+    console.log('Event Calendar Updated:', newEvent.title);
+    console.log('Push notification broadcasted for new event.');
+  };
 
   const days = Array.from({ length: 31 }, (_, i) => i + 1);
 
@@ -48,7 +60,10 @@ export default function EventsManagement() {
               <Calendar size={16} /> Calendar
             </button>
           </div>
-          <button style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', background: 'linear-gradient(135deg, var(--cyan), var(--violet))', border: 'none', borderRadius: '10px', color: '#0a0c14', fontWeight: 600, cursor: 'pointer' }}>
+          <button 
+            onClick={() => setShowCreateModal(true)}
+            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', background: 'linear-gradient(135deg, var(--cyan), var(--violet))', border: 'none', borderRadius: '10px', color: '#0a0c14', fontWeight: 600, cursor: 'pointer' }}
+          >
             <Plus size={18} /> Create Event
           </button>
         </div>
@@ -69,7 +84,7 @@ export default function EventsManagement() {
           </div>
 
           <div className={styles.eventsGrid}>
-            {mockEvents.map((event) => (
+            {eventList.map((event) => (
               <div key={event.id} className={styles.eventCard}>
                 <img src={event.banner} className={styles.banner} alt={event.title} />
                 <div className={styles.cardBody}>
@@ -104,7 +119,7 @@ export default function EventsManagement() {
               </div>
             </div>
             <div className={styles.calGrid}>
-              {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(d => <div key={d} className={styles.calDayHead}>{d}</div>)}
+              {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => <div key={`${d}-${i}`} className={styles.calDayHead}>{d}</div>)}
               {/* Padding for first day of month (mock) */}
               <div /><div /><div /><div /><div />
               {days.map(d => (
@@ -163,6 +178,23 @@ export default function EventsManagement() {
           </div>
         </div>
       </div>
+      {/* Create Event Modal */}
+      <CreateEventModal 
+        isOpen={showCreateModal} 
+        onClose={() => setShowCreateModal(false)} 
+        onSuccess={handleCreateEvent}
+      />
+
+      {/* Success Toast */}
+      {toast && (
+        <div style={{
+          position: 'fixed', bottom: '24px', right: '24px', background: 'rgba(34, 197, 94, 0.95)',
+          color: '#fff', padding: '12px 24px', borderRadius: '12px', display: 'flex', alignItems: 'center',
+          gap: '10px', boxShadow: '0 8px 32px rgba(0,0,0,0.4)', zIndex: 10000, animation: 'slideIn 0.3s ease'
+        }}>
+          <CheckCircle2 size={18} /> {toast}
+        </div>
+      )}
     </div>
   );
 }

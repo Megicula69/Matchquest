@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Award, Trophy, Star, Zap, Target, 
   Crown, TrendingUp, ShieldCheck, Flame,
@@ -8,6 +8,7 @@ import {
   CheckCircle2, Clock
 } from 'lucide-react';
 import styles from './RewardsManagement.module.css';
+import CreateRewardModal from './CreateRewardModal';
 
 interface Achievement {
   id: string;
@@ -32,6 +33,17 @@ const mockAchievements: Achievement[] = [
 import { Swords } from 'lucide-react';
 
 export default function RewardsManagement() {
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [rewards, setRewards] = useState(mockAchievements);
+  const [toast, setToast] = useState<string | null>(null);
+
+  const handleCreateReward = (newReward: any) => {
+    setRewards(prev => [newReward, ...prev]);
+    setToast('Achievement published successfully!');
+    setTimeout(() => setToast(null), 3000);
+    console.log('Reward Engine: New achievement deployed', newReward.name);
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -45,7 +57,10 @@ export default function RewardsManagement() {
               style={{ background: 'var(--surface)', border: '1px solid rgba(0, 201, 224, 0.1)', borderRadius: '10px', padding: '10px 16px 10px 40px', color: 'var(--text)', fontSize: '14px', outline: 'none' }} 
             />
           </div>
-          <button style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', background: 'linear-gradient(135deg, var(--cyan), var(--violet))', border: 'none', borderRadius: '10px', color: '#0a0c14', fontWeight: 600, cursor: 'pointer' }}>
+          <button 
+            onClick={() => setShowAddModal(true)}
+            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', background: 'linear-gradient(135deg, var(--cyan), var(--violet))', border: 'none', borderRadius: '10px', color: '#0a0c14', fontWeight: 600, cursor: 'pointer' }}
+          >
             <Plus size={18} /> Create New
           </button>
         </div>
@@ -55,7 +70,7 @@ export default function RewardsManagement() {
         <div className={styles.section}>
           <h2 className={styles.sectionTitle}><Medal size={20} color="var(--cyan)" /> Master Achievement List</h2>
           <div className={styles.achievementGrid}>
-            {mockAchievements.map((ach) => (
+            {rewards.map((ach) => (
               <div key={ach.id} className={styles.achievementCard}>
                 <div className={styles.badgeIcon}>{ach.icon}</div>
                 <div className={styles.cardContent}>
@@ -139,6 +154,23 @@ export default function RewardsManagement() {
           </div>
         </div>
       </div>
+      {/* Create Reward Modal */}
+      <CreateRewardModal 
+        isOpen={showAddModal} 
+        onClose={() => setShowAddModal(false)} 
+        onSuccess={handleCreateReward}
+      />
+
+      {/* Success Toast */}
+      {toast && (
+        <div style={{
+          position: 'fixed', bottom: '24px', right: '24px', background: 'rgba(34, 197, 94, 0.95)',
+          color: '#fff', padding: '12px 24px', borderRadius: '12px', display: 'flex', alignItems: 'center',
+          gap: '10px', boxShadow: '0 8px 32px rgba(0,0,0,0.4)', zIndex: 10000, animation: 'slideIn 0.3s ease'
+        }}>
+          <CheckCircle2 size={18} /> {toast}
+        </div>
+      )}
     </div>
   );
 }

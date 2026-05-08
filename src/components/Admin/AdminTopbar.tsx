@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
+import Link from 'next/link';
 import {
   Search,
   Bell,
@@ -15,17 +16,24 @@ import {
   Trophy,
   Megaphone,
   CalendarDays,
+  History,
 } from 'lucide-react';
 import styles from './AdminTopbar.module.css';
 
 interface AdminTopbarProps {
   sidebarCollapsed: boolean;
   onMenuClick: () => void;
+  onNewTournament?: () => void;
+  onNewAnnouncement?: () => void;
+  onNewEvent?: () => void;
 }
 
 export default function AdminTopbar({
   sidebarCollapsed,
   onMenuClick,
+  onNewTournament,
+  onNewAnnouncement,
+  onNewEvent,
 }: AdminTopbarProps) {
   const [darkMode, setDarkMode] = useState(true);
   const [showQuickCreate, setShowQuickCreate] = useState(false);
@@ -83,17 +91,26 @@ export default function AdminTopbar({
           </button>
           {showQuickCreate && (
             <div className={styles.quickCreateDropdown}>
-              <div className={styles.quickCreateItem}>
+              <div 
+                className={styles.quickCreateItem}
+                onClick={() => { onNewTournament?.(); setShowQuickCreate(false); }}
+              >
                 <Trophy size={16} />
-                New Tournament
+                <span>New Tournament</span>
               </div>
-              <div className={styles.quickCreateItem}>
+              <div 
+                className={styles.quickCreateItem}
+                onClick={() => { onNewAnnouncement?.(); setShowQuickCreate(false); }}
+              >
                 <Megaphone size={16} />
-                New Announcement
+                <span>New Announcement</span>
               </div>
-              <div className={styles.quickCreateItem}>
+              <div 
+                className={styles.quickCreateItem}
+                onClick={() => { onNewEvent?.(); setShowQuickCreate(false); }}
+              >
                 <CalendarDays size={16} />
-                New Event
+                <span>New Event</span>
               </div>
             </div>
           )}
@@ -131,11 +148,14 @@ export default function AdminTopbar({
           </div>
           {showProfile && (
             <div className={styles.profileDropdown}>
-              <div className={styles.profileDropdownItem}>
+              <Link href="/admin/profile" className={styles.profileDropdownItem}>
                 <User size={16} /> My Profile
-              </div>
-              <div className={styles.profileDropdownItem}>
+              </Link>
+              <Link href="/admin/account-settings" className={styles.profileDropdownItem}>
                 <Settings size={16} /> Account Settings
+              </Link>
+              <div className={styles.profileDropdownItem}>
+                <History size={16} /> Activity Logs
               </div>
               <div className={styles.profileDropdownDivider} />
               <div

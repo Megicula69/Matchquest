@@ -8,6 +8,7 @@ import {
   Calendar, Zap, Radio, History
 } from 'lucide-react';
 import styles from './NotificationManagement.module.css';
+import CreateNotificationModal from './CreateNotificationModal';
 
 interface Notification {
   id: string;
@@ -28,6 +29,25 @@ const mockNotifications: Notification[] = [
 
 export default function NotificationManagement() {
   const [activeType, setActiveType] = useState<'success' | 'warning' | 'alert' | 'info'>('info');
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [notifications, setNotifications] = useState(mockNotifications);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterType, setFilterType] = useState('all');
+  const [toast, setToast] = useState<string | null>(null);
+
+  const handleDispatchNotification = (newNotif: any) => {
+    setNotifications(prev => [newNotif, ...prev]);
+    setToast('Notification dispatched successfully!');
+    setTimeout(() => setToast(null), 3000);
+    console.log('Dispatch Log:', newNotif.title, 'sent via', newNotif.methods.join(', '));
+  };
+
+  const filteredNotifications = notifications.filter(notif => {
+    const matchesSearch = notif.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                          notif.message.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesFilter = filterType === 'all' || notif.type === filterType;
+    return matchesSearch && matchesFilter;
+  });
 
   return (
     <div className={styles.container}>
@@ -35,8 +55,11 @@ export default function NotificationManagement() {
         <h1 className={styles.title}>Notification Center</h1>
         <div style={{ display: 'flex', gap: '12px' }}>
           <button style={{ background: 'var(--surface)', border: '1px solid rgba(0, 201, 224, 0.1)', borderRadius: '10px', padding: '10px', color: 'var(--muted)' }}><Settings size={18} /></button>
-          <button style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', background: 'linear-gradient(135deg, var(--cyan), var(--violet))', border: 'none', borderRadius: '10px', color: '#0a0c14', fontWeight: 600, cursor: 'pointer' }}>
-            <Radio size={18} /> Live Broadcast
+          <button 
+            onClick={() => setShowCreateModal(true)}
+            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', background: 'linear-gradient(135deg, var(--cyan), var(--violet))', border: 'none', borderRadius: '10px', color: '#0a0c14', fontWeight: 600, cursor: 'pointer' }}
+          >
+            <Radio size={18} /> New Dispatch
           </button>
         </div>
       </div>
@@ -89,9 +112,31 @@ export default function NotificationManagement() {
             </form>
           </div>
 
-          <h2 className={styles.sectionTitle} style={{ marginTop: '12px' }}><History size={20} color="var(--violet)" /> Notification History</h2>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px', marginBottom: '12px' }}>
+            <h2 className={styles.sectionTitle} style={{ margin: 0 }}><History size={20} color="var(--violet)" /> Notification History</h2>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <input 
+                type="text" 
+                placeholder="Search history..." 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                style={{ background: 'var(--surface)', border: '1px solid rgba(0, 201, 224, 0.1)', borderRadius: '8px', padding: '6px 12px', color: 'var(--text)', fontSize: '12px', outline: 'none' }}
+              />
+              <select 
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value)}
+                style={{ background: 'var(--surface)', border: '1px solid rgba(0, 201, 224, 0.1)', borderRadius: '8px', padding: '6px 12px', color: 'var(--text)', fontSize: '12px', outline: 'none' }}
+              >
+                <option value="all">All Types</option>
+                <option value="info">Info</option>
+                <option value="success">Success</option>
+                <option value="warning">Warning</option>
+                <option value="alert">Alert</option>
+              </select>
+            </div>
+          </div>
           <div className={styles.notificationList}>
-            {mockNotifications.map((notif) => (
+            {filteredNotifications.map((notif) => (
               <div key={notif.id} className={`${styles.notificationItem} ${styles[notif.type]}`}>
                 <div className={styles.itemIcon} style={{ 
                   background: notif.type === 'success' ? 'rgba(34, 197, 94, 0.1)' : 
@@ -162,6 +207,23 @@ export default function NotificationManagement() {
           </div>
         </div>
       </div>
+      {/* Create Notification Modal */}
+      <CreateNotificationModal 
+        isOpen={showCreateModal} 
+        onClose={() => setShowCreateModal(false)} 
+        onSuccess={handleDispatchNotification}
+      />
+
+      {/* Success Toast */}
+      {toast && (
+        <div style={{
+          position: 'fixed', bottom: '24px', right: '24px', background: 'rgba(34, 197, 94, 0.95)',
+          color: '#fff', padding: '12px 24px', borderRadius: '12px', display: 'flex', alignItems: 'center',
+          gap: '10px', boxShadow: '0 8px 32px rgba(0,0,0,0.4)', zIndex: 10000, animation: 'slideIn 0.3s ease'
+        }}>
+          <CheckCircle2 size={18} /> {toast}
+        </div>
+      )}
     </div>
   );
 }
