@@ -11,6 +11,7 @@ import {
   RefreshCw, MousePointer2, LogOut, ChevronRight,
   Clock, ShieldCheck
 } from 'lucide-react';
+import { useTheme } from '../../context/ThemeContext';
 import styles from './SettingsManagement.module.css';
 
 const categories = [
@@ -24,8 +25,16 @@ const categories = [
 ];
 
 export default function SettingsManagement() {
+  const { config, setMode, setAccent, updateConfig, applyTheme, resetDefaults } = useTheme();
   const [activeTab, setActiveTab] = useState('general');
   const [showConfirm, setShowConfirm] = useState<string | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
+
+  const handleSaveTheme = () => {
+    applyTheme();
+    setToast('Theme Applied Successfully');
+    setTimeout(() => setToast(null), 3000);
+  };
 
   // Helper Component: Toggle Switch
   const Toggle = ({ checked = false }) => (
@@ -362,46 +371,169 @@ export default function SettingsManagement() {
           {/* THEME CUSTOMIZATION */}
           {activeTab === 'theme' && (
             <div className={styles.section}>
-              <h2 className={styles.sectionTitle}>Visual Branding & Experience</h2>
-              <div className={styles.configCard}>
-                <h3 className={styles.cardHeader}><Palette size={16} /> Theme Controls</h3>
-                <div className={styles.cardBody}>
-                  <div className={styles.themeGrid}>
-                    <div className={`${styles.themeCard} ${styles.active}`}>
-                      <div className={styles.colorPreview} style={{ background: 'linear-gradient(135deg, #00c9e0, #9b6dff)' }} />
-                      <span>Neon Cyber</span>
+              <div className={styles.themeGridOuter}>
+                {/* Customization Controls */}
+                <div className={styles.themeControls}>
+                  <h2 className={styles.sectionTitle} style={{ marginBottom: '16px' }}>Visual Branding & Experience</h2>
+                  
+                  <div className={styles.configCard}>
+                    <h3 className={styles.cardHeader}><Monitor size={16} /> Theme Modes</h3>
+                    <div className={styles.cardBody}>
+                      <div className={styles.themeModeRow}>
+                        <button 
+                          className={`${styles.modeBtn} ${config.mode === 'dark' ? styles.active : ''}`}
+                          onClick={() => setMode('dark')}
+                        >
+                          <CloudLightning size={20} />
+                          <span>Cyber Dark</span>
+                        </button>
+                        <button 
+                          className={`${styles.modeBtn} ${config.mode === 'light' ? styles.active : ''}`}
+                          onClick={() => setMode('light')}
+                        >
+                          <Zap size={20} />
+                          <span>University Light</span>
+                        </button>
+                      </div>
                     </div>
-                    <div className={styles.themeCard}>
-                      <div className={styles.colorPreview} style={{ background: 'linear-gradient(135deg, #e8334a, #ff9900)' }} />
-                      <span>Crimson War</span>
+                  </div>
+
+                  <div className={styles.configCard}>
+                    <h3 className={styles.cardHeader}><Palette size={16} /> Accent Customization</h3>
+                    <div className={styles.cardBody}>
+                      <div className={styles.accentGrid}>
+                        {[
+                          { name: 'Neon Blue', color: '#00c9e0' },
+                          { name: 'Cyber Purple', color: '#9b6dff' },
+                          { name: 'Emerald Green', color: '#22c55e' },
+                          { name: 'Crimson Red', color: '#e8334a' },
+                          { name: 'Gold Elite', color: '#f0a500' },
+                          { name: 'Sunset Orange', color: '#ff9900' },
+                          { name: 'Plasma Pink', color: '#ff00ff' }
+                        ].map(accent => (
+                          <div 
+                            key={accent.name}
+                            className={`${styles.accentCircle} ${config.accentColor === accent.color ? styles.active : ''}`}
+                            style={{ background: accent.color }}
+                            title={accent.name}
+                            onClick={() => setAccent(accent.color)}
+                          />
+                        ))}
+                      </div>
                     </div>
-                    <div className={styles.themeCard}>
-                      <div className={styles.colorPreview} style={{ background: 'linear-gradient(135deg, #22c55e, #00c9e0)' }} />
-                      <span>Emerald Pulse</span>
+                  </div>
+
+                  <div className={styles.configCard}>
+                    <h3 className={styles.cardHeader}><Layout size={16} /> Custom Theme Creator</h3>
+                    <div className={styles.cardBody}>
+                      <div className={styles.dualInputs}>
+                        <div className={styles.inputGroup}>
+                          <label>Primary Background</label>
+                          <input 
+                            type="color" 
+                            className={styles.colorInput} 
+                            value={config.primaryBg} 
+                            onChange={(e) => updateConfig({ primaryBg: e.target.value })} 
+                          />
+                        </div>
+                        <div className={styles.inputGroup}>
+                          <label>Secondary Background</label>
+                          <input 
+                            type="color" 
+                            className={styles.colorInput} 
+                            value={config.secondaryBg} 
+                            onChange={(e) => updateConfig({ secondaryBg: e.target.value })} 
+                          />
+                        </div>
+                      </div>
+                      <div className={styles.dualInputs} style={{ marginTop: '12px' }}>
+                        <div className={styles.inputGroup}>
+                          <label>Card Color</label>
+                          <input 
+                            type="color" 
+                            className={styles.colorInput} 
+                            value={config.cardBg.split(',').slice(0,3).join(',').replace('rgba(', '').replace(')', '').trim().startsWith('#') ? config.cardBg : '#141826'} 
+                            onChange={(e) => updateConfig({ cardBg: `rgba(${parseInt(e.target.value.slice(1,3),16)}, ${parseInt(e.target.value.slice(3,5),16)}, ${parseInt(e.target.value.slice(5,7),16)}, ${config.transparency})` })} 
+                          />
+                        </div>
+                        <div className={styles.inputGroup}>
+                          <label>Text Color</label>
+                          <input 
+                            type="color" 
+                            className={styles.colorInput} 
+                            value={config.textColor} 
+                            onChange={(e) => updateConfig({ textColor: e.target.value })} 
+                          />
+                        </div>
+                      </div>
                     </div>
+                  </div>
+
+                  <div className={styles.configCard}>
+                    <h3 className={styles.cardHeader}><Type size={16} /> UI Elements & Typography</h3>
+                    <div className={styles.cardBody}>
+                      <div className={styles.inputGroup}>
+                        <label>Border Radius ({config.borderRadius})</label>
+                        <input 
+                          type="range" min="0" max="32" 
+                          value={parseInt(config.borderRadius)} 
+                          onChange={(e) => updateConfig({ borderRadius: `${e.target.value}px` })} 
+                        />
+                      </div>
+                      <div className={styles.inputGroup} style={{ marginTop: '12px' }}>
+                        <label>Transparency ({config.transparency})</label>
+                        <input 
+                          type="range" min="0.1" max="1" step="0.05" 
+                          value={parseFloat(config.transparency)} 
+                          onChange={(e) => updateConfig({ transparency: e.target.value.toString() })} 
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
+                    <button className={styles.cancelBtn} style={{ flex: 1 }} onClick={resetDefaults}>Reset to Defaults</button>
+                    <button className={styles.saveBtn} style={{ flex: 1 }} onClick={handleSaveTheme}>Apply Theme Globally</button>
                   </div>
                 </div>
-              </div>
 
-              <div className={styles.configCard}>
-                <h3 className={styles.cardHeader}><Type size={16} /> Typography & Animations</h3>
-                <div className={styles.cardBody}>
-                  <div className={styles.settingGroup}>
-                    <div className={styles.settingInfo}>
-                      <div className={styles.settingLabel}>Smooth Transitions</div>
-                      <div className={styles.settingDesc}>Enable motion-blur and spring animations globally.</div>
+                {/* Live System Preview */}
+                <div className={styles.livePreview}>
+                  <h3 className={styles.previewTitle}><Eye size={16} /> Live System Preview</h3>
+                  <div className={styles.previewDashboard}>
+                    <div className={styles.previewSidebar}>
+                      <div className={styles.previewLogo}>LA</div>
+                      <div className={styles.previewNavItem} style={{ borderLeftColor: 'var(--cyan)', background: 'rgba(0,201,224,0.1)', color: 'var(--cyan)' }} />
+                      <div className={styles.previewNavItem} />
+                      <div className={styles.previewNavItem} />
                     </div>
-                    <Toggle checked />
+                    <div className={styles.previewMain}>
+                      <div className={styles.previewTopbar}>
+                        <div className={styles.previewSearch} />
+                        <div className={styles.previewAvatar} />
+                      </div>
+                      <div className={styles.previewContent}>
+                        <div className={styles.previewGrid}>
+                          <div className={styles.previewCard}>
+                            <div className={styles.previewBar} style={{ width: '40%' }} />
+                            <div className={styles.previewBar} style={{ width: '70%', height: '4px', marginTop: '8px' }} />
+                          </div>
+                          <div className={styles.previewCard}>
+                            <div className={styles.previewBar} style={{ width: '60%' }} />
+                            <div className={styles.previewBar} style={{ width: '30%', height: '4px', marginTop: '8px' }} />
+                          </div>
+                        </div>
+                        <div className={styles.previewCard} style={{ flex: 1, marginTop: '12px' }}>
+                          <div className={styles.previewTableHead} />
+                          <div className={styles.previewTableRow} />
+                          <div className={styles.previewTableRow} />
+                        </div>
+                        <div className={styles.previewButton}>Launch Tournament</div>
+                      </div>
+                    </div>
                   </div>
-                  <div className={styles.dualInputs}>
-                    <div className={styles.inputGroup}>
-                      <label>Base Font Size</label>
-                      <select className={styles.input}><option>14px (Standard)</option><option>16px (Large)</option></select>
-                    </div>
-                    <div className={styles.inputGroup}>
-                      <label>Animation Speed</label>
-                      <select className={styles.input}><option>0.3s (Fast)</option><option>0.5s (Balanced)</option></select>
-                    </div>
+                  <div className={styles.previewNote}>
+                    Preview reflects real-time CSS variable injections.
                   </div>
                 </div>
               </div>
@@ -479,6 +611,16 @@ export default function SettingsManagement() {
               <button className={styles.saveBtn} style={{ flex: 1 }} onClick={() => setShowConfirm(null)}>Confirm</button>
             </div>
           </div>
+        </div>
+      )}
+      {/* Success Toast */}
+      {toast && (
+        <div style={{
+          position: 'fixed', bottom: '24px', right: '24px', background: 'rgba(34, 197, 94, 0.95)',
+          color: '#fff', padding: '12px 24px', borderRadius: '12px', display: 'flex', alignItems: 'center',
+          gap: '10px', boxShadow: '0 8px 32px rgba(0,0,0,0.4)', zIndex: 10000, animation: 'slideIn 0.3s ease'
+        }}>
+          <CheckCircle2 size={18} /> {toast}
         </div>
       )}
     </div>
