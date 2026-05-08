@@ -7,6 +7,7 @@ import {
   ChevronRight, Save, Image, Music, Target
 } from 'lucide-react';
 import styles from './SimulationManagement.module.css';
+import AddStoryChapterModal from './AddStoryChapterModal';
 
 interface Chapter {
   id: string;
@@ -26,6 +27,16 @@ const mockChapters: Chapter[] = [
 
 export default function SimulationManagement() {
   const [selectedChapter, setSelectedChapter] = useState(mockChapters[0]);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [chapters, setChapters] = useState(mockChapters);
+  const [toast, setToast] = useState<string | null>(null);
+
+  const handleAddChapter = (newChapter: any) => {
+    setChapters(prev => [...prev, newChapter]);
+    setToast('Story chapter published successfully!');
+    setTimeout(() => setToast(null), 3000);
+    console.log('Simulation Engine: New story node indexed', newChapter.title);
+  };
 
   return (
     <div className={styles.container}>
@@ -46,7 +57,7 @@ export default function SimulationManagement() {
         <div className={styles.panel}>
           <div className={styles.panelHeader}>
             <span className={styles.panelTitle}>Story Chapters</span>
-            <Plus size={16} style={{ cursor: 'pointer' }} />
+            <Plus size={16} style={{ cursor: 'pointer' }} onClick={() => setShowAddModal(true)} />
           </div>
           <div className={styles.scrollArea}>
             <div style={{ position: 'relative', marginBottom: '8px' }}>
@@ -57,7 +68,7 @@ export default function SimulationManagement() {
                 style={{ width: '100%', background: 'var(--background)', border: '1px solid rgba(0, 201, 224, 0.1)', borderRadius: '8px', padding: '8px 12px 8px 32px', color: 'var(--text)', fontSize: '12px', outline: 'none' }} 
               />
             </div>
-            {mockChapters.map((chapter) => (
+            {chapters.map((chapter) => (
               <div 
                 key={chapter.id} 
                 className={`${styles.chapterCard} ${selectedChapter.id === chapter.id ? styles.active : ''}`}
@@ -174,6 +185,23 @@ export default function SimulationManagement() {
           </div>
         </div>
       </div>
+      {/* Add Story Chapter Modal */}
+      <AddStoryChapterModal 
+        isOpen={showAddModal} 
+        onClose={() => setShowAddModal(false)} 
+        onSuccess={handleAddChapter}
+      />
+
+      {/* Success Toast */}
+      {toast && (
+        <div style={{
+          position: 'fixed', bottom: '24px', right: '24px', background: 'rgba(34, 197, 94, 0.95)',
+          color: '#fff', padding: '12px 24px', borderRadius: '12px', display: 'flex', alignItems: 'center',
+          gap: '10px', boxShadow: '0 8px 32px rgba(0,0,0,0.4)', zIndex: 10000, animation: 'slideIn 0.3s ease'
+        }}>
+          <CheckCircle2 size={18} /> {toast}
+        </div>
+      )}
     </div>
   );
 }

@@ -3,6 +3,10 @@
 import React, { useState } from 'react';
 import AdminSidebar from '../../src/components/Admin/AdminSidebar';
 import AdminTopbar from '../../src/components/Admin/AdminTopbar';
+import CreateTournamentModal from '../../src/components/Admin/CreateTournamentModal';
+import CreateAnnouncementModal from '../../src/components/Admin/CreateAnnouncementModal';
+import CreateEventModal from '../../src/components/Admin/CreateEventModal';
+import { CheckCircle2 } from 'lucide-react';
 
 export default function AdminLayout({
   children,
@@ -11,6 +15,13 @@ export default function AdminLayout({
 }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState<'tournament' | 'announcement' | 'event' | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
+
+  const handleSuccess = (message: string) => {
+    setToast(message);
+    setTimeout(() => setToast(null), 3000);
+  };
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--background)' }}>
@@ -24,6 +35,9 @@ export default function AdminLayout({
       <AdminTopbar
         sidebarCollapsed={sidebarCollapsed}
         onMenuClick={() => setMobileOpen(!mobileOpen)}
+        onNewTournament={() => setModalOpen('tournament')}
+        onNewAnnouncement={() => setModalOpen('announcement')}
+        onNewEvent={() => setModalOpen('event')}
       />
 
       <main
@@ -37,6 +51,34 @@ export default function AdminLayout({
       >
         {children}
       </main>
+
+      {/* Global Creation Modals */}
+      <CreateTournamentModal 
+        isOpen={modalOpen === 'tournament'} 
+        onClose={() => setModalOpen(null)} 
+        onSuccess={() => handleSuccess('Tournament created successfully!')} 
+      />
+      <CreateAnnouncementModal 
+        isOpen={modalOpen === 'announcement'} 
+        onClose={() => setModalOpen(null)} 
+        onSuccess={() => handleSuccess('Announcement broadcasted!')} 
+      />
+      <CreateEventModal 
+        isOpen={modalOpen === 'event'} 
+        onClose={() => setModalOpen(null)} 
+        onSuccess={() => handleSuccess('Event published successfully!')} 
+      />
+
+      {/* Global Success Toast */}
+      {toast && (
+        <div style={{
+          position: 'fixed', bottom: '24px', right: '24px', background: 'rgba(34, 197, 94, 0.95)',
+          color: '#fff', padding: '12px 24px', borderRadius: '12px', display: 'flex', alignItems: 'center',
+          gap: '10px', boxShadow: '0 8px 32px rgba(0,0,0,0.4)', zIndex: 10000, animation: 'slideIn 0.3s ease'
+        }}>
+          <CheckCircle2 size={18} /> {toast}
+        </div>
+      )}
 
       <style>{`
         @media (max-width: 768px) {
