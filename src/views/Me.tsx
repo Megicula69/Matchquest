@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styles from './Me.module.css';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { UserProfile } from '../types';
-import { Settings, LogOut, Shield, Trophy, Activity, Zap, ChevronRight, Bell, Lock, Flame, Palette, User, X, CheckCircle, Ban, AlertTriangle } from 'lucide-react';
+import { Settings, LogOut, Shield, Trophy, Activity, Zap, ChevronRight, Bell, Lock, Flame, Palette, User, X, CheckCircle, Ban, AlertTriangle, Trash2, Image as ImageIcon, FolderOpen } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { createDefaultProfile } from '../data/profileDefaults';
 import { useTheme } from '../context/ThemeContext';
@@ -14,6 +14,7 @@ export const MePage: React.FC = () => {
     const [historyTab, setHistoryTab] = useState<'COMP' | 'SOCIAL' | 'TOURNAMENT'>('COMP');
     const [showSettings, setShowSettings] = useState(false);
     const [settingsTab, setSettingsTab] = useState<'GENERAL' | 'APPEARANCE'>('GENERAL');
+    const [showPhotoMenu, setShowPhotoMenu] = useState(false);
 
     useEffect(() => {
         if (!user) {
@@ -21,14 +22,18 @@ export const MePage: React.FC = () => {
         }
 
         setProfiles(currentProfiles => {
-            if (currentProfiles[user.username]) {
-                return currentProfiles;
+            const existingProfile = currentProfiles[user.username];
+            
+            // If profile doesn't exist or doesn't have avatar, create/update it
+            if (!existingProfile || !existingProfile.avatar) {
+                const newProfile = createDefaultProfile(user);
+                return {
+                    ...currentProfiles,
+                    [user.username]: existingProfile ? { ...existingProfile, ...newProfile } : newProfile,
+                };
             }
 
-            return {
-                ...currentProfiles,
-                [user.username]: createDefaultProfile(user),
-            };
+            return currentProfiles;
         });
     }, [user, setProfiles]);
 
@@ -100,6 +105,24 @@ export const MePage: React.FC = () => {
                         </div>
                         <div className={styles.headerActions}>
                             <button className={styles.settingsBtn} onClick={() => setShowSettings(true)}><Settings size={20} /> SETTINGS</button>
+                        </div>
+                    </div>
+
+                    <div className={styles.profilePhoto} onClick={() => setShowPhotoMenu(true)} style={{ cursor: 'pointer', position: 'relative' }}>
+                        {profile?.avatar ? (
+                            <img 
+                                src={profile.avatar} 
+                                alt={profile.username} 
+                                className={styles.photoImage}
+                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            />
+                        ) : (
+                            <div className={styles.photoPlaceholder}>
+                                <User size={48} />
+                            </div>
+                        )}
+                        <div className={styles.photoOverlay}>
+                            <span style={{ fontSize: '0.75rem', fontWeight: 700 }}>CHANGE PHOTO</span>
                         </div>
                     </div>
                 </div>
@@ -227,6 +250,28 @@ export const MePage: React.FC = () => {
                                     </div>
                                 </div>
                             )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showPhotoMenu && (
+                <div className={styles.overlay} onClick={() => setShowPhotoMenu(false)}>
+                    <div className={styles.photoMenu} onClick={e => e.stopPropagation()}>
+                        <div className={styles.photoMenuHeader}>
+                            <h3>Change Profile Photo</h3>
+                            <button onClick={() => setShowPhotoMenu(false)} className={styles.closeBtn}><X size={20} /></button>
+                        </div>
+                        <div className={styles.photoMenuBody}>
+                            <button className={styles.photoOption}>
+                                <ImageIcon size={20} /> Upload Photo
+                            </button>
+                            <button className={styles.photoOption}>
+                                <FolderOpen size={20} /> Gallery
+                            </button>
+                            <button className={styles.photoOption} style={{ color: 'var(--red)' }}>
+                                <Trash2 size={20} /> Remove Photo
+                            </button>
                         </div>
                     </div>
                 </div>

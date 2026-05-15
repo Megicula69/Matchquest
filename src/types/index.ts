@@ -1,5 +1,11 @@
 export type GameMode = 'COMP' | 'SOCIAL' | 'DUO';
 export type EventStatus = 'UPCOMING' | 'ONGOING' | 'COMPLETED' | 'REGISTERED';
+
+export interface DuoPair {
+    id: string;
+    player1: Player;
+    player2: Player;
+}
 export type StoryMode = 'GPA' | 'ELO' | 'MORALE' | 'STAMINA';
 export type Ending = 'SCHOLAR' | 'PRO_Gamer' | 'LEGEND' | 'DROPOUT' | 'AVERAGE';
 
@@ -90,6 +96,7 @@ export interface UserProfile {
     arenaScore: number;
     rank: string;
     element: string;
+    avatar?: string;
     stats: ArenaStats;
     onboarded: boolean;
 }
