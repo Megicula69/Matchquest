@@ -14,16 +14,21 @@ export function useMatchmaking() {
     const [passedDuos, setPassedDuos] = useLocalStorage<string[]>('mq_passed_duos', []);
 
     const currentPlayer = compPlayers[currentIndex % compPlayers.length];
-    const currentDuoPair = hardcodedDuoPairs[currentIndex % hardcodedDuoPairs.length];
+    
+    // Only show duo pairs where both players play the same game
+    const filteredDuoPairs = hardcodedDuoPairs.filter(pair => 
+        pair.player1.favoriteGame === pair.player2.favoriteGame
+    );
+    
+    const currentDuoPair = filteredDuoPairs.length > 0 
+        ? filteredDuoPairs[currentIndex % filteredDuoPairs.length]
+        : hardcodedDuoPairs[currentIndex % hardcodedDuoPairs.length]; // Fallback to all if none match (safety)
 
     const handleMatch = (playerId: string) => {
         if (!likedPlayers.includes(playerId)) {
             setLikedPlayers([...likedPlayers, playerId]);
-            // Simulate a "match" if it's social/comp
-            if (Math.random() > 0.5) {
-                setMatches([...matches, playerId]);
-                return true; // Return true if it's a match
-            }
+            setMatches([...matches, playerId]);
+            return true;
         }
         setCurrentIndex(prev => prev + 1);
         return false;
@@ -39,11 +44,8 @@ export function useMatchmaking() {
     const handleMatchDuo = (duoId: string) => {
         if (!likedDuos.includes(duoId)) {
             setLikedDuos([...likedDuos, duoId]);
-            // Simulate a "match" for duo
-            if (Math.random() > 0.5) {
-                setMatches([...matches, duoId]);
-                return true;
-            }
+            setMatches([...matches, duoId]);
+            return true;
         }
         setCurrentIndex(prev => prev + 1);
         return false;

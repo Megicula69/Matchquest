@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { 
-  BookOpen, GitBranch, MapPin, UserSquare2, 
+import {
+  BookOpen, GitBranch, MapPin, UserSquare2,
   ScrollText, Plus, Search, Layers,
   ChevronRight, Save, Image, Music, Target,
   CheckCircle2
@@ -60,15 +60,15 @@ export default function SimulationManagement() {
           <div className={styles.scrollArea}>
             <div style={{ position: 'relative', marginBottom: '8px' }}>
               <Search size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--muted)' }} />
-              <input 
-                type="text" 
-                placeholder="Search chapters..." 
-                style={{ width: '100%', background: 'var(--surface2)', border: '1px solid var(--glass-border)', borderRadius: '8px', padding: '8px 12px 8px 32px', color: 'var(--text)', fontSize: '12px', outline: 'none' }} 
+              <input
+                type="text"
+                placeholder="Search chapters..."
+                style={{ width: '100%', background: 'var(--surface2)', border: '1px solid var(--glass-border)', borderRadius: '8px', padding: '8px 12px 8px 32px', color: 'var(--text)', fontSize: '12px', outline: 'none' }}
               />
             </div>
             {chapters.map((chapter) => (
-              <div 
-                key={chapter.id} 
+              <div
+                key={chapter.id}
                 className={`${styles.chapterCard} ${selectedChapter.id === chapter.id ? styles.active : ''}`}
                 onClick={() => setSelectedChapter(chapter)}
               >
@@ -94,76 +94,84 @@ export default function SimulationManagement() {
             <Layers size={16} color="var(--muted)" />
           </div>
           <div className={styles.editor}>
-            {/* Level 1 Connectors: Start to Choice with Safety Gaps */}
-            <svg 
-              viewBox="0 0 100 100"
-              preserveAspectRatio="none"
-              style={{ position: 'absolute', top: '148px', left: 0, width: '100%', height: '47px', pointerEvents: 'none', zIndex: 1 }}
+            {/* SVG Layer for Connectors */}
+            <svg
+              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 1 }}
             >
-              <path
-                d="M 50 0 Q 32.5 50 15 100"
-                stroke="var(--cyan)"
-                strokeWidth="2"
-                fill="none"
-                opacity="0.8"
-                strokeLinecap="round"
-                vectorEffect="non-scaling-stroke"
-              />
-              <path
-                d="M 50 0 Q 67.5 50 85 100"
-                stroke="var(--cyan)"
-                strokeWidth="2"
-                fill="none"
-                opacity="0.8"
-                strokeLinecap="round"
-                vectorEffect="non-scaling-stroke"
-              />
-            </svg>
+              <defs>
+                <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                  <polygon points="0 0, 10 3, 0 6" fill="url(#gradientArrow)" />
+                </marker>
+                <linearGradient id="gradientArrow" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{ stopColor: 'var(--cyan)', stopOpacity: 0.8 }} />
+                  <stop offset="100%" style={{ stopColor: 'var(--violet)', stopOpacity: 0.8 }} />
+                </linearGradient>
+              </defs>
 
-            {/* Level 2 Connectors: Choice to End with Safety Gaps */}
-            <svg 
-              viewBox="0 0 100 100"
-              preserveAspectRatio="none"
-              style={{ position: 'absolute', top: '308px', left: 0, width: '100%', height: '57px', pointerEvents: 'none', zIndex: 1 }}
-            >
-              {/* CHOICE A to END 1 & 2 */}
+              {/* START to CHOICE A */}
               <path
-                d="M 15 0 Q 12.5 50 10 100"
-                stroke="var(--cyan)"
-                strokeWidth="1.5"
+                d="M 50% 90 Q 32% 145 15% 200"
+                stroke="url(#gradientArrow)"
+                strokeWidth="3"
                 fill="none"
+                markerEnd="url(#arrowhead)"
                 opacity="0.7"
                 strokeLinecap="round"
-                vectorEffect="non-scaling-stroke"
               />
+
+              {/* START to CHOICE B */}
               <path
-                d="M 15 0 Q 25.5 50 36 100"
-                stroke="var(--cyan)"
-                strokeWidth="1.5"
+                d="M 50% 90 Q 68% 145 85% 200"
+                stroke="url(#gradientArrow)"
+                strokeWidth="3"
                 fill="none"
+                markerEnd="url(#arrowhead)"
                 opacity="0.7"
                 strokeLinecap="round"
-                vectorEffect="non-scaling-stroke"
               />
-              
-              {/* CHOICE B to END 3 & 4 */}
+
+              {/* CHOICE A to END 1 (Esports) */}
               <path
-                d="M 85 0 Q 74.5 50 64 100"
-                stroke="var(--cyan)"
-                strokeWidth="1.5"
+                d="M 15% 290 Q 10% 330 5% 370"
+                stroke="url(#gradientArrow)"
+                strokeWidth="2.5"
                 fill="none"
-                opacity="0.7"
+                markerEnd="url(#arrowhead)"
+                opacity="0.6"
                 strokeLinecap="round"
-                vectorEffect="non-scaling-stroke"
               />
+
+              {/* CHOICE A to END 2 (Scholar) */}
               <path
-                d="M 85 0 Q 87.5 50 90 100"
-                stroke="var(--cyan)"
-                strokeWidth="1.5"
+                d="M 15% 290 Q 20% 330 25% 370"
+                stroke="url(#gradientArrow)"
+                strokeWidth="2.5"
                 fill="none"
-                opacity="0.7"
+                markerEnd="url(#arrowhead)"
+                opacity="0.6"
                 strokeLinecap="round"
-                vectorEffect="non-scaling-stroke"
+              />
+
+              {/* CHOICE B to END 3 (Tech Lab) */}
+              <path
+                d="M 85% 290 Q 80% 330 75% 370"
+                stroke="url(#gradientArrow)"
+                strokeWidth="2.5"
+                fill="none"
+                markerEnd="url(#arrowhead)"
+                opacity="0.6"
+                strokeLinecap="round"
+              />
+
+              {/* CHOICE B to END 4 (Social) */}
+              <path
+                d="M 85% 290 Q 90% 330 95% 370"
+                stroke="url(#gradientArrow)"
+                strokeWidth="2.5"
+                fill="none"
+                markerEnd="url(#arrowhead)"
+                opacity="0.6"
+                strokeLinecap="round"
               />
             </svg>
 
@@ -195,28 +203,28 @@ export default function SimulationManagement() {
             </div>
 
             {/* End Nodes */}
-            <div className={`${styles.node} ${styles.nodeEnd}`} style={{ top: '370px', left: '10%', transform: 'translateX(-50%)' }}>
+            <div className={`${styles.node} ${styles.nodeEnd}`} style={{ top: '370px', left: '5%', transform: 'translateX(-50%)' }}>
               <div className={styles.nodeTitle}>✓ ENDING: Esports Path</div>
               <div className={styles.nodeChoices}>
                 <div className={styles.choiceLine}>Joined the team</div>
               </div>
             </div>
 
-            <div className={`${styles.node} ${styles.nodeEnd}`} style={{ top: '370px', left: '36%', transform: 'translateX(-50%)' }}>
+            <div className={`${styles.node} ${styles.nodeEnd}`} style={{ top: '370px', left: '25%', transform: 'translateX(-50%)' }}>
               <div className={styles.nodeTitle}>✓ ENDING: Scholar Path</div>
               <div className={styles.nodeChoices}>
                 <div className={styles.choiceLine}>Discovered library</div>
               </div>
             </div>
 
-            <div className={`${styles.node} ${styles.nodeEnd}`} style={{ top: '370px', left: '64%', transform: 'translateX(-50%)' }}>
+            <div className={`${styles.node} ${styles.nodeEnd}`} style={{ top: '370px', left: '75%', transform: 'translateX(-50%)' }}>
               <div className={styles.nodeTitle}>✓ ENDING: Tech Lab Path</div>
               <div className={styles.nodeChoices}>
                 <div className={styles.choiceLine}>PC Lab expert</div>
               </div>
             </div>
 
-            <div className={`${styles.node} ${styles.nodeEnd}`} style={{ top: '370px', left: '90%', transform: 'translateX(-50%)' }}>
+            <div className={`${styles.node} ${styles.nodeEnd}`} style={{ top: '370px', left: '95%', transform: 'translateX(-50%)' }}>
               <div className={styles.nodeTitle}>✓ ENDING: Social Path</div>
               <div className={styles.nodeChoices}>
                 <div className={styles.choiceLine}>Made new friends</div>
@@ -282,9 +290,9 @@ export default function SimulationManagement() {
         </div>
       </div>
       {/* Add Story Chapter Modal */}
-      <AddStoryChapterModal 
-        isOpen={showAddModal} 
-        onClose={() => setShowAddModal(false)} 
+      <AddStoryChapterModal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
         onSuccess={handleAddChapter}
       />
 
