@@ -115,11 +115,18 @@
 .editor {
   flex: 1;
   position: relative;
-  background-image: radial-gradient(rgba(0, 201, 224, 0.1) 1px, transparent 1px);
-  background-size: 30px 30px;
+  background: linear-gradient(135deg, var(--surface2) 0%, var(--surface) 100%);
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(0, 201, 224, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.03) 0%, transparent 50%),
+    radial-gradient(rgba(0, 201, 224, 0.08) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 40px 40px;
+  background-position: 0 0, 0 0, 0 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+  border-radius: 16px;
 }
 
 .node {
@@ -130,8 +137,43 @@
   padding: 16px;
   width: 200px;
   text-align: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   z-index: 2;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.node:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(0, 201, 224, 0.3);
+  border-color: #00e5ff;
+}
+
+.node.nodeStart {
+  border-color: #22c55e;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(34, 197, 94, 0.05));
+  box-shadow: 0 0 20px rgba(34, 197, 94, 0.2);
+}
+
+.node.nodeStart:hover {
+  box-shadow: 0 8px 32px rgba(34, 197, 94, 0.4);
+  border-color: #4ade80;
+}
+
+.node.nodeEnd {
+  border-color: #a855f7;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(168, 85, 247, 0.05));
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.2);
+}
+
+.node.nodeEnd:hover {
+  box-shadow: 0 8px 32px rgba(168, 85, 247, 0.4);
+  border-color: #d8b4fe;
+}
+
+.node.nodeChoice {
+  border-color: var(--cyan);
+  background: linear-gradient(135deg, rgba(0, 201, 224, 0.05), rgba(0, 201, 224, 0.02));
 }
 
 .nodeTitle {
@@ -140,6 +182,8 @@
   font-size: 13px;
   color: var(--text);
   margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .nodeChoices {
@@ -152,16 +196,40 @@
   font-size: 11px;
   color: var(--muted);
   background: var(--surface2);
-  padding: 4px;
+  padding: 6px 4px;
   border-radius: 4px;
+  transition: all 0.2s ease;
+  border-left: 2px solid transparent;
+}
+
+.choiceLine:hover {
+  background: var(--surface);
+  border-left-color: var(--cyan);
 }
 
 .connector {
   position: absolute;
-  height: 2px;
+  height: 3px;
   background: linear-gradient(90deg, var(--cyan), var(--violet));
-  opacity: 0.5;
+  opacity: 0.6;
   z-index: 1;
+  transition: opacity 0.3s ease;
+}
+
+.connector::after {
+  content: '';
+  position: absolute;
+  right: -8px;
+  top: -3.5px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid var(--violet);
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+}
+
+.connector:hover {
+  opacity: 1;
 }
 
 /* Preview Panel */
