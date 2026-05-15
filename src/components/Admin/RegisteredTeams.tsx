@@ -6,13 +6,26 @@ import { useTournament } from '../../hooks/useTournament';
 import { Users } from 'lucide-react';
 import { useCampusEvents } from '../../hooks/useCampusEvents';
 
+import { useLocalStorage } from '../../hooks/useLocalStorage';
+
 export default function RegisteredTeams() {
   const { registrations } = useTournament();
+  const [globalTeams] = useLocalStorage<any[]>('mq_registered_teams', []);
   const [campusEvents] = useCampusEvents();
 
   const getTournamentTitle = (eventId: string) => {
+    if (eventId === 'GLOBAL_SIGNUP') return 'Platform Registration';
     return campusEvents.find(event => event.id === eventId)?.title ?? eventId;
   };
+
+  const allRegistrations = [
+    ...registrations,
+    ...globalTeams.map(gt => ({
+      teamName: gt.teamName,
+      roster: gt.roster || [gt.captainUsername],
+      eventId: 'GLOBAL_SIGNUP'
+    }))
+  ];
 
   return (
     <div className={styles.container}>
@@ -31,12 +44,12 @@ export default function RegisteredTeams() {
             </tr>
           </thead>
           <tbody>
-            {registrations.length === 0 ? (
+            {allRegistrations.length === 0 ? (
               <tr>
                 <td colSpan={3} className={styles.empty}>No teams registered yet.</td>
               </tr>
             ) : (
-              registrations.map((r, idx) => (
+              allRegistrations.map((r, idx) => (
                 <tr key={idx}>
                   <td>
                     <div className={styles.teamCell}>

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { MainLayout } from '../../src/components/Layout';
-import { HomePage, FindPage, EventsPage, MePage, StoryPage } from '../../src/views';
+import { HomePage, FindPage, EventsPage, MePage, StoryPage, TeamPage } from '../../src/views';
 import { useLocalStorage } from '../../src/hooks/useLocalStorage';
 import { UserProfile } from '../../src/types';
 
@@ -41,6 +41,7 @@ export default function MatchQuestDashboard() {
             <Route path="/events" element={<EventsPage />} />
             <Route path="/me" element={<MePage />} />
             <Route path="/story" element={<StoryPage />} />
+            <Route path="/team" element={<TeamPage />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </MainLayout>

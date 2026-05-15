@@ -1,11 +1,12 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, Search, Calendar, User, BookOpen, LogOut } from 'lucide-react';
+import { Home, Search, Calendar, User, BookOpen, LogOut, Trophy, Bell } from 'lucide-react';
+import { UserTopBar } from './UserTopBar';
 import { useAuth } from '../../context/AuthContext';
 import styles from './Navigation.module.css';
 
 export const Sidebar: React.FC = () => {
-    const { logout } = useAuth();
+    const { user, hasRegisteredTeam, logout } = useAuth();
     return (
         <aside className={`${styles.sidebar} desktop-only`}>
             <div className={styles.logo}>
@@ -29,6 +30,12 @@ export const Sidebar: React.FC = () => {
                     <BookOpen size={20} />
                     <span>Story</span>
                 </NavLink>
+                {hasRegisteredTeam(user?.username || '') && (
+                    <NavLink to="/team" className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ''}`}>
+                        <Trophy size={20} />
+                        <span>Team</span>
+                    </NavLink>
+                )}
                 <NavLink to="/me" className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ''}`}>
                     <User size={20} />
                     <span>My Profile</span>
@@ -56,6 +63,7 @@ export const Sidebar: React.FC = () => {
 };
 
 export const BottomBar: React.FC = () => {
+    const { user, hasRegisteredTeam } = useAuth();
     return (
         <nav className={`${styles.bottomBar} mobile-only`}>
             <NavLink to="/" className={({ isActive }) => `${styles.mobileNavItem} ${isActive ? styles.active : ''}`}>
@@ -70,6 +78,16 @@ export const BottomBar: React.FC = () => {
             <NavLink to="/story" className={({ isActive }) => `${styles.mobileNavItem} ${isActive ? styles.active : ''}`}>
                 <BookOpen size={24} />
             </NavLink>
+            {user && hasRegisteredTeam(user.username) && (
+                <NavLink to="/team" className={({ isActive }) => `${styles.mobileNavItem} ${isActive ? styles.active : ''}`}>
+                    <Trophy size={24} />
+                </NavLink>
+            )}
+            <NavLink to="/me" className={({ isActive }) => `${styles.mobileNavItem} ${isActive ? styles.active : ''}`}>
+                <User size={24} />
+            </NavLink>
         </nav>
     );
 };
+
+export { UserTopBar };
