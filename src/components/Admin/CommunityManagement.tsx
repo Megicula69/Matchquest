@@ -48,7 +48,7 @@ export default function CommunityManagement() {
             <input 
               type="text" 
               placeholder="Search groups or posts..." 
-              style={{ background: 'var(--surface)', border: '1px solid rgba(0, 201, 224, 0.1)', borderRadius: '10px', padding: '10px 16px 10px 40px', color: 'var(--text)', fontSize: '14px', outline: 'none' }} 
+              style={{ background: 'var(--surface)', border: '1px solid var(--glass-border)', borderRadius: '10px', padding: '10px 16px 10px 40px', color: 'var(--text)', fontSize: '14px', outline: 'none' }} 
             />
           </div>
           <button 
@@ -69,7 +69,9 @@ export default function CommunityManagement() {
                 <img src={group.banner} className={styles.cardBanner} alt={group.name} />
                 <div className={styles.cardContent}>
                   <div className={styles.cardHeader}>
-                    <div className={styles.groupIcon}>{group.name.substring(0, 2).toUpperCase()}</div>
+                    <div className={styles.groupIcon}>
+                      <img src={`https://api.dicebear.com/7.x/initials/svg?seed=${group.name}&backgroundColor=00c9e4,9b6dff`} alt="" style={{ width: '100%', height: '100%', borderRadius: '10px' }} />
+                    </div>
                     <div className={styles.groupName}>{group.name}</div>
                   </div>
                   <div className={styles.cardStats}>
@@ -93,7 +95,9 @@ export default function CommunityManagement() {
             <div className={styles.postCard}>
               <div className={styles.postHeader}>
                 <div className={styles.postUser}>
-                  <div className={styles.userAvatar}></div>
+                  <div className={styles.userAvatar}>
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=CyberWarrior" alt="" style={{ width: '100%', height: '100%', borderRadius: '50%' }} />
+                  </div>
                   <div className={styles.userInfo}>
                     <span className={styles.username}>CyberWarrior_2026</span>
                     <span className={styles.postTime}>2 hours ago · Valorant Elite</span>
@@ -120,7 +124,9 @@ export default function CommunityManagement() {
             <div className={styles.postCard}>
               <div className={styles.postHeader}>
                 <div className={styles.postUser}>
-                  <div className={styles.userAvatar}></div>
+                  <div className={styles.userAvatar}>
+                    <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=ModOfficial`} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%' }} />
+                  </div>
                   <div className={styles.userInfo}>
                     <span className={styles.username}>Mod_Official</span>
                     <span className={styles.postTime}>5 hours ago · Announcements</span>
@@ -167,7 +173,9 @@ export default function CommunityManagement() {
           <div className={styles.sidebarSection}>
             <h2 className={styles.sectionTitle}><GraduationCap size={18} color="var(--gold)" /> Org Approvals</h2>
             <div className={styles.sidebarItem}>
-              <div className={styles.userAvatar}></div>
+              <div className={styles.userAvatar}>
+                <img src={`https://api.dicebear.com/7.x/identicon/svg?seed=LOL_Society`} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%' }} />
+              </div>
               <div className={styles.sidebarInfo}>
                 <div className={styles.itemName}>League of Legends Society</div>
                 <div className={styles.itemMeta}>Pending verification</div>
@@ -175,7 +183,9 @@ export default function CommunityManagement() {
               <CheckCircle2 size={16} color="#22c55e" />
             </div>
             <div className={styles.sidebarItem}>
-              <div className={styles.userAvatar}></div>
+              <div className={styles.userAvatar}>
+                <img src={`https://api.dicebear.com/7.x/identicon/svg?seed=MLBB_Club`} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%' }} />
+              </div>
               <div className={styles.sidebarInfo}>
                 <div className={styles.itemName}>PLP Mobile Legends Club</div>
                 <div className={styles.itemMeta}>Documentation missing</div>

@@ -29,13 +29,19 @@
 }
 
 .statCard {
-  background: rgba(20, 24, 38, 0.8);
-  border: 1px solid rgba(0, 201, 224, 0.06);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   border-radius: 12px;
   padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  transition: var(--transition);
+}
+
+.statCard:hover {
+  border-color: var(--cyan);
+  transform: translateY(-2px);
 }
 
 .statLabel {
@@ -60,8 +66,8 @@
 
 /* Queue Monitoring Section */
 .queueSection {
-  background: rgba(20, 24, 38, 0.8);
-  border: 1px solid rgba(0, 201, 224, 0.06);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   border-radius: 16px;
   padding: 24px;
 }
@@ -117,14 +123,18 @@
   width: 100%;
   height: 100%;
   background: var(--surface);
-  border: 1px solid rgba(0, 201, 224, 0.1);
+  border: 1px solid var(--glass-border);
   border-radius: 20px;
   padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.playerCard:hover {
+  border-color: var(--cyan);
 }
 
 .cardTop {
@@ -137,7 +147,15 @@
   width: 60px;
   height: 60px;
   border-radius: 15px;
-  background: linear-gradient(135deg, var(--cyan), var(--violet));
+  background: var(--surface2);
+  border: 1px solid var(--glass-border);
+  overflow: hidden;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .playerInfo {

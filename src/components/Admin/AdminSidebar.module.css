@@ -4,77 +4,72 @@
   left: 0;
   height: 100vh;
   width: 260px;
-  background: rgba(14, 17, 30, 0.95);
-  border-right: 1px solid rgba(0, 201, 224, 0.08);
+  background: var(--surface);
+  border-right: 1px solid var(--surface2);
   display: flex;
   flex-direction: column;
   z-index: 100;
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   backdrop-filter: blur(20px);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .sidebar.collapsed {
   width: 72px;
 }
 
-.sidebarHeader {
+/* ===== LOGO ===== */
+.logo {
   display: flex;
   align-items: center;
-  padding: 20px 16px;
-  gap: 12px;
-  border-bottom: 1px solid rgba(0, 201, 224, 0.08);
+  padding: 0 16px;
+  gap: 8px;
+  border-bottom: 1px solid var(--surface2);
   min-height: 72px;
+  font-family: var(--font-rajdhani);
+  overflow: hidden;
+  white-space: nowrap;
 }
 
-.logoIcon {
-  width: 40px;
-  height: 40px;
-  min-width: 40px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #00c9e0, #9b6dff);
-  display: flex;
-  align-items: center;
+.sidebar.collapsed .logo {
   justify-content: center;
-  font-family: var(--font-rajdhani);
-  font-weight: 700;
-  font-size: 16px;
-  color: #0a0c14;
-  box-shadow: 0 0 20px rgba(0, 201, 224, 0.3);
+  padding: 0;
 }
 
 .logoText {
   display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  white-space: nowrap;
-  opacity: 1;
+  align-items: center;
+  font-weight: 800;
+  letter-spacing: 2px;
+  font-size: 20px;
   transition: opacity 0.2s ease;
 }
 
 .sidebar.collapsed .logoText {
-  opacity: 0;
-  width: 0;
-}
-
-.logoTitle {
-  font-family: var(--font-rajdhani);
   font-size: 18px;
-  font-weight: 700;
+}
+
+.match {
   color: var(--text);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  line-height: 1.1;
 }
 
-.logoSubtitle {
-  font-size: 10px;
+.quest {
   color: var(--cyan);
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  font-family: var(--font-mono);
 }
 
+.adminBadge {
+  font-size: 8px;
+  background: var(--cyan);
+  color: var(--background);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  margin-top: -10px;
+  white-space: nowrap;
+}
+
+/* ===== COLLAPSE BUTTON ===== */
 .collapseBtn {
   position: absolute;
   top: 24px;
@@ -83,14 +78,14 @@
   height: 28px;
   border-radius: 50%;
   background: var(--surface2);
-  border: 1px solid rgba(0, 201, 224, 0.2);
+  border: 1px solid var(--cyan);
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--cyan);
   cursor: pointer;
-  z-index: 10;
-  transition: var(--transition);
+  z-index: 1000;
+  transition: all 0.2s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
@@ -100,6 +95,7 @@
   box-shadow: 0 0 12px rgba(0, 201, 224, 0.4);
 }
 
+/* ===== NAV ===== */
 .navSection {
   flex: 1;
   overflow-y: auto;
@@ -159,21 +155,13 @@
 }
 
 .navItem.active {
-  background: rgba(0, 201, 224, 0.1);
-  color: var(--cyan);
+  background: var(--cyan);
+  color: var(--background);
+  box-shadow: 0 4px 15px rgba(0, 201, 224, 0.3);
 }
 
-.navItem.active::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3px;
-  height: 60%;
-  background: var(--cyan);
-  border-radius: 0 4px 4px 0;
-  box-shadow: 0 0 8px rgba(0, 201, 224, 0.5);
+.navItem.active .navIcon {
+  color: var(--background);
 }
 
 .navIcon {
@@ -183,6 +171,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .navLabel {
@@ -211,9 +200,10 @@
   display: none;
 }
 
+/* ===== FOOTER / LOGOUT ===== */
 .sidebarFooter {
   padding: 12px 8px;
-  border-top: 1px solid rgba(0, 201, 224, 0.08);
+  border-top: 1px solid var(--surface2);
 }
 
 .logoutBtn {
@@ -237,7 +227,11 @@
   color: var(--red);
 }
 
-/* Tooltip for collapsed sidebar */
+/* ===== TOOLTIP (collapsed state) ===== */
+.sidebar.collapsed .navItem {
+  overflow: visible;
+}
+
 .sidebar.collapsed .navItem::after {
   content: attr(data-tooltip);
   position: absolute;
@@ -262,7 +256,7 @@
   opacity: 1;
 }
 
-/* Mobile overlay */
+/* ===== MOBILE ===== */
 .mobileOverlay {
   display: none;
 }

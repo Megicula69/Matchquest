@@ -5,7 +5,7 @@ import AdminSidebar from '../../src/components/Admin/AdminSidebar';
 import AdminTopbar from '../../src/components/Admin/AdminTopbar';
 import CreateTournamentModal from '../../src/components/Admin/CreateTournamentModal';
 import CreateAnnouncementModal from '../../src/components/Admin/CreateAnnouncementModal';
-import { ThemeProvider } from '../../src/context/ThemeContext';
+import { AdminThemeProvider } from '../../src/context/AdminThemeContext';
 import { CheckCircle2 } from 'lucide-react';
 
 export default function AdminLayout({
@@ -24,8 +24,8 @@ export default function AdminLayout({
   };
 
   return (
-    <ThemeProvider>
-      <div style={{ minHeight: '100vh', background: 'var(--background)', color: 'var(--text)', transition: 'background 0.3s ease, color 0.3s ease' }}>
+    <AdminThemeProvider>
+      <>
       <AdminSidebar
         collapsed={sidebarCollapsed}
         onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
@@ -82,7 +82,7 @@ export default function AdminLayout({
           }
         }
       `}</style>
-    </div>
-    </ThemeProvider>
+    </>
+    </AdminThemeProvider>
   );
 }

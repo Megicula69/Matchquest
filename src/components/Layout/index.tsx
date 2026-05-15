@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sidebar, BottomBar } from '../Navigation';
+import { Sidebar, BottomBar, UserTopBar } from '../Navigation';
 import styles from './MainLayout.module.css';
 
 interface MainLayoutProps {
@@ -11,6 +11,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         <div className={styles.container}>
             <Sidebar />
             <main className={styles.mainContent}>
+                <UserTopBar />
                 <div className={styles.scrollArea}>
                     {children}
                 </div>

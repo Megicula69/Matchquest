@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import { 
   BookOpen, GitBranch, MapPin, UserSquare2, 
   ScrollText, Play, Plus, Search, Layers,
-  ChevronRight, Save, Image, Music, Target
+  ChevronRight, Save, Image, Music, Target,
+  CheckCircle2
 } from 'lucide-react';
 import styles from './SimulationManagement.module.css';
 import AddStoryChapterModal from './AddStoryChapterModal';
@@ -65,7 +66,7 @@ export default function SimulationManagement() {
               <input 
                 type="text" 
                 placeholder="Search chapters..." 
-                style={{ width: '100%', background: 'var(--background)', border: '1px solid rgba(0, 201, 224, 0.1)', borderRadius: '8px', padding: '8px 12px 8px 32px', color: 'var(--text)', fontSize: '12px', outline: 'none' }} 
+                style={{ width: '100%', background: 'var(--surface2)', border: '1px solid var(--glass-border)', borderRadius: '8px', padding: '8px 12px 8px 32px', color: 'var(--text)', fontSize: '12px', outline: 'none' }} 
               />
             </div>
             {chapters.map((chapter) => (

@@ -8,9 +8,11 @@ import {
   AlertCircle, ChevronRight, Zap, Monitor,
   Volume2, ShieldCheck, Key
 } from 'lucide-react';
+import { useAdminTheme } from '../../context/AdminThemeContext';
 import styles from './AccountSettingsManagement.module.css';
 
 export default function AccountSettingsManagement() {
+  const { mode, setMode } = useAdminTheme();
   const [showPassword, setShowPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(85);
   const [activeTab, setActiveTab] = useState('security');
@@ -193,13 +195,19 @@ export default function AccountSettingsManagement() {
             <div className={styles.section}>
               <h2 className={styles.sectionTitle}><Palette size={20} color="var(--cyan)" /> Appearance Settings</h2>
               <div className={styles.grid}>
-                <div className={styles.themeOption}>
-                  <div className={styles.themePreview} style={{ background: '#0a0c14' }}></div>
+                <div 
+                  className={`${styles.themeOption} ${mode === 'dark' ? styles.active : ''}`}
+                  onClick={() => setMode('dark')}
+                >
+                  <div className={styles.themePreview} style={{ background: '#0a0c14', border: '1px solid rgba(255,255,255,0.1)' }}></div>
                   <div className={styles.themeLabel}>Cyber Dark</div>
                 </div>
-                <div className={styles.themeOption} style={{ opacity: 0.5 }}>
-                  <div className={styles.themePreview} style={{ background: '#f8fafc' }}></div>
-                  <div className={styles.themeLabel}>Neon Light (Coming Soon)</div>
+                <div 
+                  className={`${styles.themeOption} ${mode === 'light' ? styles.active : ''}`}
+                  onClick={() => setMode('light')}
+                >
+                  <div className={styles.themePreview} style={{ background: '#f8fafc', border: '1px solid rgba(0,0,0,0.1)' }}></div>
+                  <div className={styles.themeLabel}>Neon Light</div>
                 </div>
               </div>
               <div className={styles.divider} />

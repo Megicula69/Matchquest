@@ -63,8 +63,8 @@ function readStoredArray<T>(key: string): T[] {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [registeredUsers, setRegisteredUsers] = useState<User[]>(() => readStoredArray<User>(REGISTERED_USERS_KEY));
-  const [registeredTeams, setRegisteredTeams] = useState<RegisteredTeam[]>(() => readStoredArray<RegisteredTeam>(REGISTERED_TEAMS_KEY));
+  const [registeredUsers, setRegisteredUsers] = useLocalStorage<User[]>(REGISTERED_USERS_KEY, []);
+  const [registeredTeams, setRegisteredTeams] = useLocalStorage<RegisteredTeam[]>(REGISTERED_TEAMS_KEY, []);
   const [profiles, setProfiles] = useLocalStorage<Record<string, UserProfile>>('mq_profiles', {});
   const [user, setUser] = useState<User | null>(() => {
     if (typeof window === 'undefined') {
@@ -187,7 +187,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const updatedUsers = [...registeredUsers, newUser];
     setRegisteredUsers(updatedUsers);
-    localStorage.setItem(REGISTERED_USERS_KEY, JSON.stringify(updatedUsers));
     ensureProfileExists(newUser);
     resetStoryState();
 
@@ -215,12 +214,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const newTeam: RegisteredTeam = {
       teamName: trimmedTeamName,
       captainUsername: trimmedCaptainUsername,
-      roster: [captainUser.fullName],
+      roster: [trimmedCaptainUsername],
     };
 
     const updatedTeams = [...registeredTeams, newTeam];
     setRegisteredTeams(updatedTeams);
-    localStorage.setItem(REGISTERED_TEAMS_KEY, JSON.stringify(updatedTeams));
 
     return { success: true };
   };
@@ -233,14 +231,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const hasRegisteredTeam = (username: string) => {
+    const userObj = allUsers.find(u => u.username.toLowerCase() === username.toLowerCase());
+    const fullName = userObj?.fullName;
+
     return registeredTeams.some(
-      team => team.captainUsername.toLowerCase() === username.toLowerCase()
+      team => 
+        team.captainUsername.toLowerCase() === username.toLowerCase() ||
+        team.roster.some(m => 
+          m.toLowerCase() === username.toLowerCase() || 
+          (fullName && m.toLowerCase() === fullName.toLowerCase())
+        )
     );
   };
 
   const getUserRegisteredTeamName = (username: string) => {
     const team = registeredTeams.find(
-      entry => entry.captainUsername.toLowerCase() === username.toLowerCase()
+      entry => 
+        entry.captainUsername.toLowerCase() === username.toLowerCase() ||
+        entry.roster.some(m => m.toLowerCase() === username.toLowerCase())
     );
 
     return team?.teamName ?? null;

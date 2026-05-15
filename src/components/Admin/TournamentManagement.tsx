@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { 
   Trophy, Search, Plus, Calendar, Filter, Users, Clock, 
   MapPin, ChevronLeft, Play, Info, CheckCircle2, 
-  Gamepad2, Swords, MessageSquare, ListTodo, BarChart2
+  Gamepad2, Swords, MessageSquare, ListTodo, BarChart2, Shield
 } from 'lucide-react';
 import styles from './TournamentManagement.module.css';
 import CreateTournamentModal from './CreateTournamentModal';
@@ -68,7 +68,7 @@ const mockTournaments: Tournament[] = [
 ];
 
 export default function TournamentManagement() {
-  const { registrations, bracket } = useTournament();
+  const { registrations, bracket, updateMatchScore } = useTournament();
   const [campusEvents, setCampusEvents] = useCampusEvents();
   const [selectedTournament, setSelectedTournament] = useState<Tournament | null>(null);
   const [activeTab, setActiveTab] = useState('bracket');
@@ -79,28 +79,6 @@ export default function TournamentManagement() {
   });
   const [toast, setToast] = useState<string | null>(null);
 
-  const getPopulatedBracket = (eventId: string) => {
-    const populated = bracket.map(match => ({ ...match }));
-    const teamsForEvent = registrations.filter(registration => registration.eventId === eventId).map(registration => registration.teamName);
-
-    populated.filter(match => match.round === 1).forEach((match, index) => {
-      match.team1 = teamsForEvent[index * 2] ?? 'TBD';
-      match.team2 = teamsForEvent[index * 2 + 1] ?? 'TBD';
-      match.score1 = undefined;
-      match.score2 = undefined;
-      match.winner = undefined;
-    });
-
-    populated.filter(match => match.round > 1).forEach(match => {
-      match.team1 = 'TBD';
-      match.team2 = 'TBD';
-      match.score1 = undefined;
-      match.score2 = undefined;
-      match.winner = undefined;
-    });
-
-    return populated;
-  };
 
   const handlePublishTournament = (newTournament: Tournament) => {
     setTournaments(prev => [newTournament, ...prev]);
@@ -193,8 +171,8 @@ export default function TournamentManagement() {
           <div className={`${styles.tab} ${activeTab === 'stats' ? styles.active : ''}`} onClick={() => setActiveTab('stats')}>
             <BarChart2 size={16} /> Stats
           </div>
-          <div className={`${styles.tab} ${activeTab === 'moderation' ? styles.active : ''}`} onClick={() => setActiveTab('moderation')}>
-            <ListTodo size={16} /> Referees
+          <div className={`${styles.tab} ${activeTab === 'referees' ? styles.active : ''}`} onClick={() => setActiveTab('referees')}>
+            <Shield size={16} /> Referees
           </div>
         </div>
 
@@ -202,24 +180,71 @@ export default function TournamentManagement() {
           {activeTab === 'bracket' && (
             <div className={styles.bracketContainer}>
               {selectedTournament ? (() => {
-                const eventBracket = getPopulatedBracket(selectedTournament.id);
 
                 return [1, 2, 3].map(round => (
                   <div key={round} className={styles.round}>
-                    <div className={styles.roundTitle}>{round === 1 ? 'Round 1' : round === 2 ? 'Round 2' : 'Round 3'}</div>
+                    <div className={styles.roundTitle}>
+                      {round === 1 ? 'Quarter-Finals' : round === 2 ? 'Semi-Finals' : 'Grand Finals'}
+                    </div>
                     <div className={styles.matches}>
-                      {eventBracket.filter(match => match.round === round).map(match => (
-                        <div key={match.id} className={styles.match}>
-                          <div className={`${styles.team} ${match.winner === match.team1 ? styles.winner : ''}`}>
-                            <span>{match.team1}</span>
-                            <span className={styles.score}>{match.score1 ?? '-'}</span>
+                      {bracket.filter(match => match.round === round).map((match, idx) => {
+                        const isFinished = match.winner !== undefined;
+                        const isLive = !isFinished && match.team1 !== 'TBD' && match.team2 !== 'TBD';
+                        
+                        return (
+                          <div key={match.id} className={styles.matchWrapper}>
+                            <div className={styles.match}>
+                              <div className={styles.matchHeader}>
+                                <span className={styles.matchId}>M-{match.id}</span>
+                                <span className={`${styles.matchStatus} ${isLive ? styles.statusLive : isFinished ? styles.statusFinished : styles.statusUpcoming}`}>
+                                  {isLive ? 'LIVE' : isFinished ? 'FINAL' : 'UPCOMING'}
+                                </span>
+                              </div>
+                              <div className={`${styles.team} ${match.winner === match.team1 && match.team1 !== 'TBD' ? styles.winner : ''}`}>
+                                <div className={styles.teamInfo}>
+                                  <img 
+                                    src={`https://api.dicebear.com/7.x/identicon/svg?seed=${match.team1}`} 
+                                    className={styles.teamAvatar} 
+                                    alt="" 
+                                  />
+                                  <span className={`${styles.teamName} ${match.team1 === 'TBD' ? styles.tbd : ''}`}>
+                                    {match.team1}
+                                  </span>
+                                </div>
+                                <input 
+                                  type="number" 
+                                  className={styles.scoreInput}
+                                  value={match.score1 ?? 0}
+                                  onChange={(e) => updateMatchScore(match.id, parseInt(e.target.value) || 0, match.score2 || 0)}
+                                />
+                              </div>
+                              <div className={`${styles.team} ${match.winner === match.team2 && match.team2 !== 'TBD' ? styles.winner : ''}`}>
+                                <div className={styles.teamInfo}>
+                                  <img 
+                                    src={`https://api.dicebear.com/7.x/identicon/svg?seed=${match.team2}`} 
+                                    className={styles.teamAvatar} 
+                                    alt="" 
+                                  />
+                                  <span className={`${styles.teamName} ${match.team2 === 'TBD' ? styles.tbd : ''}`}>
+                                    {match.team2}
+                                  </span>
+                                </div>
+                                <input 
+                                  type="number" 
+                                  className={styles.scoreInput}
+                                  value={match.score2 ?? 0}
+                                  onChange={(e) => updateMatchScore(match.id, match.score1 || 0, parseInt(e.target.value) || 0)}
+                                />
+                              </div>
+                            </div>
+                            {round < 3 && (
+                              <div className={`${styles.connector} ${idx % 2 === 0 ? styles.top : styles.bottom} ${match.winner ? styles.active : ''}`}>
+                                <div className={styles.line} />
+                              </div>
+                            )}
                           </div>
-                          <div className={`${styles.team} ${match.winner === match.team2 ? styles.winner : ''}`}>
-                            <span>{match.team2}</span>
-                            <span className={styles.score}>{match.score2 ?? '-'}</span>
-                          </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                 ));
@@ -245,8 +270,10 @@ export default function TournamentManagement() {
                     <tr key={idx}>
                       <td>
                         <div className={styles.teamCell}>
-                          <div className={styles.teamLogo}></div>
-                          <span>{r.teamName}</span>
+                          <div className={styles.teamLogo}>
+                            <img src={`https://api.dicebear.com/7.x/identicon/svg?seed=${r.teamName}`} alt="" style={{ width: '100%', height: '100%', borderRadius: '6px' }} />
+                          </div>
+                          <span style={{ fontWeight: 600 }}>{r.teamName}</span>
                         </div>
                       </td>
                       <td><span className={`${styles.status} ${styles.live}`}>Approved</span></td>
@@ -288,6 +315,51 @@ export default function TournamentManagement() {
                   <span>Cyber Samurais</span>
                 </div>
                 <div className={`${styles.status} ${styles.upcoming}`}>UPCOMING</div>
+              </div>
+            </div>
+          )}
+          
+          {activeTab === 'stats' && (
+            <div className={styles.statsGrid}>
+              <div className={styles.statCard}>
+                <div className={styles.statLabel}>Highest ACS</div>
+                <div className={styles.statValue}>284.5</div>
+                <div className={styles.statActor}>Alpha Squad</div>
+              </div>
+              <div className={styles.statCard}>
+                <div className={styles.statLabel}>Win Rate</div>
+                <div className={styles.statValue}>85%</div>
+                <div className={styles.statActor}>Neon Ninjas</div>
+              </div>
+              <div className={styles.statCard}>
+                <div className={styles.statLabel}>Average Duration</div>
+                <div className={styles.statValue}>38m</div>
+                <div className={styles.statActor}>Tournament Avg</div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'referees' && (
+            <div className={styles.refereeList}>
+              <div className={styles.refereeCard}>
+                <div className={styles.refereeInfo}>
+                  <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Referee1" alt="Ref" className={styles.refAvatar} />
+                  <div>
+                    <div className={styles.refName}>Prof. Rodriguez</div>
+                    <div className={styles.refRole}>Lead Official</div>
+                  </div>
+                </div>
+                <div className={`${styles.status} ${styles.live}`}>ACTIVE</div>
+              </div>
+              <div className={styles.refereeCard}>
+                <div className={styles.refereeInfo}>
+                  <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Referee2" alt="Ref" className={styles.refAvatar} />
+                  <div>
+                    <div className={styles.refName}>Marcus Chen</div>
+                    <div className={styles.refRole}>Technical Mod</div>
+                  </div>
+                </div>
+                <div className={`${styles.status} ${styles.live}`}>ACTIVE</div>
               </div>
             </div>
           )}
