@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import styles from './Find.module.css';
 import { useMatchmaking } from '../hooks/useMatchmaking';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import { Player, Message } from '../types';
-import { compPlayers, duoPlayers, players } from '../data/players';
+import { Player, Message, DuoPair } from '../types';
+import { compPlayers, players } from '../data/players';
 import { duoPairs as hardcodedDuoPairs } from '../data/duoPairs';
-import { X, Heart, Filter, MessageSquare, Mic, Globe, Star } from 'lucide-react';
+import { X, Heart, Filter, MessageSquare, Mic, Globe, Star, History } from 'lucide-react';
 
 export const FindPage: React.FC = () => {
     const { activeMode, setActiveMode, currentPlayer, currentDuoPair, handleMatch, handlePass, handleMatchDuo, handlePassDuo, matches } = useMatchmaking();
@@ -14,6 +14,7 @@ export const FindPage: React.FC = () => {
     const [chatMessage, setChatMessage] = useState('');
     const [allMessages, setAllMessages] = useLocalStorage<Message[]>('mq_messages', []);
     const [viewingDetails, setViewingDetails] = useState<Player | null>(null);
+    const [viewingDuoSynergy, setViewingDuoSynergy] = useState<DuoPair | null>(null);
     const [filteredIndex, setFilteredIndex] = useState(0);
 
     // Filter states
@@ -44,16 +45,17 @@ export const FindPage: React.FC = () => {
     const filteredCurrentPlayer = filteredCompPlayers.length > 0 ? filteredCompPlayers[filteredIndex % filteredCompPlayers.length] : null;
     const filteredCurrentDuoPair = filteredDuoPairs.length > 0 ? filteredDuoPairs[filteredIndex % filteredDuoPairs.length] : null;
 
-    // Get matched COMP players
-    const compMatches = compPlayers.filter(p => matches.includes(p.id));
+    // Get matched individuals (from the full players list)
+    const matchedIndividuals = players.filter(p => matches.includes(p.id));
     
-    // Get matched DUO players (extract players from matched duo pairs)
-    const duoMatches = hardcodedDuoPairs
-        .filter(duo => matches.includes(duo.id))
-        .flatMap(duo => [duo.player1, duo.player2]);
+    // Get matched DUO pairs as entities
+    const matchedDuoPairs = hardcodedDuoPairs.filter(duo => matches.includes(duo.id));
     
-    // Combine all matched players
-    const matchedPlayers = [...compMatches, ...duoMatches];
+    // Create unified entities list for the sidebar
+    const matchedEntities = [
+        ...matchedIndividuals.map(p => ({ type: 'PLAYER' as const, data: p, id: p.id })),
+        ...matchedDuoPairs.map(d => ({ type: 'DUO' as const, data: d, id: d.id }))
+    ];
 
     const sendMessage = () => {
         if (!chatMessage || !showChat) return;
@@ -120,12 +122,13 @@ export const FindPage: React.FC = () => {
                                             <p className={styles.bio}>{filteredCurrentDuoPair.player1.bio}</p>
                                             <div className={styles.tags}>
                                                 <span className={styles.tag}>{filteredCurrentDuoPair.player1.favoriteGame}</span>
-                                                {filteredCurrentDuoPair.player1.micRequired && <span className={styles.tag}><Mic size={12} /> Mic</span>}
-                                                {filteredCurrentDuoPair.player1.localArea && <span className={styles.tag}><Globe size={12} /> Local</span>}
                                             </div>
+                                            <button className={styles.duoViewProfileBtn} onClick={() => setViewingDetails(filteredCurrentDuoPair.player1)}>VIEW PROFILE</button>
                                         </div>
                                     </div>
-                                    <div className={styles.vsDivider}>VS</div>
+                                    <div className={styles.vsDivider} onClick={() => setViewingDuoSynergy(filteredCurrentDuoPair)} style={{ cursor: 'pointer' }}>
+                                        <span>AND</span>
+                                    </div>
                                     <div className={styles.playerCard}>
                                         <div className={styles.cardImage}>
                                             <img src={filteredCurrentDuoPair.player2.avatar} alt={filteredCurrentDuoPair.player2.username} />
@@ -139,14 +142,16 @@ export const FindPage: React.FC = () => {
                                             <p className={styles.bio}>{filteredCurrentDuoPair.player2.bio}</p>
                                             <div className={styles.tags}>
                                                 <span className={styles.tag}>{filteredCurrentDuoPair.player2.favoriteGame}</span>
-                                                {filteredCurrentDuoPair.player2.micRequired && <span className={styles.tag}><Mic size={12} /> Mic</span>}
-                                                {filteredCurrentDuoPair.player2.localArea && <span className={styles.tag}><Globe size={12} /> Local</span>}
                                             </div>
+                                            <button className={styles.duoViewProfileBtn} onClick={() => setViewingDetails(filteredCurrentDuoPair.player2)}>VIEW PROFILE</button>
                                         </div>
                                     </div>
                                 </div>
                                 <div className={styles.cardActions}>
                                     <button className={styles.passBtn} onClick={() => handleFilteredPassDuo()}><X size={28} /></button>
+                                    <button className={styles.viewHistoryBtn} onClick={() => setViewingDuoSynergy(filteredCurrentDuoPair)}>
+                                        <History size={18} /> VIEW HISTORY
+                                    </button>
                                     <button className={styles.matchBtn} onClick={() => handleFilteredMatchDuo(filteredCurrentDuoPair.id)}><Heart size={28} /></button>
                                 </div>
                             </div>
@@ -192,13 +197,32 @@ export const FindPage: React.FC = () => {
             <aside className={`${styles.matchesList} ${showChat ? styles.matchesHidden : ''} desktop-only`}>
                 <h2 className={styles.sectionTitle}>Matches</h2>
                 <div className={styles.matchesScroll}>
-                    {matchedPlayers.map(player => (
-                        <div key={player.id} className={`${styles.matchItem} ${showChat === player.id ? styles.activeMatch : ''}`} onClick={() => setShowChat(player.id === showChat ? null : player.id)}>
-                            <img src={player.avatar} alt={player.username} className={styles.matchAvatar} />
-                            <div className={styles.matchInfo}>
-                                <div className={styles.matchName}>{player.username}</div>
-                                <div className={styles.matchSub}>Click to message</div>
-                            </div>
+                    {matchedEntities.map(entity => (
+                        <div 
+                            key={entity.id} 
+                            className={`${styles.matchItem} ${showChat === entity.id ? styles.activeMatch : ''}`} 
+                            onClick={() => setShowChat(entity.id === showChat ? null : entity.id)}
+                        >
+                            {entity.type === 'PLAYER' ? (
+                                <>
+                                    <img src={entity.data.avatar} alt={entity.data.username} className={styles.matchAvatar} />
+                                    <div className={styles.matchInfo}>
+                                        <div className={styles.matchName}>{entity.data.username}</div>
+                                        <div className={styles.matchSub}>Click to message</div>
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <div className={styles.duoAvatarContainer}>
+                                        <img src={entity.data.player1.avatar} className={styles.matchAvatarDuo1} alt="p1" />
+                                        <img src={entity.data.player2.avatar} className={styles.matchAvatarDuo2} alt="p2" />
+                                    </div>
+                                    <div className={styles.matchInfo}>
+                                        <div className={styles.matchName}>{entity.data.player1.username} & {entity.data.player2.username}</div>
+                                        <div className={styles.matchSub}>Group Chat</div>
+                                    </div>
+                                </>
+                            )}
                             <MessageSquare size={18} className={styles.msgIcon} />
                         </div>
                     ))}
@@ -207,40 +231,76 @@ export const FindPage: React.FC = () => {
 
             {/* Chat Drawer */}
             <div className={`${styles.chatDrawer} ${showChat ? styles.drawerOpen : ''}`}>
-                {showChat ? (
-                    <>
-                        <div className={styles.chatHeader}>
-                            <div className={styles.chatUser}>
-                                <img src={players.find(p => p.id === showChat)?.avatar} alt="avatar" />
-                                <span>{players.find(p => p.id === showChat)?.username}</span>
+                {showChat ? (() => {
+                    const duoMatch = hardcodedDuoPairs.find(d => d.id === showChat);
+                    const playerMatch = players.find(p => p.id === showChat);
+                    
+                    return (
+                        <>
+                            <div className={styles.chatHeader}>
+                                {duoMatch ? (
+                                    <div className={styles.chatUser}>
+                                        <div className={styles.headerAvatars}>
+                                            <img src={duoMatch.player1.avatar} alt="p1" />
+                                            <img src={duoMatch.player2.avatar} alt="p2" />
+                                        </div>
+                                        <div className={styles.headerInfo}>
+                                            <span>{duoMatch.player1.username} & {duoMatch.player2.username}</span>
+                                            <div className={styles.groupBadge}>GROUP CHAT</div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className={styles.chatUser}>
+                                        <img src={playerMatch?.avatar} alt="avatar" />
+                                        <span>{playerMatch?.username}</span>
+                                    </div>
+                                )}
+                                <X className={styles.closeChat} onClick={() => setShowChat(null)} />
                             </div>
-                            <X className={styles.closeChat} onClick={() => setShowChat(null)} />
-                        </div>
-                        <div className={styles.chatBody}>
-                            {allMessages.filter(m => m.receiverId === showChat || m.senderId === showChat).map(msg => (
-                                <div key={msg.id} className={`${styles.msgBubble} ${msg.senderId === 'me' ? styles.msgMe : styles.msgThem}`}>
-                                    {msg.text}
-                                    <div className={styles.msgTime}>{msg.timestamp}</div>
-                                </div>
-                            ))}
-                        </div>
-                        <div className={styles.chatFooter}>
-                            <input
-                                placeholder="Type a message..."
-                                value={chatMessage}
-                                onChange={e => setChatMessage(e.target.value)}
-                                onKeyDown={e => e.key === 'Enter' && sendMessage()}
-                            />
-                            <button onClick={sendMessage}><MessageSquare size={20} /></button>
-                        </div>
-                    </>
-                ) : (
+                            <div className={styles.chatBody}>
+                                {allMessages.filter(m => m.receiverId === showChat || m.senderId === showChat).map(msg => {
+                                    const isMe = msg.senderId === 'me';
+                                    let senderAvatar = '';
+                                    if (isMe) {
+                                        senderAvatar = 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix'; // Mock user avatar
+                                    } else if (duoMatch) {
+                                        // Randomly assign p1 or p2 for mock messages in group chat
+                                        senderAvatar = parseInt(msg.id) % 2 === 0 ? duoMatch.player1.avatar : duoMatch.player2.avatar;
+                                    } else {
+                                        senderAvatar = playerMatch?.avatar || '';
+                                    }
+
+                                    return (
+                                        <div key={msg.id} className={`${styles.msgWrapper} ${isMe ? styles.msgWrapperMe : styles.msgWrapperThem}`}>
+                                            {!isMe && <img src={senderAvatar} alt="avatar" className={styles.msgAvatar} />}
+                                            <div className={`${styles.msgBubble} ${isMe ? styles.msgMe : styles.msgThem}`}>
+                                                {msg.text}
+                                                <div className={styles.msgTime}>{msg.timestamp}</div>
+                                            </div>
+                                            {isMe && <img src={senderAvatar} alt="avatar" className={styles.msgAvatar} />}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                            <div className={styles.chatFooter}>
+                                <input
+                                    placeholder="Type a message..."
+                                    value={chatMessage}
+                                    onChange={e => setChatMessage(e.target.value)}
+                                    onKeyDown={e => e.key === 'Enter' && sendMessage()}
+                                />
+                                <button onClick={sendMessage}><MessageSquare size={20} /></button>
+                            </div>
+                        </>
+                    );
+                })() : (
                     <div className={styles.drawerPlaceholder}>
                         <MessageSquare size={40} opacity={0.2} />
                         <p>Select a match to start chatting</p>
                     </div>
                 )}
             </div>
+
 
             {/* Filter Drawer/Panel */}
             {showFilters && (
@@ -338,6 +398,71 @@ export const FindPage: React.FC = () => {
                                     <span className={styles.tag}>Daily Player</span>
                                     <span className={styles.tag}>No Toxic</span>
                                     <span className={styles.tag}>Team Player</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Duo Synergy Modal */}
+            {viewingDuoSynergy && (
+                <div className={styles.detailsOverlay} onClick={() => setViewingDuoSynergy(null)}>
+                    <div className={`${styles.detailsModal} ${styles.synergyModal}`} onClick={e => e.stopPropagation()}>
+                        <div className={styles.synergyHeader}>
+                            <div className={styles.synergyAvatars}>
+                                <img src={viewingDuoSynergy.player1.avatar} alt="p1" className={styles.synergyAvatar} />
+                                <div className={styles.synergyLink}>
+                                    <Heart size={24} color="var(--cyan)" fill="var(--cyan)" />
+                                </div>
+                                <img src={viewingDuoSynergy.player2.avatar} alt="p2" className={styles.synergyAvatar} />
+                            </div>
+                            <h2>{viewingDuoSynergy.player1.username} & {viewingDuoSynergy.player2.username}</h2>
+                            <div className={styles.synergyScore}>
+                                <Star size={16} /> SYNERGY SCORE: {viewingDuoSynergy.synergyScore}%
+                            </div>
+                            <X className={styles.closeDetails} onClick={() => setViewingDuoSynergy(null)} />
+                        </div>
+                        <div className={styles.detailsBody}>
+                            <div className={styles.synergyGrid}>
+                                <div className={styles.synergyStatCard}>
+                                    <span className={styles.statLabel}>WIN RATE</span>
+                                    <span className={styles.statValue}>{viewingDuoSynergy.winRate}</span>
+                                </div>
+                                <div className={styles.synergyStatCard}>
+                                    <span className={styles.statLabel}>MATCHES TOGETHER</span>
+                                    <span className={styles.statValue}>{viewingDuoSynergy.matchesTogether}</span>
+                                </div>
+                                <div className={styles.synergyStatCard}>
+                                    <span className={styles.statLabel}>STREAK</span>
+                                    <span className={styles.statValue}>12 WINS</span>
+                                </div>
+                                <div className={styles.synergyStatCard}>
+                                    <span className={styles.statLabel}>LEVEL</span>
+                                    <span className={styles.statValue}>GODLIKE</span>
+                                </div>
+                            </div>
+
+                            <div className={styles.detailsSection}>
+                                <h3>DUO PLAYSTYLE</h3>
+                                <div className={styles.tags}>
+                                    <span className={styles.tag}>In-Sync Ults</span>
+                                    <span className={styles.tag}>Perfect Comms</span>
+                                    <span className={styles.tag}>Aggressive Early</span>
+                                    <span className={styles.tag}>Map Control</span>
+                                </div>
+                            </div>
+
+                            <div className={styles.detailsSection}>
+                                <h3>RECENT MATCHES</h3>
+                                <div className={styles.recentMatches}>
+                                    {[1, 2, 3].map(i => (
+                                        <div key={i} className={styles.recentMatchItem}>
+                                            <div className={styles.matchResult}>VICTORY</div>
+                                            <div className={styles.matchMode}>Competitive Rank</div>
+                                            <div className={styles.matchScore}>13 - 4</div>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>
