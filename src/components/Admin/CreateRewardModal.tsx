@@ -173,10 +173,10 @@ export default function CreateRewardModal({ isOpen, onClose, onSuccess }: Create
         </div>
 
         <div className={styles.modalFooter}>
-          <button type="button" className={styles.btnOutline} style={{ marginRight: 'auto' }}>Save Draft</button>
-          <button type="button" className={styles.btnOutline} onClick={onClose}>Cancel</button>
-          <button type="button" className={styles.btnOutline}><Sparkles size={16} /> Preview FX</button>
-          <button type="submit" form="rewardForm" className={styles.btnPrimary}>
+          <button type="button" className={`${styles.btn} ${styles.btnOutline}`} style={{ marginRight: 'auto' }}>Save Draft</button>
+          <button type="button" className={`${styles.btn} ${styles.btnOutline}`} onClick={onClose}>Cancel</button>
+          <button type="button" className={`${styles.btn} ${styles.btnOutline}`}><Sparkles size={16} /> Preview FX</button>
+          <button type="submit" form="rewardForm" className={`${styles.btn} ${styles.btnPrimary}`}>
             <Send size={18} /> Publish Reward
           </button>
         </div>

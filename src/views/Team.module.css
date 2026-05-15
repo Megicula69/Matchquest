@@ -228,6 +228,55 @@
   align-items: flex-end;
 }
 
+.message.system .msgAuthor {
+  color: var(--gold) !important;
+}
+
+.message.system .msgBubble {
+  background: rgba(240, 165, 0, 0.15) !important;
+  border: 1px solid rgba(240, 165, 0, 0.3) !important;
+  color: var(--gold) !important;
+  font-style: italic;
+  font-size: 13px;
+}
+
+.msgHeader {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.msgContent {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.unsendBtn {
+  opacity: 0;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  order: -1; /* Ensure it's on the left */
+}
+
+.message:hover .unsendBtn {
+  opacity: 1;
+}
+
+.unsendBtn:hover {
+  color: var(--red);
+  background: rgba(232, 51, 74, 0.1);
+}
+
 .msgAuthor {
   font-size: 10px;
   color: var(--cyan);
@@ -279,6 +328,109 @@
 .chatInput:focus {
   background: rgba(255, 255, 255, 0.08);
   border-color: var(--cyan);
+}
+
+.matchesCard {
+  background: var(--surface);
+  border: 1px solid var(--surface2);
+  border-radius: 20px;
+  padding: 30px;
+  margin-top: 30px;
+}
+
+.matchesList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.matchCard {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.matchCard:hover {
+  border-color: var(--cyan);
+  background: rgba(0, 201, 224, 0.05);
+  transform: translateY(-2px);
+}
+
+.matchMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.matchStatus {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--cyan);
+  background: rgba(0, 201, 224, 0.1);
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+
+.matchTime {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.matchVersus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.vsTeam {
+  flex: 1;
+  font-family: var(--font-rajdhani);
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.vsTeam.highlight {
+  color: var(--cyan);
+}
+
+.vsCircle {
+  width: 36px;
+  height: 36px;
+  background: var(--surface2);
+  border: 1px solid var(--glass-border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--muted);
+}
+
+.emptyMatches {
+  text-align: center;
+  padding: 40px;
+  color: var(--muted);
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  border: 1px dashed var(--glass-border);
+}
+
+.emptyMatches p {
+  margin-top: 12px;
+  font-size: 14px;
 }
 
 .sendBtn {

@@ -3,6 +3,7 @@ import styles from './Events.module.css';
 import { useCampusEvents } from '../hooks/useCampusEvents';
 import { useTournament } from '../hooks/useTournament';
 import { useAuth } from '../context/AuthContext';
+import { useTeam } from '../hooks/useTeam';
 import { TournamentEvent, BracketMatch } from '../types';
 import { Calendar, Clock, Trophy, Users, X, ChevronRight, CheckCircle, AlertCircle } from 'lucide-react';
 import confetti from 'canvas-confetti';
@@ -11,6 +12,7 @@ export const EventsPage: React.FC = () => {
     const [campusEvents] = useCampusEvents();
     const { bracket, registrations, registerTeam, updateMatchScore } = useTournament();
     const { user, hasRegisteredTeam, getUserRegisteredTeamName } = useAuth();
+    const { team: existingTeam } = useTeam();
     const [selectedEvent, setSelectedEvent] = useState<TournamentEvent | null>(null);
     const [regStep, setRegStep] = useState(1);
     const [teamInfo, setTeamInfo] = useState({ name: '', roster: ['', '', '', '', ''] });
@@ -19,6 +21,20 @@ export const EventsPage: React.FC = () => {
     const [registrationError, setRegistrationError] = useState<string | null>(null);
     const canRegisterForGames = Boolean(user && hasRegisteredTeam(user.username));
     const userRegisteredTeamName = user ? getUserRegisteredTeamName(user.username) : null;
+
+    // Auto-fill team name and roster if user already has one registered
+    React.useEffect(() => {
+        if (existingTeam && !teamInfo.name) {
+            const roster = [...(existingTeam.roster || [])];
+            // Pad roster to 5 if needed
+            while (roster.length < 5) roster.push('');
+            
+            setTeamInfo({
+                name: existingTeam.teamName,
+                roster: roster.slice(0, 5)
+            });
+        }
+    }, [existingTeam, teamInfo.name]);
 
     const handleRegister = () => {
         if (!selectedEvent) {

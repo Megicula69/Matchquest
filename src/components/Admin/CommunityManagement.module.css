@@ -22,6 +22,28 @@
   letter-spacing: 1px;
 }
 
+.btnPrimary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, var(--cyan), var(--violet));
+  border: none;
+  border-radius: 10px;
+  color: #0a0c14;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: var(--font-rajdhani);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btnPrimary:hover {
+  box-shadow: 0 0 20px rgba(0, 201, 224, 0.4);
+  transform: translateY(-1px);
+}
+
 .mainGrid {
   display: grid;
   grid-template-columns: 1fr 350px;

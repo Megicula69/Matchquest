@@ -3,7 +3,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import {
-  Search,
   Sun,
   Moon,
   Plus,
@@ -65,15 +64,6 @@ export default function AdminTopbar({
         <button className={styles.menuBtn} onClick={onMenuClick}>
           <Menu size={20} />
         </button>
-
-        <div className={styles.searchBar}>
-          <Search size={16} className={styles.searchIcon} />
-          <input
-            type="text"
-            className={styles.searchInput}
-            placeholder="Search users, tournaments, events..."
-          />
-        </div>
       </div>
 
       <div className={styles.topbarRight}>

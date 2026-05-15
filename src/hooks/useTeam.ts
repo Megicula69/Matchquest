@@ -107,10 +107,27 @@ export function useTeam() {
     setTeams(updatedTeams);
   };
 
+  const deleteMessage = (messageId: number) => {
+    if (!myTeam) return;
+
+    const updatedTeams = teams.map(t => {
+      if (t.teamName === myTeam.teamName) {
+        return { 
+          ...t, 
+          chatHistory: (t.chatHistory || []).filter(msg => msg.id !== messageId) 
+        };
+      }
+      return t;
+    });
+
+    setTeams(updatedTeams);
+  };
+
   return {
     team: myTeam,
     joinTeam,
     sendMessage,
+    deleteMessage,
     addMember,
     removeMember,
     isCaptain: user && myTeam ? myTeam.captainUsername.toLowerCase() === user.username.toLowerCase() : false

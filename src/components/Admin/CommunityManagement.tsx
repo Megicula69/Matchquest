@@ -9,6 +9,8 @@ import {
 } from 'lucide-react';
 import styles from './CommunityManagement.module.css';
 import CreateAnnouncementModal from './CreateAnnouncementModal';
+import { useNotifications } from '../../hooks/useNotifications';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 
 interface CommunityGroup {
   id: string;
@@ -30,12 +32,20 @@ export default function CommunityManagement() {
   const [activeTab, setActiveTab] = useState('communities');
   const [showAddModal, setShowAddModal] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const { broadcastNotification } = useNotifications();
+  const [announcements, setAnnouncements] = useLocalStorage<any[]>('mq_announcements', []);
 
   const handlePublishAnnouncement = (newAnnouncement: any) => {
+    broadcastNotification({
+      type: 'ANNOUNCEMENT',
+      title: newAnnouncement.title,
+      message: newAnnouncement.description,
+      priority: newAnnouncement.priority
+    });
+
+    setAnnouncements([newAnnouncement, ...announcements]);
     setToast('Announcement published successfully!');
     setTimeout(() => setToast(null), 3000);
-    console.log('Activity Log Created: Admin broadcasted announcement', newAnnouncement.title);
-    console.log('Push notification sent to target audience:', newAnnouncement.visibility);
   };
 
   return (
@@ -53,7 +63,7 @@ export default function CommunityManagement() {
           </div>
           <button 
             onClick={() => setShowAddModal(true)}
-            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', background: 'linear-gradient(135deg, var(--cyan), var(--violet))', border: 'none', borderRadius: '10px', color: '#0a0c14', fontWeight: 600, cursor: 'pointer' }}
+            className={styles.btnPrimary}
           >
             <Plus size={18} /> New Announcement
           </button>
@@ -92,6 +102,45 @@ export default function CommunityManagement() {
 
           <h2 className={styles.sectionTitle} style={{ marginTop: '12px' }}><MessageSquare size={20} color="var(--violet)" /> Moderation Feed</h2>
           <div className={styles.feed}>
+            {announcements.map((ann) => (
+              <div key={ann.id} className={styles.postCard} style={{ borderLeft: ann.priority === 'Urgent' ? '4px solid var(--red)' : ann.priority === 'High' ? '4px solid var(--gold)' : 'none' }}>
+                <div className={styles.postHeader}>
+                  <div className={styles.postUser}>
+                    <div className={styles.userAvatar}>
+                      <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=ModOfficial`} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%' }} />
+                    </div>
+                    <div className={styles.userInfo}>
+                      <span className={styles.username}>Admin Official</span>
+                      <span className={styles.postTime}>{ann.time || 'Just now'} · Announcements</span>
+                    </div>
+                  </div>
+                  {ann.priority === 'High' || ann.priority === 'Urgent' ? <Pin size={16} color="var(--violet)" /> : null}
+                </div>
+                <div className={styles.postBody} style={{ fontWeight: 600, color: 'var(--cyan)' }}>
+                  {ann.title}
+                </div>
+                <div className={styles.postBody} style={{ fontSize: '14px', marginTop: '4px', fontWeight: 400, color: 'var(--text)' }}>
+                  {ann.description}
+                </div>
+                <div className={styles.postActions}>
+                  <div className={styles.engagement}>
+                    <span className={styles.statItem}><Heart size={14} /> 0</span>
+                    <span className={styles.statItem}><MessageSquare size={14} /> 0</span>
+                  </div>
+                  <div className={styles.btnGroup}>
+                    <button className={`${styles.actionBtn} ${styles.editBtn}`}><Edit3 size={14} /> Edit</button>
+                    <button 
+                      className={`${styles.actionBtn} ${styles.removeBtn}`}
+                      onClick={() => setAnnouncements(announcements.filter(a => a.id !== ann.id))}
+                    >
+                      <Trash2 size={14} /> Remove
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {/* Static Demo Posts */}
             <div className={styles.postCard}>
               <div className={styles.postHeader}>
                 <div className={styles.postUser}>

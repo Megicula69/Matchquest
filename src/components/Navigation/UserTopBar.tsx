@@ -24,7 +24,7 @@ export const UserTopBar: React.FC = () => {
 
     return (
         <div className={styles.topBar}>
-            <div style={{ position: 'relative' }}>
+            <div style={{ position: 'relative', pointerEvents: 'all' }}>
                 <button 
                     className={styles.notifBtn} 
                     onClick={() => setIsOpen(!isOpen)}
@@ -52,12 +52,24 @@ export const UserTopBar: React.FC = () => {
                                 <div className={styles.emptyState}>No notifications</div>
                             ) : (
                                 notifications.map((n) => (
-                                    <div key={n.id} className={styles.notifItem}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                            <span className={styles.notifTitle}>{n.title}</span>
+                                    <div 
+                                        key={n.id} 
+                                        className={`${styles.notifItem} ${n.priority === 'Urgent' ? styles.urgent : n.priority === 'High' ? styles.high : ''}`}
+                                    >
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                    <span className={styles.notifTitle}>{n.title}</span>
+                                                    {(n.priority === 'Urgent' || n.priority === 'High') && (
+                                                        <span className={`${styles.priorityBadge} ${n.priority === 'Urgent' ? styles.urgentBadge : styles.highBadge}`}>
+                                                            {n.priority}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </div>
                                             <button 
                                                 onClick={() => removeNotification(n.id)}
-                                                style={{ background: 'transparent', border: 'none', color: 'var(--muted)', cursor: 'pointer' }}
+                                                style={{ background: 'transparent', border: 'none', color: 'var(--muted)', cursor: 'pointer', padding: '2px' }}
                                             >
                                                 <X size={12} />
                                             </button>

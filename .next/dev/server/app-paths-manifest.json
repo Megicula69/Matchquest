@@ -1,5 +1,4 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
   "/admin/account-settings/page": "app/admin/account-settings/page.js",
   "/admin/analytics/page": "app/admin/analytics/page.js",
   "/admin/community/page": "app/admin/community/page.js",

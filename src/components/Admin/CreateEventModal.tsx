@@ -178,10 +178,10 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }: CreateE
         </form>
 
         <div className={styles.modalFooter}>
-          <button type="button" className={styles.btnOutline} style={{ marginRight: 'auto' }}>Save Draft</button>
-          <button type="button" className={styles.btnOutline} onClick={onClose}>Cancel</button>
-          <button type="button" className={styles.btnOutline}><Eye size={16} /> Preview</button>
-          <button type="submit" form="create-event-form" className={styles.btnPrimary}>
+          <button type="button" className={`${styles.btn} ${styles.btnOutline}`} style={{ marginRight: 'auto' }}>Save Draft</button>
+          <button type="button" className={`${styles.btn} ${styles.btnOutline}`} onClick={onClose}>Cancel</button>
+          <button type="button" className={`${styles.btn} ${styles.btnOutline}`}><Eye size={16} /> Preview</button>
+          <button type="submit" form="create-event-form" className={`${styles.btn} ${styles.btnPrimary}`}>
             <Send size={18} /> Publish Event
           </button>
         </div>

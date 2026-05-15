@@ -21,8 +21,7 @@ export default function AccountSettingsManagement() {
     { id: 'security', label: 'Security & Auth', icon: <Shield size={18} /> },
     { id: 'sessions', label: 'Session Management', icon: <Laptop size={18} /> },
     { id: 'notifications', label: 'Notifications', icon: <Bell size={18} /> },
-    { id: 'appearance', label: 'Appearance', icon: <Palette size={18} /> },
-    { id: 'privacy', label: 'Privacy', icon: <Globe size={18} /> }
+    { id: 'appearance', label: 'Appearance', icon: <Palette size={18} /> }
   ];
 
   return (

@@ -1,18 +1,36 @@
-import React, { useState } from 'react';
-import { Users, UserPlus, MessageSquare, Send, Trophy, Shield, Trash2 } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Users, UserPlus, MessageSquare, Send, Trophy, Shield, Trash2, Calendar, Clock, Gamepad2 } from 'lucide-react';
 import { useTeam } from '../hooks/useTeam';
 import { useAuth } from '../context/AuthContext';
 import { useNotifications } from '../hooks/useNotifications';
 import { useToast } from '../context/ToastContext';
+import { useTournament } from '../hooks/useTournament';
 import styles from './Team.module.css';
 
 export const TeamPage: React.FC = () => {
-  const { team, addMember, removeMember, isCaptain, sendMessage } = useTeam();
-  const { user } = useAuth();
+  const { team, addMember, removeMember, isCaptain, sendMessage, deleteMessage } = useTeam();
+  const { user, getUserName } = useAuth();
   const { addNotification } = useNotifications();
   const toast = useToast();
+  const { schedule } = useTournament();
+  const chatContainerRef = useRef<HTMLDivElement>(null);
   const [newMember, setNewMember] = useState('');
   const [chatMessage, setChatMessage] = useState('');
+
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [team?.chatHistory]);
+
+  const upcomingMatches = schedule.filter(m => 
+    (m.team1 === team?.teamName || m.team2 === team?.teamName) && 
+    m.status !== 'FINAL'
+  );
 
   const handleAddMember = (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,7 +69,7 @@ export const TeamPage: React.FC = () => {
       <div className={styles.mainContent}>
         <header className={styles.header}>
           <h1><Trophy size={40} color="var(--cyan)" /> {team.teamName}</h1>
-          <p>Official Roster | Captain: {team.captainUsername}</p>
+          <p>Official Roster | Captain: {getUserName(team.captainUsername)}</p>
         </header>
 
         <section className={styles.teamCard}>
@@ -60,9 +78,9 @@ export const TeamPage: React.FC = () => {
           <div className={styles.roster}>
             {team.roster.map((member, idx) => (
               <div key={idx} className={styles.memberCard}>
-                <div className={styles.avatar}>{member.charAt(0)}</div>
+                <div className={styles.avatar}>{getUserName(member).charAt(0)}</div>
                 <div className={styles.memberInfo}>
-                  <span className={styles.memberName}>{member}</span>
+                  <span className={styles.memberName}>{getUserName(member)}</span>
                   <span className={styles.memberRole}>
                     {member.toLowerCase() === team.captainUsername.toLowerCase() ? 'Captain' : 'Player'}
                   </span>
@@ -95,6 +113,38 @@ export const TeamPage: React.FC = () => {
             </form>
           )}
         </section>
+
+        <section className={styles.matchesCard}>
+          <h2 className={styles.sectionTitle}><Calendar size={20} /> Upcoming Matches</h2>
+          <div className={styles.matchesList}>
+            {upcomingMatches.length === 0 ? (
+              <div className={styles.emptyMatches}>
+                <Gamepad2 size={32} />
+                <p>No matches scheduled yet.</p>
+              </div>
+            ) : (
+              upcomingMatches.map(match => (
+                <div key={match.id} className={styles.matchCard}>
+                  <div className={styles.matchMeta}>
+                    <div className={styles.matchStatus}>{match.status}</div>
+                    <div className={styles.matchTime}>
+                      <Clock size={14} /> {match.time} | {match.date}
+                    </div>
+                  </div>
+                  <div className={styles.matchVersus}>
+                    <div className={`${styles.vsTeam} ${match.team1 === team.teamName ? styles.highlight : ''}`}>
+                      {match.team1}
+                    </div>
+                    <div className={styles.vsCircle}>VS</div>
+                    <div className={`${styles.vsTeam} ${match.team2 === team.teamName ? styles.highlight : ''}`}>
+                      {match.team2}
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </section>
       </div>
 
       <aside className={styles.chatbox}>
@@ -103,18 +153,31 @@ export const TeamPage: React.FC = () => {
           <h2>Team Comms</h2>
         </div>
         
-        <div className={styles.chatMessages}>
+        <div className={styles.chatMessages} ref={chatContainerRef}>
           {(!team.chatHistory || team.chatHistory.length === 0) ? (
-            <div className={styles.message}>
+            <div className={`${styles.message} ${styles.system}`}>
               <span className={styles.msgAuthor}>System</span>
               <div className={styles.msgBubble}>Team channel initialized. Good luck!</div>
             </div>
           ) : (
             team.chatHistory.map(msg => (
-              <div key={msg.id} className={`${styles.message} ${msg.author === user?.username ? styles.mine : ''}`}>
-                <span className={styles.msgAuthor}>{msg.author}</span>
-                <div className={styles.msgBubble}>
-                  {msg.text}
+              <div key={msg.id} className={`${styles.message} ${msg.author === user?.username ? styles.mine : ''} ${msg.author.toLowerCase() === 'system' ? styles.system : ''}`}>
+                <div className={styles.msgHeader}>
+                  <span className={styles.msgAuthor}>{getUserName(msg.author)}</span>
+                </div>
+                <div className={styles.msgContent}>
+                  {(msg.author === user?.username || isCaptain) && msg.author.toLowerCase() !== 'system' && (
+                    <button 
+                      className={styles.unsendBtn} 
+                      onClick={() => deleteMessage(msg.id)}
+                      title="Unsend message"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  )}
+                  <div className={styles.msgBubble}>
+                    {msg.text}
+                  </div>
                 </div>
               </div>
             ))

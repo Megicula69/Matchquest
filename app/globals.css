@@ -17,6 +17,8 @@
 
   --transition: all 0.3s ease;
   --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  
+  color-scheme: dark;
 }
 
 * {
@@ -53,6 +55,11 @@ button {
   background: none;
   font-family: inherit;
   color: inherit;
+}
+
+select option {
+  background: var(--surface);
+  color: var(--text);
 }
 
 a {

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { 
   Trophy, Search, Plus, Calendar, Filter, Users, Clock, 
   MapPin, ChevronLeft, Play, Info, CheckCircle2, 
-  Gamepad2, Swords, MessageSquare, ListTodo, BarChart2, Shield
+  Gamepad2, Swords, MessageSquare, ListTodo, BarChart2, Shield, Trash2, X
 } from 'lucide-react';
 import styles from './TournamentManagement.module.css';
 import CreateTournamentModal from './CreateTournamentModal';
@@ -68,10 +68,13 @@ const mockTournaments: Tournament[] = [
 ];
 
 export default function TournamentManagement() {
-  const { registrations, bracket, updateMatchScore } = useTournament();
+  const { registrations, bracket, updateMatchScore, updateMatchTeams, schedule, updateSchedule, deleteScheduleItem, updateRegistration } = useTournament();
   const [campusEvents, setCampusEvents] = useCampusEvents();
   const [selectedTournament, setSelectedTournament] = useState<Tournament | null>(null);
   const [activeTab, setActiveTab] = useState('bracket');
+  const [isEditingBracket, setIsEditingBracket] = useState(false);
+  const [isEditingSchedule, setIsEditingSchedule] = useState(false);
+  const [editingRoster, setEditingRoster] = useState<{ id: string, eventId: string, teamName: string, roster: string[] } | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [tournaments, setTournaments] = useState<Tournament[]>(() => {
     // derive initial tournaments from events and any stored registrations
@@ -179,7 +182,20 @@ export default function TournamentManagement() {
         <div className={styles.tabContent}>
           {activeTab === 'bracket' && (
             <div className={styles.bracketContainer}>
+              <div className={styles.tabActions}>
+                <button 
+                  className={`${styles.actionBtn} ${isEditingBracket ? styles.saveBtn : styles.editBtn}`}
+                  onClick={() => setIsEditingBracket(!isEditingBracket)}
+                >
+                  {isEditingBracket ? 'Save Changes' : 'Edit Bracket'}
+                </button>
+              </div>
               {selectedTournament ? (() => {
+                const tournamentBracket = bracket.filter(m => m.eventId === selectedTournament.id);
+                
+                if (tournamentBracket.length === 0) {
+                  return <div className={styles.emptyBracket}>No bracket data. Register teams to auto-generate.</div>;
+                }
 
                 return [1, 2, 3].map(round => (
                   <div key={round} className={styles.round}>
@@ -187,7 +203,7 @@ export default function TournamentManagement() {
                       {round === 1 ? 'Quarter-Finals' : round === 2 ? 'Semi-Finals' : 'Grand Finals'}
                     </div>
                     <div className={styles.matches}>
-                      {bracket.filter(match => match.round === round).map((match, idx) => {
+                      {tournamentBracket.filter(match => match.round === round).map((match, idx) => {
                         const isFinished = match.winner !== undefined;
                         const isLive = !isFinished && match.team1 !== 'TBD' && match.team2 !== 'TBD';
                         
@@ -208,7 +224,13 @@ export default function TournamentManagement() {
                                     alt="" 
                                   />
                                   <span className={`${styles.teamName} ${match.team1 === 'TBD' ? styles.tbd : ''}`}>
-                                    {match.team1}
+                                    {isEditingBracket ? (
+                                      <input 
+                                        className={styles.editTeamInput}
+                                        value={match.team1}
+                                        onChange={(e) => updateMatchTeams(match.id, e.target.value, match.team2)}
+                                      />
+                                    ) : match.team1}
                                   </span>
                                 </div>
                                 <input 
@@ -226,7 +248,13 @@ export default function TournamentManagement() {
                                     alt="" 
                                   />
                                   <span className={`${styles.teamName} ${match.team2 === 'TBD' ? styles.tbd : ''}`}>
-                                    {match.team2}
+                                    {isEditingBracket ? (
+                                      <input 
+                                        className={styles.editTeamInput}
+                                        value={match.team2}
+                                        onChange={(e) => updateMatchTeams(match.id, match.team1, e.target.value)}
+                                      />
+                                    ) : match.team2}
                                   </span>
                                 </div>
                                 <input 
@@ -278,7 +306,19 @@ export default function TournamentManagement() {
                       </td>
                       <td><span className={`${styles.status} ${styles.live}`}>Approved</span></td>
                       <td>—</td>
-                      <td className={styles.viewBtn}>View Roster</td>
+                      <td>
+                        <button 
+                          className={styles.viewRosterBtn}
+                          onClick={() => setEditingRoster({ 
+                            id: r.id || `temp-${idx}`,
+                            eventId: selectedTournament.id, 
+                            teamName: r.teamName, 
+                            roster: r.roster || ['', '', '', '', ''] 
+                          })}
+                        >
+                          Manage Roster
+                        </button>
+                      </td>
                     </tr>
                   ))
                 ) : (
@@ -292,30 +332,98 @@ export default function TournamentManagement() {
 
           {activeTab === 'schedule' && (
             <div className={styles.scheduleList}>
-              <div className={styles.scheduleItem}>
-                <div className={styles.matchTime}>
-                  <span className={styles.time}>14:00</span>
-                  <span className={styles.date}>May 12, 2026</span>
-                </div>
-                <div className={styles.matchTeams}>
-                  <span>Team Phantom</span>
-                  <span className={styles.vs}>VS</span>
-                  <span>Neon Ninjas</span>
-                </div>
-                <div className={`${styles.status} ${styles.live}`}>LIVE</div>
+              <div className={styles.tabActions}>
+                <button 
+                  className={`${styles.actionBtn} ${isEditingSchedule ? styles.saveBtn : styles.editBtn}`}
+                  onClick={() => setIsEditingSchedule(!isEditingSchedule)}
+                >
+                  {isEditingSchedule ? 'Done Editing' : 'Edit Schedule'}
+                </button>
+                {isEditingSchedule && (
+                  <button 
+                    className={styles.addBtn}
+                    onClick={() => updateSchedule({
+                      id: Math.random().toString(36).substr(2, 9),
+                      eventId: selectedTournament.id,
+                      time: '12:00',
+                      date: selectedTournament.startDate,
+                      team1: 'TBD',
+                      team2: 'TBD',
+                      status: 'UPCOMING'
+                    })}
+                  >
+                    <Plus size={14} /> Add Match
+                  </button>
+                )}
               </div>
-              <div className={styles.scheduleItem}>
-                <div className={styles.matchTime}>
-                  <span className={styles.time}>16:00</span>
-                  <span className={styles.date}>May 12, 2026</span>
-                </div>
-                <div className={styles.matchTeams}>
-                  <span>Ghost Riders</span>
-                  <span className={styles.vs}>VS</span>
-                  <span>Cyber Samurais</span>
-                </div>
-                <div className={`${styles.status} ${styles.upcoming}`}>UPCOMING</div>
-              </div>
+              {schedule.filter(s => s.eventId === selectedTournament.id).length > 0 ? (
+                schedule.filter(s => s.eventId === selectedTournament.id).map((item) => (
+                  <div key={item.id} className={styles.scheduleItem}>
+                    <div className={styles.matchTime}>
+                      {isEditingSchedule ? (
+                        <>
+                          <input type="time" value={item.time} onChange={(e) => updateSchedule({ ...item, time: e.target.value })} className={styles.editInput} />
+                          <input type="text" value={item.date} onChange={(e) => updateSchedule({ ...item, date: e.target.value })} className={styles.editInput} />
+                        </>
+                      ) : (
+                        <>
+                          <span className={styles.time}>{item.time}</span>
+                          <span className={styles.date}>{item.date}</span>
+                        </>
+                      )}
+                    </div>
+                    <div className={styles.matchTeams}>
+                      {isEditingSchedule ? (
+                        <>
+                          <select 
+                            value={item.team1} 
+                            onChange={(e) => updateSchedule({ ...item, team1: e.target.value })} 
+                            className={styles.teamSelect}
+                          >
+                            <option value="TBD">TBD</option>
+                            {registrations.filter(r => r.eventId === selectedTournament.id).map(r => (
+                              <option key={r.id} value={r.teamName}>{r.teamName}</option>
+                            ))}
+                          </select>
+                          <span className={styles.vs}>VS</span>
+                          <select 
+                            value={item.team2} 
+                            onChange={(e) => updateSchedule({ ...item, team2: e.target.value })} 
+                            className={styles.teamSelect}
+                          >
+                            <option value="TBD">TBD</option>
+                            {registrations.filter(r => r.eventId === selectedTournament.id).map(r => (
+                              <option key={r.id} value={r.teamName}>{r.teamName}</option>
+                            ))}
+                          </select>
+                        </>
+                      ) : (
+                        <>
+                          <span>{item.team1}</span>
+                          <span className={styles.vs}>VS</span>
+                          <span>{item.team2}</span>
+                        </>
+                      )}
+                    </div>
+                    <div className={styles.itemRight}>
+                      <div className={`${styles.status} ${styles[item.status.toLowerCase()]}`}>
+                        {isEditingSchedule ? (
+                          <select value={item.status} onChange={(e) => updateSchedule({ ...item, status: e.target.value as any })} className={styles.statusSelect}>
+                            <option value="UPCOMING">UPCOMING</option>
+                            <option value="LIVE">LIVE</option>
+                            <option value="FINAL">FINAL</option>
+                          </select>
+                        ) : item.status}
+                      </div>
+                      {isEditingSchedule && (
+                        <button className={styles.deleteBtn} onClick={() => deleteScheduleItem(item.id)}><Trash2 size={14} /></button>
+                      )}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className={styles.emptyState}>No matches scheduled. Click "Edit Schedule" to add matches.</div>
+              )}
             </div>
           )}
           
@@ -364,6 +472,74 @@ export default function TournamentManagement() {
             </div>
           )}
         </div>
+
+        {/* Roster Modal */}
+        {editingRoster && (
+          <div className={styles.modalOverlay} onClick={() => setEditingRoster(null)}>
+            <div className={styles.rosterModal} onClick={e => e.stopPropagation()}>
+              <div className={styles.modalHeader}>
+                <div className={styles.modalHeaderInfo}>
+                  <Users size={20} className={styles.modalIcon} />
+                  <div>
+                    <h2 className={styles.modalTitle}>{editingRoster.teamName} Roster</h2>
+                    <p className={styles.modalSubtitle}>Manage team members for this tournament</p>
+                  </div>
+                </div>
+                <button className={styles.closeBtn} onClick={() => setEditingRoster(null)}><X size={20} /></button>
+              </div>
+              
+              <div className={styles.rosterBody}>
+                <div className={styles.rosterSlot}>
+                  <div className={styles.slotLabel}>TEAM NAME</div>
+                  <div className={styles.slotInputWrapper}>
+                    <input 
+                      className={styles.rosterInput}
+                      value={editingRoster.teamName}
+                      placeholder="Enter team name..."
+                      onChange={(e) => setEditingRoster({ ...editingRoster, teamName: e.target.value })}
+                      style={{ borderColor: 'var(--gold)', background: 'rgba(240, 165, 0, 0.05)' }}
+                    />
+                  </div>
+                </div>
+
+                <div className={styles.divider} />
+
+                {editingRoster.roster.map((player, idx) => (
+                  <div key={idx} className={styles.rosterSlot}>
+                    <div className={styles.slotLabel}>Slot {idx + 1}</div>
+                    <div className={styles.slotInputWrapper}>
+                      <input 
+                        className={styles.rosterInput}
+                        value={player}
+                        placeholder="Enter player name..."
+                        onChange={(e) => {
+                          const newRoster = [...editingRoster.roster];
+                          newRoster[idx] = e.target.value;
+                          setEditingRoster({ ...editingRoster, roster: newRoster });
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className={styles.modalFooter}>
+                <button className={styles.btnSecondary} onClick={() => setEditingRoster(null)}>Cancel</button>
+                <button 
+                  className={styles.btnPrimary}
+                  onClick={() => {
+                    updateRegistration(editingRoster.id, editingRoster.teamName, editingRoster.roster);
+                    setEditingRoster(null);
+                    setToast('Team details updated successfully!');
+                    setTimeout(() => setToast(null), 3000);
+                  }}
+                >
+                  Save Changes
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -456,6 +632,7 @@ export default function TournamentManagement() {
           </div>
         ))}
       </div>
+
       {/* Create Tournament Modal */}
       <CreateTournamentModal 
         isOpen={showCreateModal} 

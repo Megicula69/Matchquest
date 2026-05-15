@@ -18,6 +18,8 @@ interface AuthContextType {
   getUserRegisteredTeamName: (username: string) => string | null;
   logout: () => void;
   isLoading: boolean;
+  allUsers: User[];
+  getUserName: (username: string) => string;
 }
 
 interface RegisterAccountInput {
@@ -254,8 +256,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return team?.teamName ?? null;
   };
 
+  const getUserName = (username: string) => {
+    const userObj = allUsers.find(u => u.username.toLowerCase() === username.toLowerCase());
+    return userObj?.fullName || username;
+  };
+
   return (
-    <AuthContext.Provider value={{ user, isLoggedIn, login, registerAccount, registerTeam, hasRegisteredTeam, getUserRegisteredTeamName, logout, isLoading }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      isLoggedIn, 
+      login, 
+      registerAccount, 
+      registerTeam, 
+      hasRegisteredTeam, 
+      getUserRegisteredTeamName, 
+      logout, 
+      isLoading,
+      allUsers,
+      getUserName
+    }}>
       {children}
     </AuthContext.Provider>
   );

@@ -3,18 +3,31 @@ import { useAuth } from '../context/AuthContext';
 
 export interface Notification {
   id: string;
-  type: 'INVITE' | 'SYSTEM' | 'ALERT';
+  type: 'INVITE' | 'SYSTEM' | 'ALERT' | 'ANNOUNCEMENT';
   title: string;
   message: string;
   timestamp: string;
+  priority?: 'Low' | 'Medium' | 'High' | 'Urgent';
   data?: any;
 }
 
 export function useNotifications() {
-  const { user } = useAuth();
+  const { user, allUsers } = useAuth();
   const [allNotifications, setAllNotifications] = useLocalStorage<Record<string, Notification[]>>('mq_notifications', {});
 
-  const userNotifications = user ? allNotifications[user.username] || [] : [];
+  const getPriorityWeight = (p?: string) => {
+    switch (p) {
+      case 'Urgent': return 4;
+      case 'High': return 3;
+      case 'Medium': return 2;
+      case 'Low': return 1;
+      default: return 0;
+    }
+  };
+
+  const userNotifications = user ? (allNotifications[user.username] || []).sort((a, b) => 
+    getPriorityWeight(b.priority) - getPriorityWeight(a.priority)
+  ) : [];
 
   const addNotification = (username: string, notification: Omit<Notification, 'id' | 'timestamp'>) => {
     const newNotif: Notification = {
@@ -27,6 +40,20 @@ export function useNotifications() {
       ...prev,
       [username]: [newNotif, ...(prev[username] || [])]
     }));
+  };
+
+  const broadcastNotification = (notification: Omit<Notification, 'id' | 'timestamp'>) => {
+    const timestamp = 'Just now';
+    const id = Math.random().toString(36).substr(2, 9);
+    
+    setAllNotifications(prev => {
+      const updated = { ...prev };
+      allUsers.forEach(u => {
+        const newNotif: Notification = { ...notification, id, timestamp };
+        updated[u.username] = [newNotif, ...(updated[u.username] || [])];
+      });
+      return updated;
+    });
   };
 
   const clearNotifications = () => {
@@ -48,6 +75,7 @@ export function useNotifications() {
   return {
     notifications: userNotifications,
     addNotification,
+    broadcastNotification,
     clearNotifications,
     removeNotification
   };

@@ -65,6 +65,15 @@
   animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   flex-direction: column;
+  pointer-events: all;
+}
+
+@media (max-width: 500px) {
+  .dropdown {
+    right: 10px;
+    width: calc(100vw - 20px);
+    top: 60px;
+  }
 }
 
 .dropdownHeader {
@@ -141,6 +150,42 @@
   color: var(--cyan);
   font-weight: 600;
   margin-top: 4px;
+}
+
+.urgent {
+  border-left: 4px solid var(--red) !important;
+  background: rgba(232, 51, 74, 0.05) !important;
+  animation: pulseRed 2s infinite;
+}
+
+.high {
+  border-left: 4px solid var(--gold) !important;
+  background: rgba(240, 165, 0, 0.05) !important;
+}
+
+.priorityBadge {
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.urgentBadge {
+  background: var(--red);
+  color: white;
+}
+
+.highBadge {
+  background: var(--gold);
+  color: black;
+}
+
+@keyframes pulseRed {
+  0% { box-shadow: 0 0 0 0 rgba(232, 51, 74, 0.2); }
+  70% { box-shadow: 0 0 0 10px rgba(232, 51, 74, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(232, 51, 74, 0); }
 }
 
 .emptyState {
