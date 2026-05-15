@@ -14,7 +14,7 @@ import { useCampusEvents } from '../../hooks/useCampusEvents';
 interface Tournament {
   id: string;
   name: string;
-  game: 'Valorant' | 'MLBB' | 'Wild Rift';
+  game: string;
   type: string;
   teams: number;
   maxTeams: number;
@@ -71,7 +71,7 @@ export default function TournamentManagement() {
   const { registrations, bracket, updateMatchScore, updateMatchTeams, schedule, updateSchedule, deleteScheduleItem, updateRegistration } = useTournament();
   const [campusEvents, setCampusEvents] = useCampusEvents();
   const [selectedTournament, setSelectedTournament] = useState<Tournament | null>(null);
-  const [activeTab, setActiveTab] = useState('bracket');
+  const [activeTab, setActiveTab] = useState('details');
   const [isEditingBracket, setIsEditingBracket] = useState(false);
   const [isEditingSchedule, setIsEditingSchedule] = useState(false);
   const [editingRoster, setEditingRoster] = useState<{ id: string, eventId: string, teamName: string, roster: string[] } | null>(null);
@@ -218,59 +218,101 @@ export default function TournamentManagement() {
         <div className={styles.tabContent}>
           {activeTab === 'details' && (
             <div className={styles.detailsEditContainer}>
-              <div className={styles.editGroup}>
-                <label>Tournament Name</label>
-                <input 
-                  type="text" 
-                  value={editingTournament?.name || selectedTournament.name}
-                  onChange={(e) => setEditingTournament({...(editingTournament || selectedTournament), name: e.target.value})}
-                  className={styles.editInput}
+              <div className={styles.bannerEditSection}>
+                <img 
+                  src={editingTournament?.banner || selectedTournament.banner} 
+                  alt="Preview" 
+                  className={styles.bannerPreviewMini} 
                 />
+                <div className={styles.bannerInfo}>
+                  <div className={styles.bannerLabel}>Tournament Banner URL</div>
+                  <div className={styles.inputWrapper}>
+                    <Info size={18} className={styles.fieldIcon} />
+                    <input 
+                      type="text" 
+                      value={editingTournament?.banner || selectedTournament.banner}
+                      onChange={(e) => setEditingTournament({...(editingTournament || selectedTournament), banner: e.target.value})}
+                      className={styles.editInputLarge}
+                      placeholder="Enter image URL..."
+                    />
+                  </div>
+                </div>
               </div>
 
-              <div className={styles.editGroup}>
-                <label>Game</label>
-                <select 
-                  value={editingTournament?.game || selectedTournament.game}
-                  onChange={(e) => setEditingTournament({...(editingTournament || selectedTournament), game: e.target.value as any})}
-                  className={styles.editInput}
-                >
-                  <option value="Valorant">Valorant</option>
-                  <option value="MLBB">MLBB</option>
-                  <option value="Wild Rift">Wild Rift</option>
-                </select>
-              </div>
+              <div className={styles.detailsEditGrid}>
+                <div className={styles.editField}>
+                  <label><Trophy size={14} /> Tournament Name</label>
+                  <div className={styles.inputWrapper}>
+                    <BarChart2 size={18} className={styles.fieldIcon} />
+                    <input 
+                      type="text" 
+                      value={editingTournament?.name || selectedTournament.name}
+                      onChange={(e) => setEditingTournament({...(editingTournament || selectedTournament), name: e.target.value})}
+                      className={styles.editInputLarge}
+                    />
+                  </div>
+                </div>
 
-              <div className={styles.editGroup}>
-                <label>Start Date</label>
-                <input 
-                  type="text" 
-                  value={editingTournament?.startDate || selectedTournament.startDate}
-                  onChange={(e) => setEditingTournament({...(editingTournament || selectedTournament), startDate: e.target.value})}
-                  className={styles.editInput}
-                  placeholder="e.g., May 12, 2026"
-                />
-              </div>
+                <div className={styles.editField}>
+                  <label><Gamepad2 size={14} /> Game Title</label>
+                  <div className={styles.inputWrapper}>
+                    <Play size={18} className={styles.fieldIcon} />
+                    <select 
+                      value={editingTournament?.game || selectedTournament.game}
+                      onChange={(e) => setEditingTournament({...(editingTournament || selectedTournament), game: e.target.value as any})}
+                      className={styles.editSelectLarge}
+                    >
+                      <option value="Valorant">Valorant</option>
+                      <option value="MLBB">MLBB</option>
+                      <option value="Wild Rift">Wild Rift</option>
+                      <option value="League of Legends">League of Legends</option>
+                      <option value="Apex Legends">Apex Legends</option>
+                      <option value="Overwatch 2 Sky High">Overwatch 2 Sky High</option>
+                      <option value="Dota 2">Dota 2</option>
+                    </select>
+                  </div>
+                </div>
 
-              <div className={styles.editGroup}>
-                <label>Max Teams</label>
-                <input 
-                  type="number" 
-                  value={editingTournament?.maxTeams || selectedTournament.maxTeams}
-                  onChange={(e) => setEditingTournament({...(editingTournament || selectedTournament), maxTeams: parseInt(e.target.value)})}
-                  className={styles.editInput}
-                />
-              </div>
+                <div className={styles.editField}>
+                  <label><Calendar size={14} /> Schedule Date</label>
+                  <div className={styles.inputWrapper}>
+                    <Clock size={18} className={styles.fieldIcon} />
+                    <input 
+                      type="text" 
+                      value={editingTournament?.startDate || selectedTournament.startDate}
+                      onChange={(e) => setEditingTournament({...(editingTournament || selectedTournament), startDate: e.target.value})}
+                      className={styles.editInputLarge}
+                      placeholder="e.g., May 12, 2026"
+                    />
+                  </div>
+                </div>
 
-              <div className={styles.editGroup}>
-                <label>Prize Pool</label>
-                <input 
-                  type="text" 
-                  value={editingTournament?.prize || selectedTournament.prize}
-                  onChange={(e) => setEditingTournament({...(editingTournament || selectedTournament), prize: e.target.value})}
-                  className={styles.editInput}
-                  placeholder="e.g., ₱50,000"
-                />
+                <div className={styles.editField}>
+                  <label><Users size={14} /> Participation Limit</label>
+                  <div className={styles.inputWrapper}>
+                    <Users size={18} className={styles.fieldIcon} />
+                    <input 
+                      type="number" 
+                      value={editingTournament?.maxTeams || selectedTournament.maxTeams}
+                      onChange={(e) => setEditingTournament({...(editingTournament || selectedTournament), maxTeams: parseInt(e.target.value)})}
+                      className={styles.editInputLarge}
+                    />
+                  </div>
+                </div>
+
+                <div className={styles.editField}>
+                  <label><Trophy size={14} /> Prize Pool Distribution</label>
+                  <div className={styles.inputWrapper}>
+                    <Trophy size={18} className={styles.fieldIcon} />
+                    <input 
+                      type="text" 
+                      value={editingTournament?.prize || selectedTournament.prize}
+                      onChange={(e) => setEditingTournament({...(editingTournament || selectedTournament), prize: e.target.value})}
+                      className={styles.editInputLarge}
+                      placeholder="e.g., ₱50,000"
+                    />
+                  </div>
+                </div>
               </div>
 
               <div className={styles.editActions}>
@@ -694,7 +736,10 @@ export default function TournamentManagement() {
       <div className={styles.grid}>
         {filteredTournaments.length > 0 ? (
           filteredTournaments.map((tournament) => (
-            <div key={tournament.id} className={styles.card} onClick={() => setSelectedTournament(tournament)}>
+            <div key={tournament.id} className={styles.card} onClick={() => {
+              setSelectedTournament(tournament);
+              setActiveTab('details');
+            }}>
               <img src={tournament.banner} alt={tournament.name} className={styles.banner} />
               <div className={styles.cardBody}>
                 <div className={styles.cardHeader}>
