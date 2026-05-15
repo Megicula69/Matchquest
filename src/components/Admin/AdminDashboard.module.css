@@ -42,8 +42,8 @@
 }
 
 .statCard {
-  background: rgba(20, 24, 38, 0.8);
-  border: 1px solid rgba(0, 201, 224, 0.06);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   border-radius: 14px;
   padding: 20px;
   position: relative;
@@ -137,15 +137,15 @@
 }
 
 .chartCard {
-  background: rgba(20, 24, 38, 0.8);
-  border: 1px solid rgba(0, 201, 224, 0.06);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   border-radius: 14px;
   padding: 24px;
   transition: var(--transition);
 }
 
 .chartCard:hover {
-  border-color: rgba(0, 201, 224, 0.12);
+  border-color: var(--cyan);
 }
 
 .chartHeader {
@@ -246,7 +246,7 @@
 .gameBarValue {
   font-size: 11px;
   font-weight: 700;
-  color: rgba(10, 12, 20, 0.8);
+  color: var(--text);
   font-family: var(--font-mono);
 }
 
@@ -259,8 +259,8 @@
 
 /* ===== Activity Feed ===== */
 .feedCard {
-  background: rgba(20, 24, 38, 0.8);
-  border: 1px solid rgba(0, 201, 224, 0.06);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   border-radius: 14px;
   padding: 24px;
   max-height: 380px;
@@ -347,8 +347,8 @@
 
 /* ===== Tournaments Widget ===== */
 .tournamentsCard {
-  background: rgba(20, 24, 38, 0.8);
-  border: 1px solid rgba(0, 201, 224, 0.06);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   border-radius: 14px;
   padding: 24px;
   max-height: 380px;
@@ -366,8 +366,8 @@
 }
 
 .tournamentItem:hover {
-  background: rgba(26, 31, 53, 0.9);
-  border: 1px solid rgba(0, 201, 224, 0.1);
+  background: var(--surface2);
+  border: 1px solid var(--glass-border);
   margin: -1px;
   margin-bottom: 9px;
 }
@@ -432,8 +432,8 @@
 
 /* ===== System Status ===== */
 .statusCard {
-  background: rgba(20, 24, 38, 0.8);
-  border: 1px solid rgba(0, 201, 224, 0.06);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   border-radius: 14px;
   padding: 24px;
   max-height: 380px;
@@ -506,8 +506,8 @@
 
 /* ===== Announcements ===== */
 .announcementsCard {
-  background: rgba(20, 24, 38, 0.8);
-  border: 1px solid rgba(0, 201, 224, 0.06);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   border-radius: 14px;
   padding: 24px;
   grid-column: span 2;
@@ -524,7 +524,8 @@
 }
 
 .announcementItem:hover {
-  background: rgba(26, 31, 53, 0.9);
+  background: var(--surface2);
+  border-color: var(--violet);
 }
 
 .announcementItem:last-child {

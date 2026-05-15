@@ -38,9 +38,26 @@ export default function RegisteredTeams() {
             ) : (
               registrations.map((r, idx) => (
                 <tr key={idx}>
-                  <td>{r.teamName}</td>
-                  <td>{Array.isArray(r.roster) ? r.roster.join(', ') : r.roster}</td>
-                  <td>{getTournamentTitle(r.eventId)}</td>
+                  <td>
+                    <div className={styles.teamCell}>
+                      <div className={styles.teamLogo}>
+                        {r.teamName.charAt(0)}
+                      </div>
+                      <span style={{ fontWeight: 600 }}>{r.teamName}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                      {(Array.isArray(r.roster) ? r.roster : [r.roster]).map((player, pIdx) => (
+                        <span key={pIdx} style={{ fontSize: '11px', background: 'var(--glass-bg)', padding: '2px 8px', borderRadius: '4px', border: '1px solid var(--glass-border)' }}>
+                          {player}
+                        </span>
+                      ))}
+                    </div>
+                  </td>
+                  <td style={{ color: 'var(--cyan)', fontWeight: 600, fontFamily: 'var(--font-rajdhani)' }}>
+                    {getTournamentTitle(r.eventId)}
+                  </td>
                 </tr>
               ))
             )}

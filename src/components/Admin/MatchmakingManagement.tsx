@@ -163,7 +163,9 @@ export default function MatchmakingManagement() {
           <div className={styles.cardStack}>
             <div className={styles.playerCard}>
               <div className={styles.cardTop}>
-                <div className={styles.avatar} style={{ background: `linear-gradient(135deg, ${currentPlayer.compatibility > 90 ? 'var(--cyan)' : 'var(--violet)'}, #0a0c14)` }} />
+                <div className={styles.avatar}>
+                  <img src={`https://api.dicebear.com/7.x/pixel-art/svg?seed=${currentPlayer.name}`} alt="" />
+                </div>
                 <div className={styles.playerInfo}>
                   <div className={styles.playerName}>{currentPlayer.name}</div>
                   <div className={styles.playerRank}>{currentPlayer.rank}</div>
@@ -192,9 +194,11 @@ export default function MatchmakingManagement() {
                 </div>
               </div>
 
-              <div style={{ background: 'rgba(0, 201, 224, 0.05)', padding: '12px', borderRadius: '12px', fontSize: '12px', border: '1px dashed rgba(0, 201, 224, 0.2)' }}>
-                <div style={{ color: 'var(--cyan)', fontWeight: 700, marginBottom: '4px' }}>MATCH LOGIC:</div>
-                Skill gap: &lt; 200 ELO. High communication score. Previously played together (Won).
+              <div style={{ background: 'var(--glass-bg)', padding: '16px', borderRadius: '12px', fontSize: '12px', border: '1px dashed var(--glass-border)', color: 'var(--text)' }}>
+                <div style={{ color: 'var(--cyan)', fontWeight: 700, marginBottom: '4px', fontFamily: 'var(--font-rajdhani)', letterSpacing: '1px' }}>MATCH LOGIC:</div>
+                <div style={{ opacity: 0.8, lineHeight: 1.5 }}>
+                  Skill gap: &lt; 200 ELO. High communication score. Previously played together (Won).
+                </div>
               </div>
 
               <div className={styles.actions}>

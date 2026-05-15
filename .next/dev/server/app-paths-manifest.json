@@ -1,4 +1,5 @@
 {
+  "/_not-found/page": "app/_not-found/page.js",
   "/admin/account-settings/page": "app/admin/account-settings/page.js",
   "/admin/analytics/page": "app/admin/analytics/page.js",
   "/admin/community/page": "app/admin/community/page.js",
@@ -6,6 +7,7 @@
   "/admin/page": "app/admin/page.js",
   "/admin/registered-teams/page": "app/admin/registered-teams/page.js",
   "/admin/reports/page": "app/admin/reports/page.js",
+  "/admin/simulation/page": "app/admin/simulation/page.js",
   "/admin/tournaments/page": "app/admin/tournaments/page.js",
   "/admin/users/page": "app/admin/users/page.js",
   "/login/page": "app/login/page.js",

@@ -11,7 +11,7 @@ import { CheckCircle2 } from 'lucide-react';
 export default function AdminLayout({
   children,
 }: {
-  children: React.Node;
+  children: React.ReactNode;
 }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -25,7 +25,7 @@ export default function AdminLayout({
 
   return (
     <AdminThemeProvider>
-      <div style={{ minHeight: '100vh', background: 'var(--background)', color: 'var(--text)', transition: 'background 0.3s ease, color 0.3s ease' }}>
+      <>
       <AdminSidebar
         collapsed={sidebarCollapsed}
         onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
@@ -82,7 +82,7 @@ export default function AdminLayout({
           }
         }
       `}</style>
-    </div>
+    </>
     </AdminThemeProvider>
   );
 }

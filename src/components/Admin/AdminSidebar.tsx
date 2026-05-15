@@ -10,17 +10,12 @@ import {
   Trophy,
   MessageCircle,
   GraduationCap,
-  CalendarDays,
   ShieldAlert,
-  Bell,
   BarChart3,
-  Award,
-  Image,
-  Settings,
-  Lock,
   LogOut,
   ChevronLeft,
   ChevronRight,
+  Settings,
 } from 'lucide-react';
 import LogoutModal from './LogoutModal';
 import { useAuth } from '../../context/AuthContext';
@@ -52,26 +47,22 @@ const navGroups: NavGroup[] = [
       { id: 'users', label: 'User Management', icon: <Users size={20} />, href: '/admin/users' },
       { id: 'matchmaking', label: 'Matchmaking', icon: <Swords size={20} />, badge: 12, href: '/admin/matchmaking' },
       { id: 'tournaments', label: 'Tournaments', icon: <Trophy size={20} />, badge: 3, href: '/admin/tournaments' },
+      { id: 'registered-teams', label: 'Registered Teams', icon: <Users size={20} />, href: '/admin/registered-teams' },
       { id: 'community', label: 'Community Hub', icon: <MessageCircle size={20} />, href: '/admin/community' },
       { id: 'simulation', label: 'Student Simulation', icon: <GraduationCap size={20} />, href: '/admin/simulation' },
-      { id: 'events', label: 'Events', icon: <CalendarDays size={20} />, href: '/admin/events' },
     ],
   },
   {
     label: 'Intelligence',
     items: [
       { id: 'reports', label: 'Reports & Moderation', icon: <ShieldAlert size={20} />, badge: 7, href: '/admin/reports' },
-      { id: 'notifications', label: 'Notifications', icon: <Bell size={20} />, badge: 24, href: '/admin/notifications' },
       { id: 'analytics', label: 'Analytics', icon: <BarChart3 size={20} />, href: '/admin/analytics' },
     ],
   },
   {
     label: 'System',
     items: [
-      { id: 'rewards', label: 'Rewards & Achievements', icon: <Award size={20} />, href: '/admin/rewards' },
-      { id: 'media', label: 'Media Library', icon: <Image size={20} />, href: '/admin/media' },
-      { id: 'settings', label: 'System Settings', icon: <Settings size={20} />, href: '/admin/settings' },
-      { id: 'security', label: 'Security Logs', icon: <Lock size={20} />, href: '/admin/security' },
+      { id: 'settings', label: 'Settings', icon: <Settings size={20} />, href: '/admin/account-settings' },
     ],
   },
 ];
@@ -112,12 +103,21 @@ export default function AdminSidebar({
         <div className={styles.mobileOverlay} onClick={onMobileClose} />
       )}
       <aside className={sidebarClasses}>
-        <div className={styles.sidebarHeader}>
-          <div className={styles.logoIcon}>LA</div>
+        <div className={styles.logo}>
           <div className={styles.logoText}>
-            <span className={styles.logoTitle}>Lungsod Arena</span>
-            <span className={styles.logoSubtitle}>Admin Panel</span>
+            {collapsed ? (
+              <>
+                <span className={styles.match}>M</span>
+                <span className={styles.quest}>Q</span>
+              </>
+            ) : (
+              <>
+                <span className={styles.match}>MATCH</span>
+                <span className={styles.quest}>QUEST</span>
+              </>
+            )}
           </div>
+          {!collapsed && <span className={styles.adminBadge}>ADMIN</span>}
         </div>
 
         <button className={styles.collapseBtn} onClick={onToggle}>

@@ -104,10 +104,10 @@ export default function ModerationManagement() {
                   </td>
                   <td>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <div style={{ flex: 1, height: '4px', background: 'var(--surface2)', borderRadius: '2px', width: '60px' }}>
-                        <div style={{ width: `${report.aiScore}%`, height: '100%', background: report.aiScore > 80 ? 'var(--red)' : 'var(--cyan)', borderRadius: '2px' }} />
+                      <div style={{ flex: 1, height: '6px', background: 'var(--glass-bg)', borderRadius: '3px', width: '60px', overflow: 'hidden', border: '1px solid var(--glass-border)' }}>
+                        <div style={{ width: `${report.aiScore}%`, height: '100%', background: report.aiScore > 80 ? 'var(--red)' : 'var(--cyan)', borderRadius: '3px', boxShadow: `0 0 10px ${report.aiScore > 80 ? 'rgba(232, 51, 74, 0.4)' : 'rgba(0, 201, 224, 0.4)'}` }} />
                       </div>
-                      <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)' }}>{report.aiScore}%</span>
+                      <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', fontWeight: 600, color: report.aiScore > 80 ? 'var(--red)' : 'var(--text)' }}>{report.aiScore}%</span>
                     </div>
                   </td>
                   <td>
@@ -184,7 +184,7 @@ export default function ModerationManagement() {
                 <button className={`${styles.actionBtn} ${styles.permBan}`}>
                   <Ban size={18} /> Permanent Account Ban
                 </button>
-                <div style={{ height: '1px', background: 'rgba(0, 201, 224, 0.1)', margin: '8px 0' }} />
+                <div style={{ height: '1px', background: 'var(--glass-border)', margin: '8px 0' }} />
                 <button className={`${styles.actionBtn} ${styles.dismiss}`}>
                   <Check size={18} /> Dismiss Report (Innocent)
                 </button>

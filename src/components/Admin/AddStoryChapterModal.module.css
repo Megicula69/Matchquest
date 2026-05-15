@@ -11,15 +11,15 @@
 }
 
 .modal {
-  background: rgba(20, 24, 38, 0.95);
-  border: 1px solid rgba(0, 201, 224, 0.1);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   border-radius: 24px;
   width: 1200px;
   max-width: 95vw;
   max-height: 95vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.3);
   animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
   position: relative;
@@ -27,11 +27,11 @@
 
 .modalHeader {
   padding: 20px 32px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--glass-border);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(10, 12, 20, 0.4);
+  background: var(--surface2);
 }
 
 .modalTitle {
@@ -52,11 +52,11 @@
 
 .sidebar {
   padding: 24px 16px;
-  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  border-right: 1px solid var(--glass-border);
   display: flex;
   flex-direction: column;
   gap: 8px;
-  background: rgba(10, 12, 20, 0.2);
+  background: var(--surface2);
 }
 
 .navItem {
@@ -146,8 +146,8 @@
 
 .editorToolbar {
   padding: 8px 16px;
-  background: rgba(10, 12, 20, 0.4);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--surface2);
+  border-bottom: 1px solid var(--glass-border);
   display: flex;
   gap: 12px;
 }
@@ -174,8 +174,8 @@
 
 /* Branching Logic */
 .choiceItem {
-  background: rgba(20, 24, 38, 0.4);
-  border: 1px solid rgba(0, 201, 224, 0.1);
+  background: var(--surface2);
+  border: 1px solid var(--glass-border);
   border-radius: 16px;
   padding: 20px;
   display: flex;
@@ -212,7 +212,7 @@
 .previewOverlay {
   position: absolute;
   inset: 0;
-  background: #0a0c14;
+  background: var(--background);
   z-index: 100;
   display: flex;
   flex-direction: column;
@@ -256,11 +256,11 @@
   left: 50%;
   transform: translateX(-50%);
   width: 800px;
-  background: rgba(10, 12, 20, 0.9);
+  background: var(--surface);
   border: 1px solid var(--cyan);
   border-radius: 20px;
   padding: 32px;
-  box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
 }
 
 .npcName {
@@ -302,11 +302,11 @@
 /* Modal Footer */
 .modalFooter {
   padding: 24px 32px;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--glass-border);
   display: flex;
   justify-content: flex-end;
   gap: 16px;
-  background: rgba(10, 12, 20, 0.4);
+  background: var(--surface2);
 }
 
 .btn {

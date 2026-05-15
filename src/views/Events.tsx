@@ -4,7 +4,7 @@ import { useCampusEvents } from '../hooks/useCampusEvents';
 import { useTournament } from '../hooks/useTournament';
 import { useAuth } from '../context/AuthContext';
 import { TournamentEvent, BracketMatch } from '../types';
-import { Calendar, Clock, Trophy, Users, X, ChevronRight, CheckCircle } from 'lucide-react';
+import { Calendar, Clock, Trophy, Users, X, ChevronRight, CheckCircle, AlertCircle } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 export const EventsPage: React.FC = () => {
@@ -192,55 +192,61 @@ export const EventsPage: React.FC = () => {
                                     </div>
 
                                     <div className={styles.bracketContainer}>
-                                        {(() => {
-                                            const populated = bracket.map(m => ({ ...m }));
-                                            const teamsForEvent = registrations.filter(r => r.eventId === selectedEvent.id).map(r => r.teamName);
-                                            const round1Matches = populated.filter(m => m.round === 1);
-                                            round1Matches.forEach((match, idx) => {
-                                                match.team1 = teamsForEvent[idx * 2] ?? 'TBD';
-                                                match.team2 = teamsForEvent[idx * 2 + 1] ?? 'TBD';
-                                                match.score1 = undefined;
-                                                match.score2 = undefined;
-                                                match.winner = undefined;
-                                            });
-
-                                            // Clear later rounds (no teams have advanced yet)
-                                            populated.filter(m => m.round > 1).forEach(m => {
-                                                m.team1 = 'TBD';
-                                                m.team2 = 'TBD';
-                                                m.score1 = undefined;
-                                                m.score2 = undefined;
-                                                m.winner = undefined;
-                                            });
-
-                                            return [1, 2, 3].map(round => (
-                                                <div key={round} className={styles.round}>
-                                                    <h4 className={styles.roundTitle}>Round {round}</h4>
-                                                    <div className={styles.matches}>
-                                                        {populated.filter(m => m.round === round).map(match => (
-                                                            <div key={match.id} className={styles.match}>
-                                                                <div className={`${styles.team} ${match.winner === match.team1 ? styles.winner : ''}`}>
-                                                                    <span className={styles.teamName}>{match.team1}</span>
-                                                                    <input
-                                                                        type="number"
-                                                                        value={match.score1 || 0}
-                                                                        onChange={(e) => updateMatchScore(match.id, parseInt(e.target.value), match.score2 || 0)}
-                                                                    />
+                                        {[1, 2, 3].map(round => (
+                                            <div key={round} className={styles.round}>
+                                                <h4 className={styles.roundTitle}>{round === 1 ? 'Quarter-Finals' : round === 2 ? 'Semi-Finals' : 'Grand Finals'}</h4>
+                                                <div className={styles.matches}>
+                                                    {bracket.filter(m => m.round === round).map((match, idx) => {
+                                                        const isFinished = match.winner !== undefined;
+                                                        const isLive = !isFinished && match.team1 !== 'TBD' && match.team2 !== 'TBD';
+                                                        
+                                                        return (
+                                                            <div key={match.id} className={styles.matchWrapper}>
+                                                                <div className={styles.match}>
+                                                                    <div className={styles.matchHeader}>
+                                                                        <span className={styles.matchId}>M-{match.id}</span>
+                                                                        <span className={`${styles.matchStatusBadge} ${isLive ? styles.statusLive : isFinished ? styles.statusFinished : styles.statusUpcoming}`}>
+                                                                            {isLive ? 'LIVE' : isFinished ? 'FINAL' : 'UPCOMING'}
+                                                                        </span>
+                                                                    </div>
+                                                                    <div className={`${styles.team} ${match.winner === match.team1 && match.team1 !== 'TBD' ? styles.winner : ''}`}>
+                                                                        <div className={styles.teamInfo}>
+                                                                            <img 
+                                                                                src={`https://api.dicebear.com/7.x/identicon/svg?seed=${match.team1}`} 
+                                                                                className={styles.teamAvatar} 
+                                                                                alt="" 
+                                                                            />
+                                                                            <span className={`${styles.teamName} ${match.team1 === 'TBD' ? styles.tbd : ''}`}>
+                                                                                {match.team1}
+                                                                            </span>
+                                                                        </div>
+                                                                        <span className={styles.score}>{match.score1 ?? '-'}</span>
+                                                                    </div>
+                                                                    <div className={`${styles.team} ${match.winner === match.team2 && match.team2 !== 'TBD' ? styles.winner : ''}`}>
+                                                                        <div className={styles.teamInfo}>
+                                                                            <img 
+                                                                                src={`https://api.dicebear.com/7.x/identicon/svg?seed=${match.team2}`} 
+                                                                                className={styles.teamAvatar} 
+                                                                                alt="" 
+                                                                            />
+                                                                            <span className={`${styles.teamName} ${match.team2 === 'TBD' ? styles.tbd : ''}`}>
+                                                                                {match.team2}
+                                                                            </span>
+                                                                        </div>
+                                                                        <span className={styles.score}>{match.score2 ?? '-'}</span>
+                                                                    </div>
                                                                 </div>
-                                                                <div className={`${styles.team} ${match.winner === match.team2 ? styles.winner : ''}`}>
-                                                                    <span className={styles.teamName}>{match.team2}</span>
-                                                                    <input
-                                                                        type="number"
-                                                                        value={match.score2 || 0}
-                                                                        onChange={(e) => updateMatchScore(match.id, match.score1 || 0, parseInt(e.target.value))}
-                                                                    />
-                                                                </div>
+                                                                {round < 3 && (
+                                                                    <div className={`${styles.connector} ${idx % 2 === 0 ? styles.top : styles.bottom} ${match.winner ? styles.active : ''}`}>
+                                                                        <div className={styles.line} />
+                                                                    </div>
+                                                                )}
                                                             </div>
-                                                        ))}
-                                                    </div>
+                                                        );
+                                                    })}
                                                 </div>
-                                            ));
-                                        })()}
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                             )}
@@ -253,47 +259,61 @@ export const EventsPage: React.FC = () => {
                                         </div>
 
                                         <div className={styles.bracketContainer}>
-                                            {(() => {
-                                                const populated = bracket.map(m => ({ ...m }));
-                                                const teamsForEvent = registrations.filter(r => r.eventId === selectedEvent.id).map(r => r.teamName);
-                                                const round1Matches = populated.filter(m => m.round === 1);
-                                                round1Matches.forEach((match, idx) => {
-                                                    match.team1 = teamsForEvent[idx * 2] ?? 'TBD';
-                                                    match.team2 = teamsForEvent[idx * 2 + 1] ?? 'TBD';
-                                                    match.score1 = undefined;
-                                                    match.score2 = undefined;
-                                                    match.winner = undefined;
-                                                });
-
-                                                // Hide teams in later rounds until advanced
-                                                populated.filter(m => m.round > 1).forEach(m => {
-                                                    m.team1 = 'TBD';
-                                                    m.team2 = 'TBD';
-                                                    m.score1 = undefined;
-                                                    m.score2 = undefined;
-                                                    m.winner = undefined;
-                                                });
-
-                                                return [1, 2, 3].map(round => (
-                                                    <div key={round} className={styles.round}>
-                                                        <h4 className={styles.roundTitle}>Round {round}</h4>
-                                                        <div className={styles.matches}>
-                                                        {populated.filter(m => m.round === round).map(match => (
-                                                            <div key={match.id} className={styles.match}>
-                                                                <div className={`${styles.team} ${match.winner === match.team1 ? styles.winner : ''}`}>
-                                                                    <span className={styles.teamName}>{match.team1}</span>
-                                                                    <span className={styles.score}>{match.score1 ?? '-'}</span>
+                                            {[1, 2, 3].map(round => (
+                                                <div key={round} className={styles.round}>
+                                                    <h4 className={styles.roundTitle}>{round === 1 ? 'Quarter-Finals' : round === 2 ? 'Semi-Finals' : 'Grand Finals'}</h4>
+                                                    <div className={styles.matches}>
+                                                    {bracket.filter(m => m.round === round).map((match, idx) => {
+                                                        const isFinished = match.winner !== undefined;
+                                                        const isLive = !isFinished && match.team1 !== 'TBD' && match.team2 !== 'TBD';
+                                                        
+                                                        return (
+                                                            <div key={match.id} className={styles.matchWrapper}>
+                                                                <div className={styles.match}>
+                                                                    <div className={styles.matchHeader}>
+                                                                        <span className={styles.matchId}>M-{match.id}</span>
+                                                                        <span className={`${styles.matchStatusBadge} ${isLive ? styles.statusLive : isFinished ? styles.statusFinished : styles.statusUpcoming}`}>
+                                                                            {isLive ? 'LIVE' : isFinished ? 'FINAL' : 'UPCOMING'}
+                                                                        </span>
+                                                                    </div>
+                                                                    <div className={`${styles.team} ${match.winner === match.team1 && match.team1 !== 'TBD' ? styles.winner : ''}`}>
+                                                                        <div className={styles.teamInfo}>
+                                                                            <img 
+                                                                                src={`https://api.dicebear.com/7.x/identicon/svg?seed=${match.team1}`} 
+                                                                                className={styles.teamAvatar} 
+                                                                                alt="" 
+                                                                            />
+                                                                            <span className={`${styles.teamName} ${match.team1 === 'TBD' ? styles.tbd : ''}`}>
+                                                                                {match.team1}
+                                                                            </span>
+                                                                        </div>
+                                                                        <span className={styles.score}>{match.score1 ?? '-'}</span>
+                                                                    </div>
+                                                                    <div className={`${styles.team} ${match.winner === match.team2 && match.team2 !== 'TBD' ? styles.winner : ''}`}>
+                                                                        <div className={styles.teamInfo}>
+                                                                            <img 
+                                                                                src={`https://api.dicebear.com/7.x/identicon/svg?seed=${match.team2}`} 
+                                                                                className={styles.teamAvatar} 
+                                                                                alt="" 
+                                                                            />
+                                                                            <span className={`${styles.teamName} ${match.team2 === 'TBD' ? styles.tbd : ''}`}>
+                                                                                {match.team2}
+                                                                            </span>
+                                                                        </div>
+                                                                        <span className={styles.score}>{match.score2 ?? '-'}</span>
+                                                                    </div>
                                                                 </div>
-                                                                <div className={`${styles.team} ${match.winner === match.team2 ? styles.winner : ''}`}>
-                                                                    <span className={styles.teamName}>{match.team2}</span>
-                                                                    <span className={styles.score}>{match.score2 ?? '-'}</span>
-                                                                </div>
+                                                                {round < 3 && (
+                                                                    <div className={`${styles.connector} ${idx % 2 === 0 ? styles.top : styles.bottom} ${match.winner ? styles.active : ''}`}>
+                                                                        <div className={styles.line} />
+                                                                    </div>
+                                                                )}
                                                             </div>
-                                                        ))}
-                                                        </div>
+                                                        );
+                                                    })}
                                                     </div>
-                                                ));
-                                            })()}
+                                                </div>
+                                            ))}
                                         </div>
                                     </div>
                                 </div>

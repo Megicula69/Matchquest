@@ -25,23 +25,36 @@ export function AdminThemeProvider({ children }: { children: React.ReactNode }) 
   }, []);
 
   const applyMode = (m: ThemeMode) => {
-    const root = document.documentElement;
+    const wrapper = document.getElementById('admin-theme-wrapper');
+    if (!wrapper) return;
+
     if (m === 'dark') {
-      root.style.setProperty('--background', '#0B0F1A');
-      root.style.setProperty('--surface', '#121826');
-      root.style.setProperty('--text', '#FFFFFF');
-      root.style.setProperty('--muted', '#94a3b8');
-      root.style.setProperty('--cyan', '#00c9e0');
-      root.style.setProperty('--violet', '#9b6dff');
+      wrapper.style.setProperty('--background', '#0B0F1A');
+      wrapper.style.setProperty('--surface', '#121826');
+      wrapper.style.setProperty('--surface2', '#1A1F35');
+      wrapper.style.setProperty('--text', '#FFFFFF');
+      wrapper.style.setProperty('--muted', '#94a3b8');
+      wrapper.style.setProperty('--cyan', '#00c9e0');
+      wrapper.style.setProperty('--violet', '#9b6dff');
+      wrapper.style.setProperty('--glass-bg', 'rgba(255, 255, 255, 0.03)');
+      wrapper.style.setProperty('--glass-border', 'rgba(255, 255, 255, 0.05)');
     } else {
-      root.style.setProperty('--background', '#F5F7FA');
-      root.style.setProperty('--surface', '#FFFFFF');
-      root.style.setProperty('--text', '#1A1A1A');
-      root.style.setProperty('--muted', '#64748b');
-      root.style.setProperty('--cyan', '#6c5ce7');
-      root.style.setProperty('--violet', '#00b894');
+      wrapper.style.setProperty('--background', '#F8FAFC');
+      wrapper.style.setProperty('--surface', '#FFFFFF');
+      wrapper.style.setProperty('--surface2', '#F1F5F9');
+      wrapper.style.setProperty('--text', '#0F172A');
+      wrapper.style.setProperty('--muted', '#64748b');
+      wrapper.style.setProperty('--cyan', '#2563EB');
+      wrapper.style.setProperty('--violet', '#7C3AED');
+      wrapper.style.setProperty('--glass-bg', 'rgba(15, 23, 42, 0.03)');
+      wrapper.style.setProperty('--glass-border', 'rgba(15, 23, 42, 0.08)');
     }
   };
+
+  useEffect(() => {
+    // Re-apply when wrapper is available or mode changes
+    applyMode(mode);
+  }, [mode]);
 
   const setMode = (m: ThemeMode) => {
     setModeState(m);
@@ -51,7 +64,19 @@ export function AdminThemeProvider({ children }: { children: React.ReactNode }) 
 
   return (
     <AdminThemeContext.Provider value={{ mode, setMode }}>
-      {children}
+      <div 
+        id="admin-theme-wrapper" 
+        className={`admin-theme-${mode}`}
+        style={{ 
+          minHeight: '100vh', 
+          width: '100%',
+          backgroundColor: 'var(--background)',
+          color: 'var(--text)',
+          transition: 'all 0.3s ease'
+        }}
+      >
+        {children}
+      </div>
     </AdminThemeContext.Provider>
   );
 }

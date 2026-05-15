@@ -181,14 +181,7 @@ export const MePage: React.FC = () => {
                         <div className={styles.panelBody}>
                             {settingsTab === 'GENERAL' ? (
                                 <div className={styles.settingGroup}>
-                                    <h3>Administrative Actions</h3>
-                                    <div className={styles.adminActions}>
-                                        <button className={styles.adminBtn} title="Verify Account"><CheckCircle size={18} /> Verify</button>
-                                        <button className={styles.adminBtn} title="Suspend Account"><AlertTriangle size={18} /> Suspend</button>
-                                        <button className={`${styles.adminBtn} ${styles.danger}`} title="Ban Account"><Ban size={18} /> Ban</button>
-                                    </div>
-
-                                    <h3 style={{ marginTop: '24px' }}>Personal Preferences</h3>
+                                    <h3>Personal Preferences</h3>
                                     <div className={styles.settingItem}>
                                         <div className={styles.settingDesc}>
                                             <Bell size={18} />

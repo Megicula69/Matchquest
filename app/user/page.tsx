@@ -22,6 +22,7 @@ export default function MatchQuestDashboard() {
         favoriteGame: 'Valorant',
         arenaScore: 1000,
         rank: 'Bronze I',
+        element: 'Neutral',
         stats: { kda: '0.0', winRate: '0%', tournaments: 0, reputation: 100 },
         onboarded: true
       });
