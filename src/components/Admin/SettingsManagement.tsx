@@ -12,6 +12,7 @@ import {
   Clock, ShieldCheck
 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
+import { useAdminTheme } from '../../context/AdminThemeContext';
 import styles from './SettingsManagement.module.css';
 
 const categories = [
@@ -25,14 +26,15 @@ const categories = [
 ];
 
 export default function SettingsManagement() {
-  const { config, setMode, setAccent, updateConfig, applyTheme, resetDefaults } = useTheme();
+  const { config, setAccent, updateConfig, resetDefaults } = useTheme();
+  const { mode, setMode } = useAdminTheme();
   const [activeTab, setActiveTab] = useState('general');
   const [showConfirm, setShowConfirm] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
 
   const handleSaveTheme = () => {
-    applyTheme();
-    setToast('Theme Applied Successfully');
+    // updateConfig already applies changes via useEffect in ThemeContext
+    setToast('Theme Applied Globally');
     setTimeout(() => setToast(null), 3000);
   };
 
@@ -381,14 +383,14 @@ export default function SettingsManagement() {
                     <div className={styles.cardBody}>
                       <div className={styles.themeModeRow}>
                         <button 
-                          className={`${styles.modeBtn} ${config.mode === 'dark' ? styles.active : ''}`}
+                          className={`${styles.modeBtn} ${mode === 'dark' ? styles.active : ''}`}
                           onClick={() => setMode('dark')}
                         >
                           <CloudLightning size={20} />
                           <span>Cyber Dark</span>
                         </button>
                         <button 
-                          className={`${styles.modeBtn} ${config.mode === 'light' ? styles.active : ''}`}
+                          className={`${styles.modeBtn} ${mode === 'light' ? styles.active : ''}`}
                           onClick={() => setMode('light')}
                         >
                           <Zap size={20} />
@@ -414,7 +416,10 @@ export default function SettingsManagement() {
                           <div 
                             key={accent.name}
                             className={`${styles.accentCircle} ${config.accentColor === accent.color ? styles.active : ''}`}
-                            style={{ background: accent.color }}
+                            style={{ 
+                              background: accent.color,
+                              borderColor: config.accentColor === accent.color ? 'var(--text)' : 'transparent'
+                            }}
                             title={accent.name}
                             onClick={() => setAccent(accent.color)}
                           />
@@ -428,7 +433,7 @@ export default function SettingsManagement() {
                     <div className={styles.cardBody}>
                       <div className={styles.dualInputs}>
                         <div className={styles.inputGroup}>
-                          <label>Primary Background</label>
+                          <label style={{ color: 'var(--muted)' }}>Primary Background</label>
                           <input 
                             type="color" 
                             className={styles.colorInput} 
@@ -437,7 +442,7 @@ export default function SettingsManagement() {
                           />
                         </div>
                         <div className={styles.inputGroup}>
-                          <label>Secondary Background</label>
+                          <label style={{ color: 'var(--muted)' }}>Secondary Background</label>
                           <input 
                             type="color" 
                             className={styles.colorInput} 
@@ -448,16 +453,16 @@ export default function SettingsManagement() {
                       </div>
                       <div className={styles.dualInputs} style={{ marginTop: '12px' }}>
                         <div className={styles.inputGroup}>
-                          <label>Card Color</label>
+                          <label style={{ color: 'var(--muted)' }}>Card Color</label>
                           <input 
                             type="color" 
                             className={styles.colorInput} 
-                            value={config.cardBg.split(',').slice(0,3).join(',').replace('rgba(', '').replace(')', '').trim().startsWith('#') ? config.cardBg : '#141826'} 
-                            onChange={(e) => updateConfig({ cardBg: `rgba(${parseInt(e.target.value.slice(1,3),16)}, ${parseInt(e.target.value.slice(3,5),16)}, ${parseInt(e.target.value.slice(5,7),16)}, ${config.transparency})` })} 
+                            value={config.cardBg.startsWith('#') ? config.cardBg : '#141826'} 
+                            onChange={(e) => updateConfig({ cardBg: e.target.value })} 
                           />
                         </div>
                         <div className={styles.inputGroup}>
-                          <label>Text Color</label>
+                          <label style={{ color: 'var(--muted)' }}>Text Color</label>
                           <input 
                             type="color" 
                             className={styles.colorInput} 

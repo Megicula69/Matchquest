@@ -206,10 +206,10 @@ export default function CreateTournamentModal({ isOpen, onClose, onSuccess }: Cr
         </form>
 
         <div className={styles.modalFooter}>
-          <button type="button" className={styles.btnOutline} style={{ marginRight: 'auto' }}>Save as Draft</button>
-          <button type="button" className={styles.btnOutline} onClick={onClose}>Cancel</button>
-          <button type="button" className={styles.btnOutline}><Eye size={16} /> Preview</button>
-          <button type="submit" form="create-tournament-form" className={styles.btnPrimary}>
+          <button type="button" className={`${styles.btn} ${styles.btnOutline}`} style={{ marginRight: 'auto' }}>Save as Draft</button>
+          <button type="button" className={`${styles.btn} ${styles.btnOutline}`} onClick={onClose}>Cancel</button>
+          <button type="button" className={`${styles.btn} ${styles.btnOutline}`}><Eye size={16} /> Preview</button>
+          <button type="submit" form="create-tournament-form" className={`${styles.btn} ${styles.btnPrimary}`}>
             <Trophy size={18} /> Publish Tournament
           </button>
         </div>

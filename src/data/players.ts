@@ -12,7 +12,8 @@ export const players: Player[] = [
         localArea: false,
         arenaScore: 1250,
         stats: { kda: '2.4', winRate: '62%', tournaments: 12 },
-        bio: 'Looking for a solid competitive duo. I main Duelist.'
+        bio: 'Looking for a solid competitive duo. I main Duelist.',
+        age: 21
     },
     {
         id: '2',
@@ -25,7 +26,8 @@ export const players: Player[] = [
         localArea: true,
         arenaScore: 1840,
         stats: { kda: '3.1', winRate: '58%', tournaments: 8 },
-        bio: 'Support main. Let\'s win some tournaments together.'
+        bio: 'Support main. Let\'s win some tournaments together.',
+        age: 23
     },
     {
         id: '3',
@@ -38,7 +40,8 @@ export const players: Player[] = [
         localArea: false,
         arenaScore: 920,
         stats: { kda: '1.8', winRate: '51%', tournaments: 5 },
-        bio: 'Casual player looking for social games. No salt allowed!'
+        bio: 'Casual player looking for social games. No salt allowed!',
+        age: 19
     },
     {
         id: '4',
@@ -51,7 +54,8 @@ export const players: Player[] = [
         localArea: true,
         arenaScore: 750,
         stats: { kda: '1.5', winRate: '48%', tournaments: 3 },
-        bio: 'Apex is life. Looking for a squad.'
+        bio: 'Apex is life. Looking for a squad.',
+        age: 20
     },
     {
         id: '5',
@@ -64,7 +68,8 @@ export const players: Player[] = [
         localArea: false,
         arenaScore: 2450,
         stats: { kda: '4.2', winRate: '75%', tournaments: 25 },
-        bio: 'Grinding for Radiant. Serious inquiries only.'
+        bio: 'Grinding for Radiant. Serious inquiries only.',
+        age: 24
     },
     {
         id: '6',
@@ -77,7 +82,8 @@ export const players: Player[] = [
         localArea: true,
         arenaScore: 1100,
         stats: { kda: '2.0', winRate: '55%', tournaments: 10 },
-        bio: 'Dota 2 veteran. I play for fun and corgis.'
+        bio: 'Dota 2 veteran. I play for fun and corgis.',
+        age: 25
     },
     {
         id: '7',
@@ -90,7 +96,8 @@ export const players: Player[] = [
         localArea: false,
         arenaScore: 1420,
         stats: { kda: '2.8', winRate: '60%', tournaments: 15 },
-        bio: 'Tank main. Protect the team at all costs.'
+        bio: 'Tank main. Protect the team at all costs.',
+        age: 22
     },
     {
         id: '8',
@@ -103,7 +110,8 @@ export const players: Player[] = [
         localArea: false,
         arenaScore: 1680,
         stats: { kda: '3.5', winRate: '64%', tournaments: 18 },
-        bio: 'Mid lane assassin. Watch the map.'
+        bio: 'Mid lane assassin. Watch the map.',
+        age: 21
     },
     {
         id: '9',
@@ -116,7 +124,8 @@ export const players: Player[] = [
         localArea: true,
         arenaScore: 620,
         stats: { kda: '1.2', winRate: '42%', tournaments: 2 },
-        bio: 'Just started Apex. Be patient with me!'
+        bio: 'Just started Apex. Be patient with me!',
+        age: 18
     },
     {
         id: '10',
@@ -129,6 +138,7 @@ export const players: Player[] = [
         localArea: false,
         arenaScore: 1350,
         stats: { kda: '2.5', winRate: '61%', tournaments: 14 },
-        bio: 'AWP specialist. Clean shots only.'
+        bio: 'AWP specialist. Clean shots only.',
+        age: 22
     }
 ];

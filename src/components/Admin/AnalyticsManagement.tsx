@@ -73,14 +73,14 @@ export default function AnalyticsManagement() {
             <div className={styles.chartContainer}>
               <svg width="100%" height="100%" viewBox="0 0 800 300" preserveAspectRatio="none">
                 {/* Grid Lines */}
-                <line x1="0" y1="50" x2="800" y2="50" stroke="rgba(255,255,255,0.05)" />
-                <line x1="0" y1="150" x2="800" y2="150" stroke="rgba(255,255,255,0.05)" />
-                <line x1="0" y1="250" x2="800" y2="250" stroke="rgba(255,255,255,0.05)" />
+                <line x1="0" y1="50" x2="800" y2="50" stroke="var(--glass-border)" strokeOpacity="0.3" />
+                <line x1="0" y1="150" x2="800" y2="150" stroke="var(--glass-border)" strokeOpacity="0.3" />
+                <line x1="0" y1="250" x2="800" y2="250" stroke="var(--glass-border)" strokeOpacity="0.3" />
                 
                 {/* Area Gradient */}
                 <defs>
                   <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="var(--cyan)" stopOpacity="0.2" />
+                    <stop offset="0%" stopColor="var(--cyan)" stopOpacity="0.4" />
                     <stop offset="100%" stopColor="var(--cyan)" stopOpacity="0" />
                   </linearGradient>
                 </defs>
@@ -90,9 +90,10 @@ export default function AnalyticsManagement() {
                   d="M0,250 L50,230 L100,240 L150,180 L200,190 L250,140 L300,150 L350,100 L400,120 L450,70 L500,80 L550,40 L600,60 L650,20 L700,30 L800,10" 
                   fill="none" 
                   stroke="var(--cyan)" 
-                  strokeWidth="3" 
+                  strokeWidth="4" 
                   strokeLinecap="round" 
                   strokeLinejoin="round" 
+                  style={{ filter: 'drop-shadow(0 0 8px rgba(0, 201, 224, 0.4))' }}
                 />
                 <path 
                   d="M0,250 L50,230 L100,240 L150,180 L200,190 L250,140 L300,150 L350,100 L400,120 L450,70 L500,80 L550,40 L600,60 L650,20 L700,30 L800,10 L800,300 L0,300 Z" 

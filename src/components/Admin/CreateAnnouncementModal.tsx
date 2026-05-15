@@ -3,8 +3,8 @@
 import React, { useState } from 'react';
 import { 
   X, Megaphone, Image, Paperclip, Target, 
-  Zap, Calendar, Globe, Eye, Plus,
-  CheckCircle2, Users, Swords, Layout,
+  Zap, Calendar, Eye, Plus,
+  CheckCircle2, Users,
   MessageSquare, ShieldAlert, Send, FileText
 } from 'lucide-react';
 import styles from './CreateAnnouncementModal.module.css';
@@ -16,7 +16,6 @@ interface CreateAnnouncementModalProps {
 }
 
 export default function CreateAnnouncementModal({ isOpen, onClose, onSuccess }: CreateAnnouncementModalProps) {
-  const [visibility, setVisibility] = useState('students');
   const [bannerPreview, setBannerPreview] = useState<string | null>(null);
 
   if (!isOpen) return null;
@@ -32,7 +31,6 @@ export default function CreateAnnouncementModal({ isOpen, onClose, onSuccess }: 
       description: formData.get('description'),
       priority: formData.get('priority'),
       publishDate: formData.get('publishDate'),
-      visibility,
       time: 'Just now',
       username: 'System Admin',
       engagement: { likes: 0, comments: 0 }
@@ -50,7 +48,8 @@ export default function CreateAnnouncementModal({ isOpen, onClose, onSuccess }: 
           <button className={styles.closeBtn} onClick={onClose}><X size={20} /></button>
         </div>
 
-        <form onSubmit={handleSubmit} className={styles.modalBody}>
+        <form onSubmit={handleSubmit} className={styles.modalForm}>
+          <div className={styles.modalBody}>
           {/* ANNOUNCEMENT DETAILS */}
           <section className={styles.section}>
             <h3 className={styles.sectionTitle}><Megaphone size={18} /> Announcement Details</h3>
@@ -114,11 +113,10 @@ export default function CreateAnnouncementModal({ isOpen, onClose, onSuccess }: 
             </div>
           </section>
 
-          {/* SCHEDULING & VISIBILITY */}
           <div className={styles.grid}>
-            <section className={styles.section}>
+            <section className={styles.section} style={{ gridColumn: 'span 2' }}>
               <h3 className={styles.sectionTitle}><Calendar size={18} /> Scheduling</h3>
-              <div className={styles.grid} style={{ gridTemplateColumns: '1fr' }}>
+              <div className={styles.grid}>
                 <div className={styles.inputGroup}>
                   <label className={styles.label}>Publish Date & Time</label>
                   <input name="publishDate" type="datetime-local" className={styles.input} required />
@@ -129,40 +127,19 @@ export default function CreateAnnouncementModal({ isOpen, onClose, onSuccess }: 
                 </div>
               </div>
             </section>
-
-            <section className={styles.section}>
-              <h3 className={styles.sectionTitle}><Target size={18} /> Visibility Settings</h3>
-              <div className={styles.visibilityGrid}>
-                <div className={`${styles.visibilityOption} ${visibility === 'public' ? styles.active : ''}`} onClick={() => setVisibility('public')}>
-                  <div className={styles.radioCircle}><Globe size={14} /></div>
-                  <span className={styles.label} style={{ textTransform: 'none' }}>Public</span>
-                </div>
-                <div className={`${styles.visibilityOption} ${visibility === 'students' ? styles.active : ''}`} onClick={() => setVisibility('students')}>
-                  <div className={styles.radioCircle}><Users size={14} /></div>
-                  <span className={styles.label} style={{ textTransform: 'none' }}>Students Only</span>
-                </div>
-                <div className={`${styles.visibilityOption} ${visibility === 'participants' ? styles.active : ''}`} onClick={() => setVisibility('participants')}>
-                  <div className={styles.radioCircle}><Swords size={14} /></div>
-                  <span className={styles.label} style={{ textTransform: 'none' }}>Tournament Teams</span>
-                </div>
-                <div className={`${styles.visibilityOption} ${visibility === 'communities' ? styles.active : ''}`} onClick={() => setVisibility('communities')}>
-                  <div className={styles.radioCircle}><Layout size={14} /></div>
-                  <span className={styles.label} style={{ textTransform: 'none' }}>Specific Orgs</span>
-                </div>
-              </div>
-            </section>
           </div>
-        </form>
+        </div>
 
         <div className={styles.modalFooter}>
-          <button type="button" className={styles.btnOutline} style={{ marginRight: 'auto' }}>Save Draft</button>
-          <button type="button" className={styles.btnOutline} onClick={onClose}>Cancel</button>
-          <button type="button" className={styles.btnOutline}><Eye size={16} /> Preview</button>
-          <button type="submit" onClick={(e) => handleSubmit(e as any)} className={styles.btnPrimary}>
+          <button type="button" className={`${styles.btn} ${styles.btnOutline}`} style={{ marginRight: 'auto' }}>Save Draft</button>
+          <button type="button" className={`${styles.btn} ${styles.btnOutline}`} onClick={onClose}>Cancel</button>
+          <button type="button" className={`${styles.btn} ${styles.btnOutline}`}><Eye size={16} /> Preview</button>
+          <button type="submit" className={`${styles.btn} ${styles.btnPrimary}`}>
             <Send size={18} /> Publish Announcement
           </button>
         </div>
-      </div>
+      </form>
     </div>
+  </div>
   );
 }

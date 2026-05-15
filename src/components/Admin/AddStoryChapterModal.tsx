@@ -203,12 +203,12 @@ export default function AddStoryChapterModal({ isOpen, onClose, onSuccess }: Add
         </div>
 
         <div className={styles.modalFooter}>
-          <button type="button" className={styles.btnOutline} style={{ marginRight: 'auto' }}>Save as Draft</button>
-          <button type="button" className={styles.btnOutline} onClick={onClose}>Cancel</button>
-          <button type="button" onClick={() => setShowPreview(true)} className={styles.btnTest}>
+          <button type="button" className={`${styles.btn} ${styles.btnOutline}`} style={{ marginRight: 'auto' }}>Save as Draft</button>
+          <button type="button" className={`${styles.btn} ${styles.btnOutline}`} onClick={onClose}>Cancel</button>
+          <button type="button" onClick={() => setShowPreview(true)} className={`${styles.btn} ${styles.btnTest}`}>
             <Play size={16} /> Test Scenario
           </button>
-          <button type="submit" form="chapterForm" className={styles.btnPrimary}>
+          <button type="submit" form="chapterForm" className={`${styles.btn} ${styles.btnPrimary}`}>
             <Save size={16} /> Publish Chapter
           </button>
         </div>

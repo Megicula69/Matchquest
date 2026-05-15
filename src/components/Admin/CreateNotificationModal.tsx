@@ -31,12 +31,14 @@ export default function CreateNotificationModal({ isOpen, onClose, onSuccess }: 
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     
+    const type = formData.get('type')?.toString() || 'info';
+    
     const newNotif = {
       id: Math.random().toString(36).substr(2, 9),
-      title: formData.get('title'),
-      message: formData.get('message'),
-      type: formData.get('type'),
-      category: formData.get('type').toString().charAt(0).toUpperCase() + formData.get('type').toString().slice(1),
+      title: formData.get('title')?.toString() || '',
+      message: formData.get('message')?.toString() || '',
+      type: type,
+      category: type.charAt(0).toUpperCase() + type.slice(1),
       timestamp: 'Just now',
       reach: Math.floor(Math.random() * 5000),
       methods: methods,
@@ -51,13 +53,13 @@ export default function CreateNotificationModal({ isOpen, onClose, onSuccess }: 
 
   return (
     <div className={styles.overlay} onClick={onClose}>
-      <div className={styles.modal} onClick={e => e.stopPropagation()}>
+      <form onSubmit={handleSubmit} className={styles.modal} onClick={e => e.stopPropagation()}>
         <div className={styles.modalHeader}>
           <h2 className={styles.modalTitle}>Dispatch Notification</h2>
           <button className={styles.closeBtn} onClick={onClose}><X size={20} /></button>
         </div>
 
-        <form onSubmit={handleSubmit} className={styles.modalBody}>
+        <div className={styles.modalBody}>
           {/* NOTIFICATION DETAILS */}
           <section className={styles.section}>
             <h3 className={styles.sectionTitle}><Info size={18} /> Notification Details</h3>
@@ -147,17 +149,17 @@ export default function CreateNotificationModal({ isOpen, onClose, onSuccess }: 
               </div>
             </section>
           </div>
-        </form>
+        </div>
 
         <div className={styles.modalFooter}>
-          <button type="button" className={styles.btnOutline} style={{ marginRight: 'auto' }}>Save Draft</button>
-          <button type="button" className={styles.btnOutline} onClick={onClose}>Cancel</button>
-          <button type="button" className={styles.btnOutline}><Eye size={16} /> Preview</button>
-          <button type="submit" onClick={(e) => handleSubmit(e as any)} className={styles.btnPrimary}>
+          <button type="button" className={`${styles.btn} ${styles.btnOutline}`} style={{ marginRight: 'auto' }}>Save Draft</button>
+          <button type="button" className={`${styles.btn} ${styles.btnOutline}`} onClick={onClose}>Cancel</button>
+          <button type="button" className={`${styles.btn} ${styles.btnOutline}`}><Eye size={16} /> Preview</button>
+          <button type="submit" className={`${styles.btn} ${styles.btnPrimary}`}>
             <Send size={18} /> Dispatch Notification
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

@@ -1,31 +1,43 @@
 .container {
-  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  animation: fadeIn 0.5s ease;
 }
 
 .header {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 16px;
+  gap: 4px;
 }
 
 .title {
-  font-size: 20px;
+  font-family: var(--font-rajdhani);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 1px;
   display: flex;
-  gap: 8px;
   align-items: center;
+  gap: 12px;
+}
+
+.title svg {
+  color: var(--cyan);
 }
 
 .subtitle {
   color: var(--muted);
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .tableWrap {
-  background: rgba(10,12,20,0.6);
-  border: 1px solid rgba(255,255,255,0.04);
-  border-radius: 12px;
-  overflow: auto;
+  background: var(--surface);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .table {
@@ -33,14 +45,59 @@
   border-collapse: collapse;
 }
 
-.table th, .table td {
-  padding: 12px 16px;
+.table th {
+  padding: 16px 20px;
   text-align: left;
-  border-bottom: 1px solid rgba(255,255,255,0.02);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-family: var(--font-mono);
+  background: var(--glass-bg);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.table td {
+  padding: 16px 20px;
+  font-size: 14px;
+  color: var(--text);
+  border-bottom: 1px solid var(--glass-border);
+  vertical-align: middle;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table tr:hover {
+  background: var(--glass-bg);
 }
 
 .empty {
   text-align: center;
   color: var(--muted);
-  padding: 24px;
+  padding: 40px !important;
+  font-style: italic;
 }
+
+.teamCell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.teamLogo {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--surface2);
+  border: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-rajdhani);
+  font-weight: 700;
+  color: var(--cyan);
+}
+

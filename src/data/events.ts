@@ -39,7 +39,7 @@ export const initialEvents: TournamentEvent[] = [
         participants: 12,
         maxParticipants: 16,
         status: 'UPCOMING',
-        image: 'https://images.unsplash.com/photo-1552824236-07764611de65?q=80&w=2070&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?q=80&w=2070&auto=format&fit=crop',
         location: { x: 15, y: 70 },
         description: 'For the old school gamers. No flashy skins, just pure skill.'
     },

@@ -64,6 +64,7 @@
 .navItem.active {
     background-color: var(--cyan);
     color: var(--background);
+    box-shadow: 0 4px 15px var(--accent-glow);
 }
 
 .footer {

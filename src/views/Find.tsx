@@ -12,11 +12,13 @@ export const FindPage: React.FC = () => {
     const [showChat, setShowChat] = useState<string | null>(null);
     const [chatMessage, setChatMessage] = useState('');
     const [allMessages, setAllMessages] = useLocalStorage<Message[]>('mq_messages', []);
+    const [viewingDetails, setViewingDetails] = useState<Player | null>(null);
 
     // Filter states
     const [micRequired, setMicRequired] = useState(false);
     const [localOnly, setLocalOnly] = useState(false);
     const [minRep, setMinRep] = useState(0);
+    const [ageRange, setAgeRange] = useState({ min: 15, max: 25 });
 
     const matchedPlayers = hardcodedPlayers.filter(p => matches.includes(p.id));
 
@@ -69,6 +71,7 @@ export const FindPage: React.FC = () => {
                             </div>
                             <div className={styles.cardActions}>
                                 <button className={styles.passBtn} onClick={() => handlePass(currentPlayer.id)}><X size={28} /></button>
+                                <button className={styles.viewDetailsBtn} onClick={() => setViewingDetails(currentPlayer)}>VIEW DETAILS</button>
                                 <button className={styles.matchBtn} onClick={() => handleMatch(currentPlayer.id)}><Heart size={28} /></button>
                             </div>
                         </div>
@@ -82,11 +85,11 @@ export const FindPage: React.FC = () => {
                 </button>
             </div>
 
-            <aside className={`${styles.matchesList} desktop-only`}>
+            <aside className={`${styles.matchesList} ${showChat ? styles.matchesHidden : ''} desktop-only`}>
                 <h2 className={styles.sectionTitle}>Matches</h2>
                 <div className={styles.matchesScroll}>
                     {matchedPlayers.map(player => (
-                        <div key={player.id} className={styles.matchItem} onClick={() => setShowChat(player.id)}>
+                        <div key={player.id} className={`${styles.matchItem} ${showChat === player.id ? styles.activeMatch : ''}`} onClick={() => setShowChat(player.id === showChat ? null : player.id)}>
                             <img src={player.avatar} alt={player.username} className={styles.matchAvatar} />
                             <div className={styles.matchInfo}>
                                 <div className={styles.matchName}>{player.username}</div>
@@ -98,15 +101,71 @@ export const FindPage: React.FC = () => {
                 </div>
             </aside>
 
+            {/* Chat Drawer */}
+            <div className={`${styles.chatDrawer} ${showChat ? styles.drawerOpen : ''}`}>
+                {showChat ? (
+                    <>
+                        <div className={styles.chatHeader}>
+                            <div className={styles.chatUser}>
+                                <img src={hardcodedPlayers.find(p => p.id === showChat)?.avatar} alt="avatar" />
+                                <span>{hardcodedPlayers.find(p => p.id === showChat)?.username}</span>
+                            </div>
+                            <X className={styles.closeChat} onClick={() => setShowChat(null)} />
+                        </div>
+                        <div className={styles.chatBody}>
+                            {allMessages.filter(m => m.receiverId === showChat || m.senderId === showChat).map(msg => (
+                                <div key={msg.id} className={`${styles.msgBubble} ${msg.senderId === 'me' ? styles.msgMe : styles.msgThem}`}>
+                                    {msg.text}
+                                    <div className={styles.msgTime}>{msg.timestamp}</div>
+                                </div>
+                            ))}
+                        </div>
+                        <div className={styles.chatFooter}>
+                            <input
+                                placeholder="Type a message..."
+                                value={chatMessage}
+                                onChange={e => setChatMessage(e.target.value)}
+                                onKeyDown={e => e.key === 'Enter' && sendMessage()}
+                            />
+                            <button onClick={sendMessage}><MessageSquare size={20} /></button>
+                        </div>
+                    </>
+                ) : (
+                    <div className={styles.drawerPlaceholder}>
+                        <MessageSquare size={40} opacity={0.2} />
+                        <p>Select a match to start chatting</p>
+                    </div>
+                )}
+            </div>
+
             {/* Filter Drawer/Panel */}
             {showFilters && (
                 <div className={styles.filterOverlay} onClick={() => setShowFilters(false)}>
                     <div className={styles.filterPanel} onClick={e => e.stopPropagation()}>
                         <div className={styles.filterHeader}>
                             <h2>FILTERS</h2>
-                            <X onClick={() => setShowFilters(false)} />
+                            <X onClick={() => setShowFilters(false)} style={{ cursor: 'pointer' }} />
                         </div>
                         <div className={styles.filterBody}>
+                            <div className={styles.filterGroup}>
+                                <label>Age Range: {ageRange.min} - {ageRange.max}</label>
+                                <div style={{ display: 'flex', gap: '10px' }}>
+                                    <input 
+                                        type="range" 
+                                        min="15" 
+                                        max="30" 
+                                        value={ageRange.min} 
+                                        onChange={e => setAgeRange({ ...ageRange, min: parseInt(e.target.value) })} 
+                                    />
+                                    <input 
+                                        type="range" 
+                                        min="15" 
+                                        max="30" 
+                                        value={ageRange.max} 
+                                        onChange={e => setAgeRange({ ...ageRange, max: parseInt(e.target.value) })} 
+                                    />
+                                </div>
+                            </div>
                             <div className={styles.filterGroup}>
                                 <label>Min Reputation: {minRep}%</label>
                                 <input type="range" min="0" max="100" value={minRep} onChange={e => setMinRep(parseInt(e.target.value))} />
@@ -126,34 +185,57 @@ export const FindPage: React.FC = () => {
                     </div>
                 </div>
             )}
-
-            {/* Chat Modal */}
-            {showChat && (
-                <div className={styles.chatOverlay} onClick={() => setShowChat(null)}>
-                    <div className={styles.chatModal} onClick={e => e.stopPropagation()}>
-                        <div className={styles.chatHeader}>
-                            <div className={styles.chatUser}>
-                                <img src={hardcodedPlayers.find(p => p.id === showChat)?.avatar} alt="avatar" />
-                                <span>{hardcodedPlayers.find(p => p.id === showChat)?.username}</span>
+            {/* Player Details Modal */}
+            {viewingDetails && (
+                <div className={styles.detailsOverlay} onClick={() => setViewingDetails(null)}>
+                    <div className={styles.detailsModal} onClick={e => e.stopPropagation()}>
+                        <div className={styles.detailsHeader}>
+                            <img src={viewingDetails.avatar} alt={viewingDetails.username} className={styles.detailsAvatar} />
+                            <div className={styles.detailsHeaderInfo}>
+                                <h2>{viewingDetails.username}</h2>
+                                <span className={styles.detailsRank}>{viewingDetails.rank}</span>
                             </div>
-                            <X onClick={() => setShowChat(null)} />
+                            <X className={styles.closeDetails} onClick={() => setViewingDetails(null)} />
                         </div>
-                        <div className={styles.chatBody}>
-                            {allMessages.filter(m => m.receiverId === showChat || m.senderId === showChat).map(msg => (
-                                <div key={msg.id} className={`${styles.msgBubble} ${msg.senderId === 'me' ? styles.msgMe : styles.msgThem}`}>
-                                    {msg.text}
-                                    <div className={styles.msgTime}>{msg.timestamp}</div>
+                        <div className={styles.detailsBody}>
+                            <div className={styles.detailsSection}>
+                                <h3>ABOUT</h3>
+                                <p>{viewingDetails.bio}</p>
+                            </div>
+                            <div className={styles.detailsSection}>
+                                <h3>GAMING PROFILE</h3>
+                                <div className={styles.detailsGrid}>
+                                    <div className={styles.detailItem}>
+                                        <span className={styles.detailLabel}>Favorite Game</span>
+                                        <span className={styles.detailValue}>{viewingDetails.favoriteGame}</span>
+                                    </div>
+                                    <div className={styles.detailItem}>
+                                        <span className={styles.detailLabel}>Reputation</span>
+                                        <span className={styles.detailValue}>{viewingDetails.reputation}%</span>
+                                    </div>
+                                    <div className={styles.detailItem}>
+                                        <span className={styles.detailLabel}>Region</span>
+                                        <span className={styles.detailValue}>{viewingDetails.localArea ? 'Local Campus' : 'Global'}</span>
+                                    </div>
+                                    <div className={styles.detailItem}>
+                                        <span className={styles.detailLabel}>Age</span>
+                                        <span className={styles.detailValue}>{viewingDetails.age || 'N/A'}</span>
+                                    </div>
+                                    <div className={styles.detailItem}>
+                                        <span className={styles.detailLabel}>Communication</span>
+                                        <span className={styles.detailValue}>{viewingDetails.micRequired ? 'Mic Required' : 'Text Only'}</span>
+                                    </div>
                                 </div>
-                            ))}
-                        </div>
-                        <div className={styles.chatFooter}>
-                            <input
-                                placeholder="Type a message..."
-                                value={chatMessage}
-                                onChange={e => setChatMessage(e.target.value)}
-                                onKeyDown={e => e.key === 'Enter' && sendMessage()}
-                            />
-                            <button onClick={sendMessage}><MessageSquare size={20} /></button>
+                            </div>
+                            <div className={styles.detailsSection}>
+                                <h3>PLAYSTYLE TAGS</h3>
+                                <div className={styles.tags}>
+                                    <span className={styles.tag}>Competitive</span>
+                                    <span className={styles.tag}>Daily Player</span>
+                                    <span className={styles.tag}>No Toxic</span>
+                                    <span className={styles.tag}>Team Player</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

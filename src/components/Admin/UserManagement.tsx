@@ -2,13 +2,14 @@
 
 import React, { useState, useMemo } from 'react';
 import {
-  Search, Plus, Download, Eye, Pencil, Ban, ShieldOff, ShieldCheck,
-  Trash2, X, Users, UserCheck, UserX, Clock, Trophy, Swords,
-  MessageCircle, Star, AlertTriangle, CalendarDays,
+  Search, Plus, Download, Eye, Pencil,
+  Trash2, X, Users, UserCheck, UserX, Clock,
   CheckCircle2,
 } from 'lucide-react';
 import s from './UserManagement.module.css';
 import AddUserModal from './AddUserModal';
+import ConfirmModal from './ConfirmModal';
+import { useToast } from '../../context/ToastContext';
 
 /* ===== MOCK DATA ===== */
 interface UserRecord {
@@ -35,7 +36,7 @@ const USERS: UserRecord[] = [
 const repColor = (v:number) => v >= 80 ? '#22c55e' : v >= 50 ? '#f0a500' : '#e8334a';
 
 /* ===== DRAWER COMPONENT ===== */
-function UserDrawer({ user, onClose }: { user: UserRecord; onClose: () => void }) {
+function UserDrawer({ user, onClose, onEdit }: { user: UserRecord; onClose: () => void; onEdit: () => void }) {
   const initials = user.firstName[0] + user.lastName[0];
   const history = [
     { text:'Joined Valorant Masters tournament',time:'2 hours ago',color:'#00c9e0' },
@@ -79,7 +80,7 @@ function UserDrawer({ user, onClose }: { user: UserRecord; onClose: () => void }
             </div>
           </div>
 
-          {/* Tournament Participation */}
+          {/* Tournament History */}
           <div className={s.drawerSection}>
             <div className={s.drawerSectionTitle}>Tournament History</div>
             <div className={s.drawerGrid}>
@@ -88,7 +89,7 @@ function UserDrawer({ user, onClose }: { user: UserRecord; onClose: () => void }
             </div>
           </div>
 
-          {/* Social / Reports */}
+          {/* Social & Reports */}
           <div className={s.drawerSection}>
             <div className={s.drawerSectionTitle}>Social &amp; Reports</div>
             <div className={s.drawerGrid}>
@@ -113,12 +114,11 @@ function UserDrawer({ user, onClose }: { user: UserRecord; onClose: () => void }
             </div>
           </div>
 
-          {/* Actions */}
+          {/* Actions — Edit Profile only */}
           <div className={s.drawerActions}>
-            <button className={`${s.drawerBtn} ${s.primary}`}>Edit Profile</button>
-            <button className={`${s.drawerBtn} ${s.success}`}><ShieldCheck size={14} /> Verify</button>
-            <button className={`${s.drawerBtn} ${s.warn}`}><ShieldOff size={14} /> Suspend</button>
-            <button className={`${s.drawerBtn} ${s.danger}`}><Ban size={14} /> Ban</button>
+            <button className={`${s.drawerBtn} ${s.primary}`} onClick={onEdit}>
+              <Pencil size={14} /> Edit Profile
+            </button>
           </div>
         </div>
       </div>
@@ -128,16 +128,18 @@ function UserDrawer({ user, onClose }: { user: UserRecord; onClose: () => void }
 
 /* ===== MAIN COMPONENT ===== */
 export default function UserManagement() {
+  const { success, error } = useToast();
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [gameFilter, setGameFilter] = useState('all');
   const [verifyFilter, setVerifyFilter] = useState('all');
   const [selectedUser, setSelectedUser] = useState<UserRecord | null>(null);
+  const [userToEdit, setUserToEdit] = useState<UserRecord | null>(null);
+  const [userToDelete, setUserToDelete] = useState<UserRecord | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [userList, setUserList] = useState<UserRecord[]>(USERS);
   const [page, setPage] = useState(1);
-  const [toast, setToast] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
     return userList.filter(u => {
@@ -153,16 +155,34 @@ export default function UserManagement() {
 
   const handleAddUser = (newUser: UserRecord) => {
     setUserList(prev => [newUser, ...prev]);
-    setToast('User created successfully!');
-    setTimeout(() => setToast(null), 3000);
-    console.log('Activity Log Created: Admin added user', newUser.username);
+    success('User created successfully!');
   };
 
-  const counts = { 
-    total:userList.length, 
-    active:userList.filter(u=>u.status==='active').length, 
-    banned:userList.filter(u=>u.status==='banned').length, 
-    pending:userList.filter(u=>!u.verified).length 
+  const handleUpdateUser = (updatedUser: UserRecord) => {
+    setUserList(prev => prev.map(u => u.id === updatedUser.id ? updatedUser : u));
+    setUserToEdit(null);
+    setShowAddModal(false);
+    // Only show generic toast for form-save; admin action buttons handle their own toast
+  };
+
+  const handleDeleteUser = () => {
+    if (!userToDelete) return;
+    setUserList(prev => prev.filter(u => u.id !== userToDelete.id));
+    success(`${userToDelete.firstName} ${userToDelete.lastName} has been deleted.`);
+    setUserToDelete(null);
+  };
+
+  const openEdit = (user: UserRecord) => {
+    setSelectedUser(null);
+    setUserToEdit(user);
+    setShowAddModal(true);
+  };
+
+  const counts = {
+    total: userList.length,
+    active: userList.filter(u => u.status === 'active').length,
+    banned: userList.filter(u => u.status === 'banned').length,
+    pending: userList.filter(u => !u.verified).length
   };
 
   return (
@@ -193,7 +213,7 @@ export default function UserManagement() {
         <select className={s.filterSelect} value={verifyFilter} onChange={e=>setVerifyFilter(e.target.value)}>
           <option value="all">Verification</option><option value="verified">Verified</option><option value="unverified">Unverified</option>
         </select>
-        <button className={s.btnPrimary} onClick={() => setShowAddModal(true)}><Plus size={16} /> Add User</button>
+        <button className={s.btnPrimary} onClick={() => { setUserToEdit(null); setShowAddModal(true); }}><Plus size={16} /> Add User</button>
         <button className={s.btnOutline}><Download size={16} /> Export</button>
       </div>
 
@@ -231,11 +251,8 @@ export default function UserManagement() {
                   <td>
                     <div className={s.actions} onClick={e=>e.stopPropagation()}>
                       <button className={s.actionBtn} title="View" onClick={()=>setSelectedUser(u)}><Eye size={14} /></button>
-                      <button className={s.actionBtn} title="Edit"><Pencil size={14} /></button>
-                      <button className={`${s.actionBtn} ${s.success}`} title="Verify"><ShieldCheck size={14} /></button>
-                      <button className={`${s.actionBtn} ${s.warn}`} title="Suspend"><ShieldOff size={14} /></button>
-                      <button className={`${s.actionBtn} ${s.danger}`} title="Ban"><Ban size={14} /></button>
-                      <button className={`${s.actionBtn} ${s.danger}`} title="Delete"><Trash2 size={14} /></button>
+                      <button className={s.actionBtn} title="Edit" onClick={()=>openEdit(u)}><Pencil size={14} /></button>
+                      <button className={`${s.actionBtn} ${s.danger}`} title="Delete" onClick={()=>setUserToDelete(u)}><Trash2 size={14} /></button>
                     </div>
                   </td>
                 </tr>
@@ -256,25 +273,31 @@ export default function UserManagement() {
       </div>
 
       {/* Drawer */}
-      {selectedUser && <UserDrawer user={selectedUser} onClose={()=>setSelectedUser(null)} />}
+      {selectedUser && (
+        <UserDrawer
+          user={selectedUser}
+          onClose={() => setSelectedUser(null)}
+          onEdit={() => openEdit(selectedUser)}
+        />
+      )}
 
-      {/* Add User Modal */}
-      <AddUserModal 
-        isOpen={showAddModal} 
-        onClose={() => setShowAddModal(false)} 
-        onSuccess={handleAddUser}
+      {/* Add / Edit User Modal */}
+      <AddUserModal
+        isOpen={showAddModal}
+        onClose={() => { setShowAddModal(false); setUserToEdit(null); }}
+        onSuccess={userToEdit ? handleUpdateUser : handleAddUser}
+        userToEdit={userToEdit}
       />
 
-      {/* Success Toast */}
-      {toast && (
-        <div style={{
-          position: 'fixed', bottom: '24px', right: '24px', background: 'rgba(34, 197, 94, 0.95)',
-          color: '#fff', padding: '12px 24px', borderRadius: '12px', display: 'flex', alignItems: 'center',
-          gap: '10px', boxShadow: '0 8px 32px rgba(0,0,0,0.4)', zIndex: 10000, animation: 'slideIn 0.3s ease'
-        }}>
-          <CheckCircle2 size={18} /> {toast}
-        </div>
-      )}
+      {/* Delete Confirmation Modal */}
+      <ConfirmModal
+        isOpen={!!userToDelete}
+        onClose={() => setUserToDelete(null)}
+        onConfirm={handleDeleteUser}
+        title="Delete User Account"
+        message={`Are you sure you want to permanently delete ${userToDelete?.firstName} ${userToDelete?.lastName}? This action cannot be undone.`}
+        type="danger"
+      />
     </div>
   );
 }

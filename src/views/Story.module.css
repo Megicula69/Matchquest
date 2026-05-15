@@ -1,8 +1,10 @@
 .container {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    min-height: calc(100vh - 120px);
+    gap: 1.5rem;
+    height: calc(100vh - 60px);
+    overflow: hidden;
+    padding-bottom: 20px;
 }
 
 .header {
@@ -97,9 +99,11 @@
 
 .visualArea {
     flex: 1;
-    background-color: var(--surface);
+    min-height: 0;
+    max-height: 45vh;
+    background-color: rgba(0, 0, 0, 0.3);
     border-radius: 20px;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -118,7 +122,7 @@
 .cgImage {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .effectPopup {
@@ -148,11 +152,13 @@
 }
 
 .dialogueBox {
+    flex-shrink: 0;
     background-color: var(--surface);
     border: 1px solid var(--surface2);
     border-radius: 16px;
-    padding: 2rem;
+    padding: 1.5rem 2rem;
     position: relative;
+    margin-top: auto;
 }
 
 .npcName {

@@ -15,6 +15,7 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
+  Settings,
 } from 'lucide-react';
 import LogoutModal from './LogoutModal';
 import { useAuth } from '../../context/AuthContext';
@@ -58,6 +59,12 @@ const navGroups: NavGroup[] = [
       { id: 'analytics', label: 'Analytics', icon: <BarChart3 size={20} />, href: '/admin/analytics' },
     ],
   },
+  {
+    label: 'System',
+    items: [
+      { id: 'settings', label: 'Settings', icon: <Settings size={20} />, href: '/admin/account-settings' },
+    ],
+  },
 ];
 
 interface AdminSidebarProps {
@@ -96,12 +103,21 @@ export default function AdminSidebar({
         <div className={styles.mobileOverlay} onClick={onMobileClose} />
       )}
       <aside className={sidebarClasses}>
-        <div className={styles.sidebarHeader}>
-          <div className={styles.logoIcon}>LA</div>
+        <div className={styles.logo}>
           <div className={styles.logoText}>
-            <span className={styles.logoTitle}>Lungsod Arena</span>
-            <span className={styles.logoSubtitle}>Admin Panel</span>
+            {collapsed ? (
+              <>
+                <span className={styles.match}>M</span>
+                <span className={styles.quest}>Q</span>
+              </>
+            ) : (
+              <>
+                <span className={styles.match}>MATCH</span>
+                <span className={styles.quest}>QUEST</span>
+              </>
+            )}
           </div>
+          {!collapsed && <span className={styles.adminBadge}>ADMIN</span>}
         </div>
 
         <button className={styles.collapseBtn} onClick={onToggle}>
@@ -139,8 +155,8 @@ export default function AdminSidebar({
         </div>
       </aside>
 
-      <LogoutModal 
-        isOpen={showLogoutModal} 
+      <LogoutModal
+        isOpen={showLogoutModal}
         onClose={() => setShowLogoutModal(false)}
         onConfirm={() => {
           logout();

@@ -19,6 +19,7 @@ export interface Player {
         tournaments: number;
     };
     bio: string;
+    age?: number;
 }
 
 export interface TournamentEvent {
@@ -101,6 +102,7 @@ export interface ArenaStats {
 }
 
 export interface TeamRegistration {
+    id: string;
     teamName: string;
     roster: string[];
     eventId: string;
@@ -108,6 +110,7 @@ export interface TeamRegistration {
 
 export interface BracketMatch {
     id: string;
+    eventId: string;
     team1: string;
     team2: string;
     score1?: number;
@@ -115,4 +118,14 @@ export interface BracketMatch {
     winner?: string;
     round: number;
     nextMatchId?: string;
+}
+
+export interface ScheduleItem {
+    id: string;
+    eventId: string;
+    time: string;
+    date: string;
+    team1: string;
+    team2: string;
+    status: 'LIVE' | 'UPCOMING' | 'FINAL';
 }
