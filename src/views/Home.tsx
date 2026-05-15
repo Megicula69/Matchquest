@@ -1,13 +1,35 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './Home.module.css';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { UserProfile, StoryState } from '../types';
 import { Activity, Trophy, Zap, Shield, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { createDefaultProfile } from '../data/profileDefaults';
 
 export const HomePage: React.FC = () => {
-    const [profile] = useLocalStorage<UserProfile | null>('mq_profile', null);
+    const { user } = useAuth();
+    const [profiles, setProfiles] = useLocalStorage<Record<string, UserProfile>>('mq_profiles', {});
     const [story] = useLocalStorage<StoryState | null>('mq_story_state', null);
+
+    useEffect(() => {
+        if (!user) {
+            return;
+        }
+
+        setProfiles(currentProfiles => {
+            if (currentProfiles[user.username]) {
+                return currentProfiles;
+            }
+
+            return {
+                ...currentProfiles,
+                [user.username]: createDefaultProfile(user),
+            };
+        });
+    }, [user, setProfiles]);
+
+    const profile = user ? profiles[user.username] ?? createDefaultProfile(user) : null;
 
     if (!profile) return null;
 

@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import styles from './EventsManagement.module.css';
 import CreateEventModal from './CreateEventModal';
+import { useCampusEvents } from '../../hooks/useCampusEvents';
 
 interface CampusEvent {
   id: string;
@@ -35,10 +36,28 @@ export default function EventsManagement() {
   const [selectedDay, setSelectedDay] = useState(8);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [eventList, setEventList] = useState(mockEvents);
+  const [, setCampusEvents] = useCampusEvents();
   const [toast, setToast] = useState<string | null>(null);
 
   const handleCreateEvent = (newEvent: any) => {
     setEventList(prev => [newEvent, ...prev]);
+    setCampusEvents(prev => [
+      {
+        id: newEvent.id,
+        title: newEvent.title,
+        game: newEvent.category || 'Tournament',
+        date: newEvent.date,
+        time: newEvent.time,
+        prizePool: 'TBD',
+        participants: newEvent.participants ?? 0,
+        maxParticipants: newEvent.maxParticipants,
+        status: 'UPCOMING',
+        image: newEvent.banner,
+        location: { x: 50, y: 50 },
+        description: newEvent.description || `${newEvent.category} at ${newEvent.venue}`,
+      },
+      ...prev,
+    ]);
     setToast('Event published successfully!');
     setTimeout(() => setToast(null), 3000);
     console.log('Event Calendar Updated:', newEvent.title);

@@ -1,6 +1,6 @@
 import { TournamentEvent } from '../types';
 
-export const events: TournamentEvent[] = [
+export const initialEvents: TournamentEvent[] = [
     {
         id: 'e1',
         title: 'Valorant Pasig Open',
@@ -86,3 +86,5 @@ export const events: TournamentEvent[] = [
         description: 'Hero shooters unite. Prove your worth in the arena.'
     }
 ];
+
+export const events = initialEvents;

@@ -1,27 +1,15 @@
 import { useLocalStorage } from './useLocalStorage';
 import { StoryState, StoryStats, Ending } from '../types';
 import { scenes } from '../data/scenes';
-
-const initialState: StoryState = {
-    currentSceneId: 'start',
-    stats: { gpa: 50, elo: 50, morale: 50, stamina: 100 },
-    chapter: 1,
-    activeQuests: [
-        { id: 'q1', title: 'First Steps', description: 'Reach Chapter 2', targetChapter: 2, isCompleted: false },
-        { id: 'q2', title: 'The Grind', description: 'Reach Chapter 5', targetChapter: 5, isCompleted: false },
-        { id: 'q3', title: 'The Finale', description: 'Reach Chapter 10', targetChapter: 10, isCompleted: false },
-    ],
-    unlockedCGs: [],
-    history: []
-};
+import { initialStoryState } from '../data/storyDefaults';
 
 export function useStory() {
-    const [storedState, setStoredState] = useLocalStorage<StoryState>('mq_story_state', initialState);
+    const [storedState, setStoredState] = useLocalStorage<StoryState>('mq_story_state', initialStoryState);
 
     // Fallback for existing users who don't have activeQuests in their local storage
     const state = {
         ...storedState,
-        activeQuests: storedState.activeQuests || initialState.activeQuests
+        activeQuests: storedState.activeQuests || initialStoryState.activeQuests
     };
 
     const setState = setStoredState;
@@ -43,7 +31,7 @@ export function useStory() {
             }
 
             const newChapter = prev.chapter + 1;
-            const currentQuests = prev.activeQuests || initialState.activeQuests || [];
+            const currentQuests = prev.activeQuests || initialStoryState.activeQuests || [];
             const updatedQuests = currentQuests.map(q => ({
                 ...q,
                 isCompleted: q.isCompleted || newChapter >= q.targetChapter
@@ -70,7 +58,7 @@ export function useStory() {
         return 'AVERAGE';
     };
 
-    const resetStory = () => setState(initialState);
+    const resetStory = () => setState(initialStoryState);
 
     return {
         state,

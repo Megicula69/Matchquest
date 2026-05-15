@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   Trophy, Search, Plus, Calendar, Filter, Users, Clock, 
   MapPin, ChevronLeft, Play, Info, CheckCircle2, 
@@ -8,6 +8,8 @@ import {
 } from 'lucide-react';
 import styles from './TournamentManagement.module.css';
 import CreateTournamentModal from './CreateTournamentModal';
+import { useTournament } from '../../hooks/useTournament';
+import { useCampusEvents } from '../../hooks/useCampusEvents';
 
 interface Tournament {
   id: string;
@@ -66,19 +68,94 @@ const mockTournaments: Tournament[] = [
 ];
 
 export default function TournamentManagement() {
+  const { registrations, bracket } = useTournament();
+  const [campusEvents, setCampusEvents] = useCampusEvents();
   const [selectedTournament, setSelectedTournament] = useState<Tournament | null>(null);
   const [activeTab, setActiveTab] = useState('bracket');
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [tournaments, setTournaments] = useState<Tournament[]>(mockTournaments);
+  const [tournaments, setTournaments] = useState<Tournament[]>(() => {
+    // derive initial tournaments from events and any stored registrations
+    return mockTournaments.map(t => t); // will be replaced by effect below
+  });
   const [toast, setToast] = useState<string | null>(null);
+
+  const getPopulatedBracket = (eventId: string) => {
+    const populated = bracket.map(match => ({ ...match }));
+    const teamsForEvent = registrations.filter(registration => registration.eventId === eventId).map(registration => registration.teamName);
+
+    populated.filter(match => match.round === 1).forEach((match, index) => {
+      match.team1 = teamsForEvent[index * 2] ?? 'TBD';
+      match.team2 = teamsForEvent[index * 2 + 1] ?? 'TBD';
+      match.score1 = undefined;
+      match.score2 = undefined;
+      match.winner = undefined;
+    });
+
+    populated.filter(match => match.round > 1).forEach(match => {
+      match.team1 = 'TBD';
+      match.team2 = 'TBD';
+      match.score1 = undefined;
+      match.score2 = undefined;
+      match.winner = undefined;
+    });
+
+    return populated;
+  };
+
   const handlePublishTournament = (newTournament: Tournament) => {
     setTournaments(prev => [newTournament, ...prev]);
+    setCampusEvents(prev => [
+      {
+        id: newTournament.id,
+        title: newTournament.name,
+        game: newTournament.game,
+        date: newTournament.startDate,
+        time: 'TBD',
+        prizePool: newTournament.prize,
+        participants: newTournament.teams,
+        maxParticipants: newTournament.maxTeams,
+        status: 'UPCOMING',
+        image: newTournament.banner,
+        location: { x: 50, y: 50 },
+        description: `${newTournament.type} tournament for ${newTournament.game}`,
+      },
+      ...prev,
+    ]);
     setToast('Tournament published successfully!');
     setTimeout(() => setToast(null), 3000);
     console.log('Activity Log Created: Admin published tournament', newTournament.name);
     console.log('Brackets auto-generated for', newTournament.name);
     console.log('Push notification broadcasted to all students.');
   };
+
+  // Keep tournaments in sync with player-registered events
+  useEffect(() => {
+    const mappedTournaments = campusEvents.map(ev => {
+      const regCount = registrations.filter(r => r.eventId === ev.id).length;
+      const statusMap: Record<string, Tournament['status']> = {
+        UPCOMING: 'upcoming',
+        ONGOING: 'live',
+        COMPLETED: 'upcoming',
+        REGISTERED: 'registering'
+      };
+
+      return {
+        id: ev.id,
+        name: ev.title,
+        game: (ev.game as any) || 'Valorant',
+        type: 'Open',
+        teams: regCount,
+        maxTeams: ev.maxParticipants,
+        prize: ev.prizePool,
+        startDate: ev.date,
+        status: statusMap[ev.status] || 'upcoming',
+        banner: ev.image,
+        progress: Math.min(100, Math.round((regCount / Math.max(1, ev.maxParticipants)) * 100)),
+      } as Tournament;
+    });
+
+    setTournaments(mappedTournaments.concat(mockTournaments.filter(t => !mappedTournaments.find(m => m.id === t.id))));
+  }, [registrations, campusEvents]);
 
   if (selectedTournament) {
     return (
@@ -124,67 +201,31 @@ export default function TournamentManagement() {
         <div className={styles.tabContent}>
           {activeTab === 'bracket' && (
             <div className={styles.bracketContainer}>
-              <div className={styles.round}>
-                <div className={styles.roundTitle}>Round of 16</div>
-                <div className={styles.match}>
-                  <div className={`${styles.team} ${styles.winner}`}>
-                    <span>Team Phantom</span>
-                    <span className={styles.score}>2</span>
-                  </div>
-                  <div className={`${styles.team} ${styles.loser}`}>
-                    <span>Ghost Riders</span>
-                    <span className={styles.score}>0</span>
-                  </div>
-                </div>
-                <div className={styles.match}>
-                  <div className={`${styles.team} ${styles.winner}`}>
-                    <span>Neon Ninjas</span>
-                    <span className={styles.score}>2</span>
-                  </div>
-                  <div className={`${styles.team} ${styles.loser}`}>
-                    <span>Cyber Samurais</span>
-                    <span className={styles.score}>1</span>
-                  </div>
-                </div>
-              </div>
+              {selectedTournament ? (() => {
+                const eventBracket = getPopulatedBracket(selectedTournament.id);
 
-              <div className={styles.round}>
-                <div className={styles.roundTitle}>Quarter Finals</div>
-                <div className={styles.match}>
-                  <div className={styles.team}>
-                    <span>Team Phantom</span>
-                    <span className={styles.score}>-</span>
+                return [1, 2, 3].map(round => (
+                  <div key={round} className={styles.round}>
+                    <div className={styles.roundTitle}>{round === 1 ? 'Round 1' : round === 2 ? 'Round 2' : 'Round 3'}</div>
+                    <div className={styles.matches}>
+                      {eventBracket.filter(match => match.round === round).map(match => (
+                        <div key={match.id} className={styles.match}>
+                          <div className={`${styles.team} ${match.winner === match.team1 ? styles.winner : ''}`}>
+                            <span>{match.team1}</span>
+                            <span className={styles.score}>{match.score1 ?? '-'}</span>
+                          </div>
+                          <div className={`${styles.team} ${match.winner === match.team2 ? styles.winner : ''}`}>
+                            <span>{match.team2}</span>
+                            <span className={styles.score}>{match.score2 ?? '-'}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <div className={styles.team}>
-                    <span>Neon Ninjas</span>
-                    <span className={styles.score}>-</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className={styles.round}>
-                <div className={styles.roundTitle}>Semi Finals</div>
-                <div className={styles.match}>
-                  <div className={styles.team}>
-                    <span>TBD</span>
-                  </div>
-                  <div className={styles.team}>
-                    <span>TBD</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className={styles.round}>
-                <div className={styles.roundTitle}>Grand Finals</div>
-                <div className={styles.match} style={{ borderColor: 'var(--gold)', boxShadow: '0 0 20px rgba(240, 165, 0, 0.2)' }}>
-                  <div className={styles.team}>
-                    <span>TBD</span>
-                  </div>
-                  <div className={styles.team}>
-                    <span>TBD</span>
-                  </div>
-                </div>
-              </div>
+                ));
+              })() : (
+                <div style={{ color: 'var(--muted)' }}>Select a tournament to view its bracket.</div>
+              )}
             </div>
           )}
 
@@ -199,28 +240,25 @@ export default function TournamentManagement() {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>
-                    <div className={styles.teamCell}>
-                      <div className={styles.teamLogo}></div>
-                      <span>Team Phantom</span>
-                    </div>
-                  </td>
-                  <td><span className={`${styles.status} ${styles.live}`}>Approved</span></td>
-                  <td>85%</td>
-                  <td className={styles.viewBtn}>View Roster</td>
-                </tr>
-                <tr>
-                  <td>
-                    <div className={styles.teamCell}>
-                      <div className={styles.teamLogo}></div>
-                      <span>Neon Ninjas</span>
-                    </div>
-                  </td>
-                  <td><span className={`${styles.status} ${styles.live}`}>Approved</span></td>
-                  <td>72%</td>
-                  <td className={styles.viewBtn}>View Roster</td>
-                </tr>
+                {selectedTournament ? (
+                  registrations.filter(r => r.eventId === selectedTournament.id).map((r, idx) => (
+                    <tr key={idx}>
+                      <td>
+                        <div className={styles.teamCell}>
+                          <div className={styles.teamLogo}></div>
+                          <span>{r.teamName}</span>
+                        </div>
+                      </td>
+                      <td><span className={`${styles.status} ${styles.live}`}>Approved</span></td>
+                      <td>—</td>
+                      <td className={styles.viewBtn}>View Roster</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={4} style={{ textAlign: 'center', color: 'var(--muted)' }}>Select a tournament to view registered teams.</td>
+                  </tr>
+                )}
               </tbody>
             </table>
           )}

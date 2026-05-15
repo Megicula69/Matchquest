@@ -20,9 +20,9 @@ export default function CreateTournamentModal({ isOpen, onClose, onSuccess }: Cr
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.target as HTMLFormElement);
+    const formData = new FormData(e.currentTarget);
     
     const newTournament = {
       id: Math.random().toString(36).substr(2, 9),
@@ -50,7 +50,7 @@ export default function CreateTournamentModal({ isOpen, onClose, onSuccess }: Cr
           <button className={styles.closeBtn} onClick={onClose}><X size={20} /></button>
         </div>
 
-        <form onSubmit={handleSubmit} className={styles.modalBody}>
+        <form id="create-tournament-form" onSubmit={handleSubmit} className={styles.modalBody}>
           {/* TOURNAMENT INFORMATION */}
           <section className={styles.section}>
             <h3 className={styles.sectionTitle}><Info size={18} /> Tournament Information</h3>
@@ -209,7 +209,7 @@ export default function CreateTournamentModal({ isOpen, onClose, onSuccess }: Cr
           <button type="button" className={styles.btnOutline} style={{ marginRight: 'auto' }}>Save as Draft</button>
           <button type="button" className={styles.btnOutline} onClick={onClose}>Cancel</button>
           <button type="button" className={styles.btnOutline}><Eye size={16} /> Preview</button>
-          <button type="submit" onClick={(e) => handleSubmit(e as any)} className={styles.btnPrimary}>
+          <button type="submit" form="create-tournament-form" className={styles.btnPrimary}>
             <Trophy size={18} /> Publish Tournament
           </button>
         </div>

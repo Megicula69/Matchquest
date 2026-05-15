@@ -4,7 +4,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import {
   Search,
-  Bell,
   Sun,
   Moon,
   Plus,
@@ -15,7 +14,6 @@ import {
   LogOut,
   Trophy,
   Megaphone,
-  CalendarDays,
   History,
 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
@@ -27,7 +25,6 @@ interface AdminTopbarProps {
   onMenuClick: () => void;
   onNewTournament?: () => void;
   onNewAnnouncement?: () => void;
-  onNewEvent?: () => void;
 }
 
 export default function AdminTopbar({
@@ -35,7 +32,6 @@ export default function AdminTopbar({
   onMenuClick,
   onNewTournament,
   onNewAnnouncement,
-  onNewEvent,
 }: AdminTopbarProps) {
   const { config, setMode } = useTheme();
   const { logout } = useAuth();
@@ -108,22 +104,9 @@ export default function AdminTopbar({
                 <Megaphone size={16} />
                 <span>New Announcement</span>
               </div>
-              <div 
-                className={styles.quickCreateItem}
-                onClick={() => { onNewEvent?.(); setShowQuickCreate(false); }}
-              >
-                <CalendarDays size={16} />
-                <span>New Event</span>
-              </div>
             </div>
           )}
         </div>
-
-        {/* Notifications */}
-        <button className={styles.iconBtn} id="admin-notifications-btn">
-          <Bell size={20} />
-          <span className={styles.notifBadge}>5</span>
-        </button>
 
         {/* Theme Toggle */}
         <button
@@ -158,9 +141,6 @@ export default function AdminTopbar({
               <Link href="/admin/account-settings" className={styles.profileDropdownItem}>
                 <Settings size={16} /> Account Settings
               </Link>
-              <div className={styles.profileDropdownItem}>
-                <History size={16} /> Activity Logs
-              </div>
               <div className={styles.profileDropdownDivider} />
               <div
                 className={`${styles.profileDropdownItem} ${styles.danger}`}

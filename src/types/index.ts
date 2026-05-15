@@ -88,6 +88,7 @@ export interface UserProfile {
     favoriteGame: string;
     arenaScore: number;
     rank: string;
+    element: string;
     stats: ArenaStats;
     onboarded: boolean;
 }

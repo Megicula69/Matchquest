@@ -19,9 +19,9 @@ interface CreateEventModalProps {
 export default function CreateEventModal({ isOpen, onClose, onSuccess }: CreateEventModalProps) {
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.target as HTMLFormElement);
+    const formData = new FormData(e.currentTarget);
     
     const newEvent = {
       id: Math.random().toString(36).substr(2, 9),
@@ -49,7 +49,7 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }: CreateE
           <button className={styles.closeBtn} onClick={onClose}><X size={20} /></button>
         </div>
 
-        <form onSubmit={handleSubmit} className={styles.modalBody}>
+        <form id="create-event-form" onSubmit={handleSubmit} className={styles.modalBody}>
           {/* EVENT INFORMATION */}
           <section className={styles.section}>
             <h3 className={styles.sectionTitle}><Info size={18} /> Event Information</h3>
@@ -181,7 +181,7 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }: CreateE
           <button type="button" className={styles.btnOutline} style={{ marginRight: 'auto' }}>Save Draft</button>
           <button type="button" className={styles.btnOutline} onClick={onClose}>Cancel</button>
           <button type="button" className={styles.btnOutline}><Eye size={16} /> Preview</button>
-          <button type="submit" onClick={(e) => handleSubmit(e as any)} className={styles.btnPrimary}>
+          <button type="submit" form="create-event-form" className={styles.btnPrimary}>
             <Send size={18} /> Publish Event
           </button>
         </div>

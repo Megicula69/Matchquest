@@ -5,7 +5,6 @@ import AdminSidebar from '../../src/components/Admin/AdminSidebar';
 import AdminTopbar from '../../src/components/Admin/AdminTopbar';
 import CreateTournamentModal from '../../src/components/Admin/CreateTournamentModal';
 import CreateAnnouncementModal from '../../src/components/Admin/CreateAnnouncementModal';
-import CreateEventModal from '../../src/components/Admin/CreateEventModal';
 import { ThemeProvider } from '../../src/context/ThemeContext';
 import { CheckCircle2 } from 'lucide-react';
 
@@ -16,7 +15,7 @@ export default function AdminLayout({
 }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [modalOpen, setModalOpen] = useState<'tournament' | 'announcement' | 'event' | null>(null);
+  const [modalOpen, setModalOpen] = useState<'tournament' | 'announcement' | null>(null);
   const [toast, setToast] = useState<string | null>(null);
 
   const handleSuccess = (message: string) => {
@@ -39,7 +38,6 @@ export default function AdminLayout({
         onMenuClick={() => setMobileOpen(!mobileOpen)}
         onNewTournament={() => setModalOpen('tournament')}
         onNewAnnouncement={() => setModalOpen('announcement')}
-        onNewEvent={() => setModalOpen('event')}
       />
 
       <main
@@ -65,12 +63,6 @@ export default function AdminLayout({
         onClose={() => setModalOpen(null)} 
         onSuccess={() => handleSuccess('Announcement broadcasted!')} 
       />
-      <CreateEventModal 
-        isOpen={modalOpen === 'event'} 
-        onClose={() => setModalOpen(null)} 
-        onSuccess={() => handleSuccess('Event published successfully!')} 
-      />
-
       {/* Global Success Toast */}
       {toast && (
         <div style={{

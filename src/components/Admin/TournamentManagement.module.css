@@ -380,22 +380,25 @@
 
 .tabContent {
   min-height: 400px;
+  width: 100%;
 }
 
 /* Bracket UI */
 .bracketContainer {
   display: flex;
-  gap: 40px;
+  gap: 24px;
   padding: 20px 0;
-  overflow-x: auto;
-  scrollbar-width: thin;
+  width: 100%;
+  align-items: stretch;
+  justify-content: space-between;
 }
 
 .round {
   display: flex;
+  flex: 1 1 0;
+  min-width: 0;
   flex-direction: column;
-  justify-content: space-around;
-  min-width: 250px;
+  justify-content: flex-start;
 }
 
 .roundTitle {
@@ -407,20 +410,27 @@
   text-transform: uppercase;
 }
 
+.matches {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
 .match {
   background: var(--surface2);
   border: 1px solid rgba(0, 201, 224, 0.1);
   border-radius: 10px;
-  margin: 20px 0;
   position: relative;
+  width: 100%;
 }
 
 .match::after {
   content: '';
   position: absolute;
-  right: -40px;
+  right: -24px;
   top: 50%;
-  width: 40px;
+  width: 24px;
   height: 2px;
   background: rgba(0, 201, 224, 0.2);
 }

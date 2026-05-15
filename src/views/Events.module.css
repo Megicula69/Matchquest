@@ -206,7 +206,19 @@
 .bracketContainer {
     display: flex;
     gap: 3rem;
-    min-width: 800px;
+    min-width: 1200px;
+}
+
+/* Full-screen bracket modal */
+.bracketModal {
+    width: 95vw;
+    max-width: 1400px;
+    max-height: 90vh;
+    background-color: var(--surface);
+    border-radius: 12px;
+    padding: 1.5rem;
+    overflow: auto;
+    position: relative;
 }
 
 .round {
@@ -397,6 +409,30 @@
 
 .successStep {
     text-align: center;
+}
+
+/* Modal action row and secondary button */
+.modalActions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.secondaryBtn {
+    background: transparent;
+    border: 1px solid var(--surface2);
+    color: var(--text);
+    padding: 0.9rem 1.1rem;
+    border-radius: 10px;
+    font-family: var(--font-rajdhani);
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.secondaryBtn:hover {
+    background: rgba(255,255,255,0.02);
+    transform: translateY(-1px);
 }
 
 .successStep h2 {

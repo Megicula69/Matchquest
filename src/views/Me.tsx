@@ -1,13 +1,35 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './Me.module.css';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { UserProfile } from '../types';
-import { Settings, LogOut, Shield, Trophy, Activity, Zap, ChevronRight, Bell, Moon, Lock } from 'lucide-react';
+import { Settings, LogOut, Shield, Trophy, Activity, Zap, ChevronRight, Bell, Moon, Lock, Flame } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { createDefaultProfile } from '../data/profileDefaults';
 
 export const MePage: React.FC = () => {
-    const [profile, setProfile] = useLocalStorage<UserProfile | null>('mq_profile', null);
+    const { user } = useAuth();
+    const [profiles, setProfiles] = useLocalStorage<Record<string, UserProfile>>('mq_profiles', {});
     const [historyTab, setHistoryTab] = useState<'COMP' | 'SOCIAL' | 'TOURNAMENT'>('COMP');
     const [showSettings, setShowSettings] = useState(false);
+
+    useEffect(() => {
+        if (!user) {
+            return;
+        }
+
+        setProfiles(currentProfiles => {
+            if (currentProfiles[user.username]) {
+                return currentProfiles;
+            }
+
+            return {
+                ...currentProfiles,
+                [user.username]: createDefaultProfile(user),
+            };
+        });
+    }, [user, setProfiles]);
+
+    const profile = user ? profiles[user.username] ?? createDefaultProfile(user) : null;
 
     if (!profile) return null;
 
@@ -19,6 +41,17 @@ export const MePage: React.FC = () => {
     };
 
     const scorePercentage = (profile.arenaScore % 2000) / 20; // Simplified for visual
+
+    const elementStyle = {
+        Fire: { borderColor: 'rgba(232, 51, 74, 0.4)', color: 'var(--red)' },
+        Water: { borderColor: 'rgba(0, 201, 224, 0.4)', color: 'var(--cyan)' },
+        Earth: { borderColor: 'rgba(120, 184, 84, 0.4)', color: '#78b854' },
+        Wind: { borderColor: 'rgba(163, 164, 255, 0.4)', color: 'var(--violet)' },
+        Lightning: { borderColor: 'rgba(240, 165, 0, 0.4)', color: 'var(--gold)' },
+        Ice: { borderColor: 'rgba(125, 216, 255, 0.4)', color: '#7dd8ff' },
+        Shadow: { borderColor: 'rgba(108, 92, 231, 0.4)', color: '#8d7bff' },
+        Light: { borderColor: 'rgba(255, 232, 153, 0.4)', color: '#ffe899' },
+    } as const;
 
     const matchHistory = {
         COMP: [
@@ -55,6 +88,12 @@ export const MePage: React.FC = () => {
                 <div className={styles.profileInfo}>
                     <h1>{profile.username}</h1>
                     <p>{profile.favoriteGame} Specialist</p>
+                    <div className={styles.profileBadges}>
+                        <span className={styles.rankBadge}>{profile.rank}</span>
+                        <span className={styles.elementBadge} style={elementStyle[profile.element as keyof typeof elementStyle]}>
+                            <Flame size={14} /> {profile.element}
+                        </span>
+                    </div>
                     <div className={styles.headerActions}>
                         <button className={styles.settingsBtn} onClick={() => setShowSettings(true)}><Settings size={20} /> SETTINGS</button>
                     </div>
