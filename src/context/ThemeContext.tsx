@@ -1,12 +1,10 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-
-type ThemeMode = 'dark' | 'light' | 'custom';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 
 interface ThemeConfig {
-  mode: ThemeMode;
   accentColor: string;
+  secondaryAccent: string;
   primaryBg: string;
   secondaryBg: string;
   cardBg: string;
@@ -18,112 +16,108 @@ interface ThemeConfig {
 
 interface ThemeContextType {
   config: ThemeConfig;
-  setMode: (mode: ThemeMode) => void;
   setAccent: (color: string) => void;
+  setTheme: (pageColor: string, accentColor: string) => void;
   updateConfig: (updates: Partial<ThemeConfig>) => void;
   resetDefaults: () => void;
-  applyTheme: () => void;
 }
 
-const defaultThemes = {
-  dark: {
-    mode: 'dark' as ThemeMode,
-    accentColor: '#00c9e0', // Neon Blue
-    primaryBg: '#0B0F1A',
-    secondaryBg: '#121826',
-    cardBg: 'rgba(20, 24, 38, 0.75)',
-    textColor: '#FFFFFF',
-    borderRadius: '16px',
-    transparency: '0.75',
-    glowIntensity: '1',
-  },
-  light: {
-    mode: 'light' as ThemeMode,
-    accentColor: '#9b6dff', // Cyber Purple
-    primaryBg: '#F5F7FA',
-    secondaryBg: '#FFFFFF',
-    cardBg: 'rgba(255, 255, 255, 0.8)',
-    textColor: '#1A1A1A',
-    borderRadius: '12px',
-    transparency: '0.8',
-    glowIntensity: '0.3',
-  }
+const defaultTheme: ThemeConfig = {
+  accentColor: '#00c9e0',
+  secondaryAccent: '#9b6dff',
+  primaryBg: '#0B0F1A',
+  secondaryBg: '#121826',
+  cardBg: 'rgba(20, 24, 38, 0.75)',
+  textColor: '#FFFFFF',
+  borderRadius: '16px',
+  transparency: '0.75',
+  glowIntensity: '1',
 };
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [config, setConfig] = useState<ThemeConfig>(defaultThemes.dark);
+  const [config, setConfig] = useState<ThemeConfig>(defaultTheme);
+  const scopeRef = useRef<HTMLDivElement>(null);
 
-  // Load from localStorage on init
+  // Apply theme to the scoped element whenever config changes
   useEffect(() => {
-    const saved = localStorage.getItem('la_admin_theme');
+    const saved = localStorage.getItem('mq_user_theme');
     if (saved) {
       const parsed = JSON.parse(saved);
       setConfig(parsed);
-      applyToDOM(parsed);
+      applyToElement(parsed);
     } else {
-      applyToDOM(defaultThemes.dark);
+      applyToElement(defaultTheme);
     }
   }, []);
 
-  const applyToDOM = (conf: ThemeConfig) => {
-    const root = document.documentElement;
+  const applyToElement = (conf: ThemeConfig) => {
+    const element = scopeRef.current;
+    if (!element) return;
     
     // Core Colors
-    root.style.setProperty('--background', conf.primaryBg);
-    root.style.setProperty('--surface', conf.secondaryBg);
-    root.style.setProperty('--surface2', conf.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)');
-    root.style.setProperty('--card-bg', conf.cardBg);
-    root.style.setProperty('--text', conf.textColor);
-    root.style.setProperty('--muted', conf.mode === 'dark' ? '#94a3b8' : '#64748b');
+    element.style.setProperty('--background', conf.primaryBg);
+    element.style.setProperty('--surface', conf.secondaryBg);
+    element.style.setProperty('--surface2', 'rgba(255,255,255,0.05)');
+    element.style.setProperty('--card-bg', conf.cardBg);
+    element.style.setProperty('--text', conf.textColor);
+    element.style.setProperty('--muted', '#94a3b8');
     
     // Accent
-    root.style.setProperty('--cyan', conf.accentColor);
-    root.style.setProperty('--accent-glow', `${conf.accentColor}${Math.round(Number(conf.glowIntensity) * 255).toString(16).padStart(2, '0')}`);
+    element.style.setProperty('--cyan', conf.accentColor);
+    element.style.setProperty('--violet', conf.secondaryAccent);
+    element.style.setProperty('--accent-glow', `${conf.accentColor}33`);
     
     // UI Constants
-    root.style.setProperty('--radius', conf.borderRadius);
-    root.style.setProperty('--transition', 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)');
+    element.style.setProperty('--radius', conf.borderRadius);
+    element.style.setProperty('--transition', 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)');
     
     // Transparency / Blurs
-    root.style.setProperty('--glass-opacity', conf.transparency);
-    root.style.setProperty('--blur', '20px');
-
-    // Chart compatibility (custom property for charts)
-    root.style.setProperty('--chart-grid', conf.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)');
+    element.style.setProperty('--glass-opacity', conf.transparency);
+    element.style.setProperty('--blur', '20px');
   };
 
-  const setMode = (mode: ThemeMode) => {
-    const newConfig = mode === 'dark' ? defaultThemes.dark : mode === 'light' ? defaultThemes.light : config;
-    setConfig(newConfig);
-    applyToDOM(newConfig);
-  };
+  // Re-apply whenever config changes or ref mounts
+  useEffect(() => {
+    applyToElement(config);
+  }, [config]);
 
   const setAccent = (color: string) => {
     const newConfig = { ...config, accentColor: color };
     setConfig(newConfig);
-    applyToDOM(newConfig);
+    localStorage.setItem('mq_user_theme', JSON.stringify(newConfig));
+  };
+
+  const setTheme = (pageColor: string, accentColor: string) => {
+    const newConfig = { 
+      ...config, 
+      primaryBg: pageColor, 
+      secondaryBg: `${pageColor}ee`,
+      accentColor: accentColor,
+      secondaryAccent: accentColor,
+      cardBg: `${pageColor}cc`
+    };
+    setConfig(newConfig);
+    localStorage.setItem('mq_user_theme', JSON.stringify(newConfig));
   };
 
   const updateConfig = (updates: Partial<ThemeConfig>) => {
     const newConfig = { ...config, ...updates };
     setConfig(newConfig);
-    applyToDOM(newConfig);
+    localStorage.setItem('mq_user_theme', JSON.stringify(newConfig));
   };
 
   const resetDefaults = () => {
-    setMode('dark');
-  };
-
-  const applyTheme = () => {
-    localStorage.setItem('la_admin_theme', JSON.stringify(config));
-    console.log('Theme saved to persistent storage');
+    setConfig(defaultTheme);
+    localStorage.removeItem('mq_user_theme');
   };
 
   return (
-    <ThemeContext.Provider value={{ config, setMode, setAccent, updateConfig, resetDefaults, applyTheme }}>
-      {children}
+    <ThemeContext.Provider value={{ config, setAccent, setTheme, updateConfig, resetDefaults }}>
+      <div ref={scopeRef} style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', flex: 1 }}>
+        {children}
+      </div>
     </ThemeContext.Provider>
   );
 }

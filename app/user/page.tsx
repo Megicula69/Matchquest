@@ -7,6 +7,8 @@ import { HomePage, FindPage, EventsPage, MePage, StoryPage } from '../../src/vie
 import { useLocalStorage } from '../../src/hooks/useLocalStorage';
 import { UserProfile } from '../../src/types';
 
+import { ThemeProvider } from '../../src/context/ThemeContext';
+
 export default function MatchQuestDashboard() {
   const [profile, setProfile] = useLocalStorage<UserProfile | null>('mq_profile', null);
   const [mounted, setMounted] = useState(false);
@@ -29,17 +31,19 @@ export default function MatchQuestDashboard() {
   if (!mounted) return null;
 
   return (
-    <HashRouter>
-      <MainLayout>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/find" element={<FindPage />} />
-          <Route path="/events" element={<EventsPage />} />
-          <Route path="/me" element={<MePage />} />
-          <Route path="/story" element={<StoryPage />} />
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </MainLayout>
-    </HashRouter>
+    <ThemeProvider>
+      <HashRouter>
+        <MainLayout>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/find" element={<FindPage />} />
+            <Route path="/events" element={<EventsPage />} />
+            <Route path="/me" element={<MePage />} />
+            <Route path="/story" element={<StoryPage />} />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </MainLayout>
+      </HashRouter>
+    </ThemeProvider>
   );
 }

@@ -11,12 +11,10 @@ import {
   Menu,
   User,
   Settings,
-  LogOut,
   Trophy,
   Megaphone,
-  History,
 } from 'lucide-react';
-import { useTheme } from '../../context/ThemeContext';
+import { useAdminTheme } from '../../context/AdminThemeContext';
 import { useAuth } from '../../context/AuthContext';
 import styles from './AdminTopbar.module.css';
 
@@ -33,7 +31,7 @@ export default function AdminTopbar({
   onNewTournament,
   onNewAnnouncement,
 }: AdminTopbarProps) {
-  const { config, setMode } = useTheme();
+  const { mode, setMode } = useAdminTheme();
   const { logout } = useAuth();
   const [showQuickCreate, setShowQuickCreate] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
@@ -111,10 +109,10 @@ export default function AdminTopbar({
         {/* Theme Toggle */}
         <button
           className={styles.themeToggle}
-          onClick={() => setMode(config.mode === 'dark' ? 'light' : 'dark')}
+          onClick={() => setMode(mode === 'dark' ? 'light' : 'dark')}
           id="admin-theme-toggle"
         >
-          {config.mode === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+          {mode === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
           <div className={styles.ripple} />
         </button>
 
@@ -141,13 +139,6 @@ export default function AdminTopbar({
               <Link href="/admin/account-settings" className={styles.profileDropdownItem}>
                 <Settings size={16} /> Account Settings
               </Link>
-              <div className={styles.profileDropdownDivider} />
-              <div
-                className={`${styles.profileDropdownItem} ${styles.danger}`}
-                onClick={logout}
-              >
-                <LogOut size={16} /> Sign Out
-              </div>
             </div>
           )}
         </div>

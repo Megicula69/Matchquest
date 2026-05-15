@@ -212,11 +212,21 @@ export default function TournamentManagement() {
                         <div key={match.id} className={styles.match}>
                           <div className={`${styles.team} ${match.winner === match.team1 ? styles.winner : ''}`}>
                             <span>{match.team1}</span>
-                            <span className={styles.score}>{match.score1 ?? '-'}</span>
+                            <input 
+                              type="number" 
+                              className={styles.scoreInput}
+                              value={match.score1 ?? 0}
+                              onChange={(e) => updateMatchScore(match.id, parseInt(e.target.value), match.score2 || 0)}
+                            />
                           </div>
                           <div className={`${styles.team} ${match.winner === match.team2 ? styles.winner : ''}`}>
                             <span>{match.team2}</span>
-                            <span className={styles.score}>{match.score2 ?? '-'}</span>
+                            <input 
+                              type="number" 
+                              className={styles.scoreInput}
+                              value={match.score2 ?? 0}
+                              onChange={(e) => updateMatchScore(match.id, match.score1 || 0, parseInt(e.target.value))}
+                            />
                           </div>
                         </div>
                       ))}

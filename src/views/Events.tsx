@@ -278,26 +278,18 @@ export const EventsPage: React.FC = () => {
                                                     <div key={round} className={styles.round}>
                                                         <h4 className={styles.roundTitle}>Round {round}</h4>
                                                         <div className={styles.matches}>
-                                                            {populated.filter(m => m.round === round).map(match => (
-                                                                <div key={match.id} className={styles.match}>
-                                                                    <div className={`${styles.team} ${match.winner === match.team1 ? styles.winner : ''}`}>
-                                                                        <span className={styles.teamName}>{match.team1}</span>
-                                                                        <input
-                                                                            type="number"
-                                                                            value={match.score1 || 0}
-                                                                            onChange={(e) => updateMatchScore(match.id, parseInt(e.target.value), match.score2 || 0)}
-                                                                        />
-                                                                    </div>
-                                                                    <div className={`${styles.team} ${match.winner === match.team2 ? styles.winner : ''}`}>
-                                                                        <span className={styles.teamName}>{match.team2}</span>
-                                                                        <input
-                                                                            type="number"
-                                                                            value={match.score2 || 0}
-                                                                            onChange={(e) => updateMatchScore(match.id, match.score1 || 0, parseInt(e.target.value))}
-                                                                        />
-                                                                    </div>
+                                                        {populated.filter(m => m.round === round).map(match => (
+                                                            <div key={match.id} className={styles.match}>
+                                                                <div className={`${styles.team} ${match.winner === match.team1 ? styles.winner : ''}`}>
+                                                                    <span className={styles.teamName}>{match.team1}</span>
+                                                                    <span className={styles.score}>{match.score1 ?? '-'}</span>
                                                                 </div>
-                                                            ))}
+                                                                <div className={`${styles.team} ${match.winner === match.team2 ? styles.winner : ''}`}>
+                                                                    <span className={styles.teamName}>{match.team2}</span>
+                                                                    <span className={styles.score}>{match.score2 ?? '-'}</span>
+                                                                </div>
+                                                            </div>
+                                                        ))}
                                                         </div>
                                                     </div>
                                                 ));

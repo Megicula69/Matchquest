@@ -25,13 +25,13 @@ export const Sidebar: React.FC = () => {
                     <Calendar size={20} />
                     <span>Events</span>
                 </NavLink>
-                <NavLink to="/me" className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ''}`}>
-                    <User size={20} />
-                    <span>Me</span>
-                </NavLink>
                 <NavLink to="/story" className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ''}`}>
                     <BookOpen size={20} />
                     <span>Story</span>
+                </NavLink>
+                <NavLink to="/me" className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ''}`}>
+                    <User size={20} />
+                    <span>My Profile</span>
                 </NavLink>
             </nav>
             <div className={styles.footer}>
@@ -66,9 +66,6 @@ export const BottomBar: React.FC = () => {
             </NavLink>
             <NavLink to="/events" className={({ isActive }) => `${styles.mobileNavItem} ${isActive ? styles.active : ''}`}>
                 <Calendar size={24} />
-            </NavLink>
-            <NavLink to="/me" className={({ isActive }) => `${styles.mobileNavItem} ${isActive ? styles.active : ''}`}>
-                <User size={24} />
             </NavLink>
             <NavLink to="/story" className={({ isActive }) => `${styles.mobileNavItem} ${isActive ? styles.active : ''}`}>
                 <BookOpen size={24} />
