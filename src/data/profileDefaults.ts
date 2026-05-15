@@ -25,6 +25,9 @@ export function createDefaultProfile(user: Pick<User, 'username' | 'fullName'>):
   const winRate = `${55 + (hash % 35)}%`;
   const tournaments = 4 + (hash % 12);
   const reputation = 60 + (hash % 40);
+  
+  // Use adventurer style avatars that look like actual people
+  const avatar = `https://api.dicebear.com/7.x/adventurer/svg?seed=${user.username}`;
 
   return {
     username: user.username,
@@ -32,6 +35,7 @@ export function createDefaultProfile(user: Pick<User, 'username' | 'fullName'>):
     arenaScore,
     rank: `${rankTier} ${((hash >> 1) % 4) + 1}`,
     element,
+    avatar,
     stats: {
       kda,
       winRate,

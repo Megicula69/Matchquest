@@ -3,16 +3,18 @@ import styles from './Find.module.css';
 import { useMatchmaking } from '../hooks/useMatchmaking';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { Player, Message } from '../types';
-import { players as hardcodedPlayers } from '../data/players';
+import { compPlayers, duoPlayers, players } from '../data/players';
+import { duoPairs as hardcodedDuoPairs } from '../data/duoPairs';
 import { X, Heart, Filter, MessageSquare, Mic, Globe, Star } from 'lucide-react';
 
 export const FindPage: React.FC = () => {
-    const { activeMode, setActiveMode, currentPlayer, handleMatch, handlePass, matches } = useMatchmaking();
+    const { activeMode, setActiveMode, currentPlayer, currentDuoPair, handleMatch, handlePass, handleMatchDuo, handlePassDuo, matches } = useMatchmaking();
     const [showFilters, setShowFilters] = useState(false);
     const [showChat, setShowChat] = useState<string | null>(null);
     const [chatMessage, setChatMessage] = useState('');
     const [allMessages, setAllMessages] = useLocalStorage<Message[]>('mq_messages', []);
     const [viewingDetails, setViewingDetails] = useState<Player | null>(null);
+    const [filteredIndex, setFilteredIndex] = useState(0);
 
     // Filter states
     const [micRequired, setMicRequired] = useState(false);
@@ -20,7 +22,38 @@ export const FindPage: React.FC = () => {
     const [minRep, setMinRep] = useState(0);
     const [ageRange, setAgeRange] = useState({ min: 15, max: 25 });
 
-    const matchedPlayers = hardcodedPlayers.filter(p => matches.includes(p.id));
+    // Filter function for COMP mode
+    const getFilteredCompPlayer = (player: Player): boolean => {
+        if (micRequired && !player.micRequired) return false;
+        if (localOnly && !player.localArea) return false;
+        if (player.reputation < minRep) return false;
+        if (player.age && (player.age < ageRange.min || player.age > ageRange.max)) return false;
+        return true;
+    };
+
+    // Filter function for DUO mode
+    const getFilteredDuoPair = (pair: any): boolean => {
+        return getFilteredCompPlayer(pair.player1) && getFilteredCompPlayer(pair.player2);
+    };
+
+    // Get filtered players
+    const filteredCompPlayers = compPlayers.filter(getFilteredCompPlayer);
+    const filteredDuoPairs = hardcodedDuoPairs.filter(getFilteredDuoPair);
+
+    // Get current filtered player/duo based on index
+    const filteredCurrentPlayer = filteredCompPlayers.length > 0 ? filteredCompPlayers[filteredIndex % filteredCompPlayers.length] : null;
+    const filteredCurrentDuoPair = filteredDuoPairs.length > 0 ? filteredDuoPairs[filteredIndex % filteredDuoPairs.length] : null;
+
+    // Get matched COMP players
+    const compMatches = compPlayers.filter(p => matches.includes(p.id));
+    
+    // Get matched DUO players (extract players from matched duo pairs)
+    const duoMatches = hardcodedDuoPairs
+        .filter(duo => matches.includes(duo.id))
+        .flatMap(duo => [duo.player1, duo.player2]);
+    
+    // Combine all matched players
+    const matchedPlayers = [...compMatches, ...duoMatches];
 
     const sendMessage = () => {
         if (!chatMessage || !showChat) return;
@@ -35,11 +68,30 @@ export const FindPage: React.FC = () => {
         setChatMessage('');
     };
 
+    // Handler for pass/match actions on filtered players
+    const handleFilteredPass = () => {
+        setFilteredIndex(prev => prev + 1);
+    };
+
+    const handleFilteredMatch = (playerId: string) => {
+        handleMatch(playerId);
+        setFilteredIndex(prev => prev + 1);
+    };
+
+    const handleFilteredPassDuo = () => {
+        setFilteredIndex(prev => prev + 1);
+    };
+
+    const handleFilteredMatchDuo = (pairId: string) => {
+        handleMatchDuo(pairId);
+        setFilteredIndex(prev => prev + 1);
+    };
+
     return (
         <div className={styles.container}>
             <div className={styles.mainArea}>
                 <div className={styles.modeToggle}>
-                    {(['COMP', 'SOCIAL', 'DUO'] as const).map(mode => (
+                    {(['COMP', 'DUO'] as const).map(mode => (
                         <button
                             key={mode}
                             className={`${styles.modeBtn} ${activeMode === mode ? styles.activeMode : ''}`}
@@ -50,33 +102,85 @@ export const FindPage: React.FC = () => {
                     ))}
                 </div>
 
-                <div className={styles.cardContainer}>
-                    {currentPlayer ? (
-                        <div className={`${styles.playerCard} fade-in`} key={currentPlayer.id}>
-                            <div className={styles.cardImage}>
-                                <img src={currentPlayer.avatar} alt={currentPlayer.username} />
-                                <div className={styles.rankBadge}>{currentPlayer.rank}</div>
-                            </div>
-                            <div className={styles.cardContent}>
-                                <div className={styles.cardHeader}>
-                                    <h3>{currentPlayer.username}</h3>
-                                    <div className={styles.repBadge}><Star size={14} /> {currentPlayer.reputation}%</div>
+                <div className={`${styles.cardContainer} ${activeMode === 'DUO' ? styles.duoMode : ''}`}>
+                    {activeMode === 'DUO' ? (
+                        filteredCurrentDuoPair ? (
+                            <div className={`${styles.duoPairContainer} fade-in`} key={filteredCurrentDuoPair.id}>
+                                <div className={styles.duoCards}>
+                                    <div className={styles.playerCard}>
+                                        <div className={styles.cardImage}>
+                                            <img src={filteredCurrentDuoPair.player1.avatar} alt={filteredCurrentDuoPair.player1.username} />
+                                            <div className={styles.rankBadge}>{filteredCurrentDuoPair.player1.rank}</div>
+                                        </div>
+                                        <div className={styles.cardContent}>
+                                            <div className={styles.cardHeader}>
+                                                <h3>{filteredCurrentDuoPair.player1.username}</h3>
+                                                <div className={styles.repBadge}><Star size={14} /> {filteredCurrentDuoPair.player1.reputation}%</div>
+                                            </div>
+                                            <p className={styles.bio}>{filteredCurrentDuoPair.player1.bio}</p>
+                                            <div className={styles.tags}>
+                                                <span className={styles.tag}>{filteredCurrentDuoPair.player1.favoriteGame}</span>
+                                                {filteredCurrentDuoPair.player1.micRequired && <span className={styles.tag}><Mic size={12} /> Mic</span>}
+                                                {filteredCurrentDuoPair.player1.localArea && <span className={styles.tag}><Globe size={12} /> Local</span>}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className={styles.vsDivider}>VS</div>
+                                    <div className={styles.playerCard}>
+                                        <div className={styles.cardImage}>
+                                            <img src={filteredCurrentDuoPair.player2.avatar} alt={filteredCurrentDuoPair.player2.username} />
+                                            <div className={styles.rankBadge}>{filteredCurrentDuoPair.player2.rank}</div>
+                                        </div>
+                                        <div className={styles.cardContent}>
+                                            <div className={styles.cardHeader}>
+                                                <h3>{filteredCurrentDuoPair.player2.username}</h3>
+                                                <div className={styles.repBadge}><Star size={14} /> {filteredCurrentDuoPair.player2.reputation}%</div>
+                                            </div>
+                                            <p className={styles.bio}>{filteredCurrentDuoPair.player2.bio}</p>
+                                            <div className={styles.tags}>
+                                                <span className={styles.tag}>{filteredCurrentDuoPair.player2.favoriteGame}</span>
+                                                {filteredCurrentDuoPair.player2.micRequired && <span className={styles.tag}><Mic size={12} /> Mic</span>}
+                                                {filteredCurrentDuoPair.player2.localArea && <span className={styles.tag}><Globe size={12} /> Local</span>}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <p className={styles.bio}>{currentPlayer.bio}</p>
-                                <div className={styles.tags}>
-                                    <span className={styles.tag}>{currentPlayer.favoriteGame}</span>
-                                    {currentPlayer.micRequired && <span className={styles.tag}><Mic size={12} /> Mic</span>}
-                                    {currentPlayer.localArea && <span className={styles.tag}><Globe size={12} /> Local</span>}
+                                <div className={styles.cardActions}>
+                                    <button className={styles.passBtn} onClick={() => handleFilteredPassDuo()}><X size={28} /></button>
+                                    <button className={styles.matchBtn} onClick={() => handleFilteredMatchDuo(filteredCurrentDuoPair.id)}><Heart size={28} /></button>
                                 </div>
                             </div>
-                            <div className={styles.cardActions}>
-                                <button className={styles.passBtn} onClick={() => handlePass(currentPlayer.id)}><X size={28} /></button>
-                                <button className={styles.viewDetailsBtn} onClick={() => setViewingDetails(currentPlayer)}>VIEW DETAILS</button>
-                                <button className={styles.matchBtn} onClick={() => handleMatch(currentPlayer.id)}><Heart size={28} /></button>
-                            </div>
-                        </div>
+                        ) : (
+                            <div className={styles.noPlayers}>No duo pairs match your filters. Try adjusting your criteria.</div>
+                        )
                     ) : (
-                        <div className={styles.noPlayers}>No more players in your area.</div>
+                        filteredCurrentPlayer ? (
+                            <div className={`${styles.playerCard} fade-in`} key={filteredCurrentPlayer.id}>
+                                <div className={styles.cardImage}>
+                                    <img src={filteredCurrentPlayer.avatar} alt={filteredCurrentPlayer.username} />
+                                    <div className={styles.rankBadge}>{filteredCurrentPlayer.rank}</div>
+                                </div>
+                                <div className={styles.cardContent}>
+                                    <div className={styles.cardHeader}>
+                                        <h3>{filteredCurrentPlayer.username}</h3>
+                                        <div className={styles.repBadge}><Star size={14} /> {filteredCurrentPlayer.reputation}%</div>
+                                    </div>
+                                    <p className={styles.bio}>{filteredCurrentPlayer.bio}</p>
+                                    <div className={styles.tags}>
+                                        <span className={styles.tag}>{filteredCurrentPlayer.favoriteGame}</span>
+                                        {filteredCurrentPlayer.micRequired && <span className={styles.tag}><Mic size={12} /> Mic</span>}
+                                        {filteredCurrentPlayer.localArea && <span className={styles.tag}><Globe size={12} /> Local</span>}
+                                    </div>
+                                </div>
+                                <div className={styles.cardActions}>
+                                    <button className={styles.passBtn} onClick={() => handleFilteredPass()}><X size={28} /></button>
+                                    <button className={styles.viewDetailsBtn} onClick={() => setViewingDetails(filteredCurrentPlayer)}>VIEW DETAILS</button>
+                                    <button className={styles.matchBtn} onClick={() => handleFilteredMatch(filteredCurrentPlayer.id)}><Heart size={28} /></button>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className={styles.noPlayers}>No players match your filters. Try adjusting your criteria.</div>
+                        )
                     )}
                 </div>
 
@@ -107,8 +211,8 @@ export const FindPage: React.FC = () => {
                     <>
                         <div className={styles.chatHeader}>
                             <div className={styles.chatUser}>
-                                <img src={hardcodedPlayers.find(p => p.id === showChat)?.avatar} alt="avatar" />
-                                <span>{hardcodedPlayers.find(p => p.id === showChat)?.username}</span>
+                                <img src={players.find(p => p.id === showChat)?.avatar} alt="avatar" />
+                                <span>{players.find(p => p.id === showChat)?.username}</span>
                             </div>
                             <X className={styles.closeChat} onClick={() => setShowChat(null)} />
                         </div>

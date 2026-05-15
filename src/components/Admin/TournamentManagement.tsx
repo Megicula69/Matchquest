@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { 
   Trophy, Search, Plus, Calendar, Filter, Users, Clock, 
   MapPin, ChevronLeft, Play, Info, CheckCircle2, 
-  Gamepad2, Swords, MessageSquare, ListTodo, BarChart2, Shield, Trash2, X
+  Gamepad2, Swords, MessageSquare, ListTodo, BarChart2, Shield, Trash2, X, Settings
 } from 'lucide-react';
 import styles from './TournamentManagement.module.css';
 import CreateTournamentModal from './CreateTournamentModal';
@@ -76,6 +76,10 @@ export default function TournamentManagement() {
   const [isEditingSchedule, setIsEditingSchedule] = useState(false);
   const [editingRoster, setEditingRoster] = useState<{ id: string, eventId: string, teamName: string, roster: string[] } | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterGame, setFilterGame] = useState('all');
+  const [filterStatus, setFilterStatus] = useState('all');
+  const [editingTournament, setEditingTournament] = useState<Tournament | null>(null);
   const [tournaments, setTournaments] = useState<Tournament[]>(() => {
     // derive initial tournaments from events and any stored registrations
     return mockTournaments.map(t => t); // will be replaced by effect below
@@ -109,6 +113,25 @@ export default function TournamentManagement() {
     console.log('Push notification broadcasted to all students.');
   };
 
+  const handleSaveTournamentEdit = (updatedTournament: Tournament) => {
+    setTournaments(prev => prev.map(t => t.id === updatedTournament.id ? updatedTournament : t));
+    setCampusEvents(prev => prev.map(ev => 
+      ev.id === updatedTournament.id 
+        ? {
+            ...ev,
+            title: updatedTournament.name,
+            game: updatedTournament.game,
+            date: updatedTournament.startDate,
+            prizePool: updatedTournament.prize,
+          }
+        : ev
+    ));
+    setEditingTournament(null);
+    setToast('Tournament updated successfully!');
+    setTimeout(() => setToast(null), 3000);
+    console.log('Activity Log Created: Admin updated tournament', updatedTournament.name);
+  };
+
   // Keep tournaments in sync with player-registered events
   useEffect(() => {
     const mappedTournaments = campusEvents.map(ev => {
@@ -138,6 +161,16 @@ export default function TournamentManagement() {
     setTournaments(mappedTournaments.concat(mockTournaments.filter(t => !mappedTournaments.find(m => m.id === t.id))));
   }, [registrations, campusEvents]);
 
+  // Filter tournaments based on search and filters
+  const filteredTournaments = tournaments.filter(tournament => {
+    const matchesSearch = tournament.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          tournament.game.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesGame = filterGame === 'all' || tournament.game.toLowerCase() === filterGame.toLowerCase();
+    const matchesStatus = filterStatus === 'all' || tournament.status === filterStatus;
+    
+    return matchesSearch && matchesGame && matchesStatus;
+  });
+
   if (selectedTournament) {
     return (
       <div className={styles.detailsContainer}>
@@ -162,6 +195,9 @@ export default function TournamentManagement() {
         </div>
 
         <div className={styles.tabs}>
+          <div className={`${styles.tab} ${activeTab === 'details' ? styles.active : ''}`} onClick={() => setActiveTab('details')}>
+            <Settings size={16} /> Details
+          </div>
           <div className={`${styles.tab} ${activeTab === 'bracket' ? styles.active : ''}`} onClick={() => setActiveTab('bracket')}>
             <Swords size={16} /> Bracket
           </div>
@@ -180,6 +216,74 @@ export default function TournamentManagement() {
         </div>
 
         <div className={styles.tabContent}>
+          {activeTab === 'details' && (
+            <div className={styles.detailsEditContainer}>
+              <div className={styles.editGroup}>
+                <label>Tournament Name</label>
+                <input 
+                  type="text" 
+                  value={editingTournament?.name || selectedTournament.name}
+                  onChange={(e) => setEditingTournament({...(editingTournament || selectedTournament), name: e.target.value})}
+                  className={styles.editInput}
+                />
+              </div>
+
+              <div className={styles.editGroup}>
+                <label>Game</label>
+                <select 
+                  value={editingTournament?.game || selectedTournament.game}
+                  onChange={(e) => setEditingTournament({...(editingTournament || selectedTournament), game: e.target.value as any})}
+                  className={styles.editInput}
+                >
+                  <option value="Valorant">Valorant</option>
+                  <option value="MLBB">MLBB</option>
+                  <option value="Wild Rift">Wild Rift</option>
+                </select>
+              </div>
+
+              <div className={styles.editGroup}>
+                <label>Start Date</label>
+                <input 
+                  type="text" 
+                  value={editingTournament?.startDate || selectedTournament.startDate}
+                  onChange={(e) => setEditingTournament({...(editingTournament || selectedTournament), startDate: e.target.value})}
+                  className={styles.editInput}
+                  placeholder="e.g., May 12, 2026"
+                />
+              </div>
+
+              <div className={styles.editGroup}>
+                <label>Max Teams</label>
+                <input 
+                  type="number" 
+                  value={editingTournament?.maxTeams || selectedTournament.maxTeams}
+                  onChange={(e) => setEditingTournament({...(editingTournament || selectedTournament), maxTeams: parseInt(e.target.value)})}
+                  className={styles.editInput}
+                />
+              </div>
+
+              <div className={styles.editGroup}>
+                <label>Prize Pool</label>
+                <input 
+                  type="text" 
+                  value={editingTournament?.prize || selectedTournament.prize}
+                  onChange={(e) => setEditingTournament({...(editingTournament || selectedTournament), prize: e.target.value})}
+                  className={styles.editInput}
+                  placeholder="e.g., ₱50,000"
+                />
+              </div>
+
+              <div className={styles.editActions}>
+                <button className={styles.cancelBtn} onClick={() => setEditingTournament(null)}>Discard Changes</button>
+                <button className={styles.saveBtn} onClick={() => {
+                  if (editingTournament) {
+                    handleSaveTournamentEdit(editingTournament);
+                    setSelectedTournament(editingTournament);
+                  }
+                }}>Save Changes</button>
+              </div>
+            </div>
+          )}
           {activeTab === 'bracket' && (
             <div className={styles.bracketContainer}>
               <div className={styles.tabActions}>
@@ -553,15 +657,29 @@ export default function TournamentManagement() {
         <div className={styles.headerRight}>
           <div className={styles.searchBar}>
             <Search size={18} className={styles.searchIcon} />
-            <input type="text" placeholder="Search tournaments..." className={styles.searchInput} />
+            <input 
+              type="text" 
+              placeholder="Search tournaments..." 
+              className={styles.searchInput}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
           </div>
-          <select className={styles.filterSelect}>
+          <select 
+            className={styles.filterSelect}
+            value={filterGame}
+            onChange={(e) => setFilterGame(e.target.value)}
+          >
             <option value="all">All Games</option>
             <option value="valorant">Valorant</option>
             <option value="mlbb">MLBB</option>
             <option value="wildrift">Wild Rift</option>
           </select>
-          <select className={styles.filterSelect}>
+          <select 
+            className={styles.filterSelect}
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+          >
             <option value="all">All Status</option>
             <option value="live">Live</option>
             <option value="upcoming">Upcoming</option>
@@ -574,63 +692,70 @@ export default function TournamentManagement() {
       </div>
 
       <div className={styles.grid}>
-        {tournaments.map((tournament) => (
-          <div key={tournament.id} className={styles.card} onClick={() => setSelectedTournament(tournament)}>
-            <img src={tournament.banner} alt={tournament.name} className={styles.banner} />
-            <div className={styles.cardBody}>
-              <div className={styles.cardHeader}>
-                <div className={styles.gameTitle}>{tournament.name}</div>
-                <div className={`${styles.status} ${styles[tournament.status]}`}>
-                  {tournament.status}
+        {filteredTournaments.length > 0 ? (
+          filteredTournaments.map((tournament) => (
+            <div key={tournament.id} className={styles.card} onClick={() => setSelectedTournament(tournament)}>
+              <img src={tournament.banner} alt={tournament.name} className={styles.banner} />
+              <div className={styles.cardBody}>
+                <div className={styles.cardHeader}>
+                  <div className={styles.gameTitle}>{tournament.name}</div>
+                  <div className={`${styles.status} ${styles[tournament.status]}`}>
+                    {tournament.status}
+                  </div>
                 </div>
-              </div>
-              
-              <div className={styles.cardInfo}>
-                <div className={styles.infoItem}>
-                  <span className={styles.infoLabel}>Game</span>
-                  <span className={styles.infoValue}>{tournament.game}</span>
+                
+                <div className={styles.cardInfo}>
+                  <div className={styles.infoItem}>
+                    <span className={styles.infoLabel}>Game</span>
+                    <span className={styles.infoValue}>{tournament.game}</span>
+                  </div>
+                  <div className={styles.infoItem}>
+                    <span className={styles.infoLabel}>Type</span>
+                    <span className={styles.infoValue}>{tournament.type}</span>
+                  </div>
+                  <div className={styles.infoItem}>
+                    <span className={styles.infoLabel}>Teams</span>
+                    <span className={styles.infoValue}>{tournament.teams} / {tournament.maxTeams}</span>
+                  </div>
+                  <div className={styles.infoItem}>
+                    <span className={styles.infoLabel}>Prize Pool</span>
+                    <span className={styles.infoValue} style={{ color: 'var(--gold)' }}>{tournament.prize}</span>
+                  </div>
                 </div>
-                <div className={styles.infoItem}>
-                  <span className={styles.infoLabel}>Type</span>
-                  <span className={styles.infoValue}>{tournament.type}</span>
-                </div>
-                <div className={styles.infoItem}>
-                  <span className={styles.infoLabel}>Teams</span>
-                  <span className={styles.infoValue}>{tournament.teams} / {tournament.maxTeams}</span>
-                </div>
-                <div className={styles.infoItem}>
-                  <span className={styles.infoLabel}>Prize Pool</span>
-                  <span className={styles.infoValue} style={{ color: 'var(--gold)' }}>{tournament.prize}</span>
-                </div>
-              </div>
 
-              {tournament.status === 'live' && (
-                <div className={styles.progressContainer}>
-                  <div className={styles.progressLabel}>
-                    <span>Tournament Progress</span>
-                    <span>{tournament.progress}%</span>
-                  </div>
-                  <div className={styles.progressBar}>
-                    <div className={styles.progressFill} style={{ width: `${tournament.progress}%` }} />
-                  </div>
-                </div>
-              )}
-
-              <div className={styles.cardFooter}>
-                {tournament.status === 'live' ? (
-                  <div className={styles.liveIndicator}>
-                    <div className={styles.pulse} /> LIVE NOW
-                  </div>
-                ) : (
-                  <div className={styles.metaItem} style={{ color: 'var(--muted)', fontSize: 12 }}>
-                    <Calendar size={14} /> Starts {tournament.startDate}
+                {tournament.status === 'live' && (
+                  <div className={styles.progressContainer}>
+                    <div className={styles.progressLabel}>
+                      <span>Tournament Progress</span>
+                      <span>{tournament.progress}%</span>
+                    </div>
+                    <div className={styles.progressBar}>
+                      <div className={styles.progressFill} style={{ width: `${tournament.progress}%` }} />
+                    </div>
                   </div>
                 )}
-                <div className={styles.viewBtn}>Manage Details</div>
+
+                <div className={styles.cardFooter}>
+                  {tournament.status === 'live' ? (
+                    <div className={styles.liveIndicator}>
+                      <div className={styles.pulse} /> LIVE NOW
+                    </div>
+                  ) : (
+                    <div className={styles.metaItem} style={{ color: 'var(--muted)', fontSize: 12 }}>
+                      <Calendar size={14} /> Starts {tournament.startDate}
+                    </div>
+                  )}
+                  <div className={styles.viewBtn}>Manage Details</div>
+                </div>
               </div>
             </div>
+          ))
+        ) : (
+          <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '4rem 2rem', color: 'var(--muted)' }}>
+            <Trophy size={48} style={{ marginBottom: '1rem', opacity: 0.5 }} />
+            <p>No tournaments found matching your filters.</p>
           </div>
-        ))}
+        )}
       </div>
 
       {/* Create Tournament Modal */}
@@ -639,6 +764,86 @@ export default function TournamentManagement() {
         onClose={() => setShowCreateModal(false)} 
         onSuccess={handlePublishTournament}
       />
+
+      {/* Edit Tournament Modal */}
+      {editingTournament && (
+        <div className={styles.modalOverlay} onClick={() => setEditingTournament(null)}>
+          <div className={styles.editModal} onClick={e => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <div className={styles.modalHeaderInfo}>
+                <Trophy size={20} className={styles.modalIcon} />
+                <div>
+                  <h2 className={styles.modalTitle}>Edit Tournament</h2>
+                  <p className={styles.modalSubtitle}>Update tournament details</p>
+                </div>
+              </div>
+              <button className={styles.closeBtn} onClick={() => setEditingTournament(null)}><X size={20} /></button>
+            </div>
+            
+            <div className={styles.editBody}>
+              <div className={styles.editGroup}>
+                <label>Tournament Name</label>
+                <input 
+                  type="text" 
+                  value={editingTournament.name}
+                  onChange={(e) => setEditingTournament({...editingTournament, name: e.target.value})}
+                  className={styles.editInput}
+                />
+              </div>
+
+              <div className={styles.editGroup}>
+                <label>Game</label>
+                <select 
+                  value={editingTournament.game}
+                  onChange={(e) => setEditingTournament({...editingTournament, game: e.target.value as any})}
+                  className={styles.editInput}
+                >
+                  <option value="Valorant">Valorant</option>
+                  <option value="MLBB">MLBB</option>
+                  <option value="Wild Rift">Wild Rift</option>
+                </select>
+              </div>
+
+              <div className={styles.editGroup}>
+                <label>Start Date</label>
+                <input 
+                  type="text" 
+                  value={editingTournament.startDate}
+                  onChange={(e) => setEditingTournament({...editingTournament, startDate: e.target.value})}
+                  className={styles.editInput}
+                  placeholder="e.g., May 12, 2026"
+                />
+              </div>
+
+              <div className={styles.editGroup}>
+                <label>Max Teams</label>
+                <input 
+                  type="number" 
+                  value={editingTournament.maxTeams}
+                  onChange={(e) => setEditingTournament({...editingTournament, maxTeams: parseInt(e.target.value)})}
+                  className={styles.editInput}
+                />
+              </div>
+
+              <div className={styles.editGroup}>
+                <label>Prize Pool</label>
+                <input 
+                  type="text" 
+                  value={editingTournament.prize}
+                  onChange={(e) => setEditingTournament({...editingTournament, prize: e.target.value})}
+                  className={styles.editInput}
+                  placeholder="e.g., ₱50,000"
+                />
+              </div>
+
+              <div className={styles.editActions}>
+                <button className={styles.cancelBtn} onClick={() => setEditingTournament(null)}>Cancel</button>
+                <button className={styles.saveBtn} onClick={() => handleSaveTournamentEdit(editingTournament)}>Save Changes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Success Toast */}
       {toast && (
