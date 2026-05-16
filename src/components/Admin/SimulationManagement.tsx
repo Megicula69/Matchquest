@@ -96,23 +96,26 @@ export default function SimulationManagement() {
           <div className={styles.editor}>
             {/* SVG Layer for Connectors */}
             <svg
+              viewBox="0 0 100 100"
+              preserveAspectRatio="none"
               style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 1 }}
             >
               <defs>
                 <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
-                  <polygon points="0 0, 10 3, 0 6" fill="url(#gradientArrow)" />
+                  <polygon points="0 0, 10 3, 0 6" fill="var(--violet)" />
                 </marker>
-                <linearGradient id="gradientArrow" x1="0%" y1="0%" x2="100%" y2="100%">
+                <linearGradient id="gradientArrow" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" style={{ stopColor: 'var(--cyan)', stopOpacity: 0.8 }} />
                   <stop offset="100%" style={{ stopColor: 'var(--violet)', stopOpacity: 0.8 }} />
                 </linearGradient>
               </defs>
-
+              
+              {/* Responsive Percentage-based Paths (viewBox 100x100) */}
               {/* START to CHOICE A */}
               <path
-                d="M 50% 90 Q 32% 145 15% 200"
+                d="M 50 22 Q 32 30 15 40"
                 stroke="url(#gradientArrow)"
-                strokeWidth="3"
+                strokeWidth="0.3"
                 fill="none"
                 markerEnd="url(#arrowhead)"
                 opacity="0.7"
@@ -121,9 +124,9 @@ export default function SimulationManagement() {
 
               {/* START to CHOICE B */}
               <path
-                d="M 50% 90 Q 68% 145 85% 200"
+                d="M 50 22 Q 68 30 85 40"
                 stroke="url(#gradientArrow)"
-                strokeWidth="3"
+                strokeWidth="0.3"
                 fill="none"
                 markerEnd="url(#arrowhead)"
                 opacity="0.7"
@@ -132,9 +135,9 @@ export default function SimulationManagement() {
 
               {/* CHOICE A to END 1 (Esports) */}
               <path
-                d="M 15% 290 Q 10% 330 5% 370"
-                stroke="url(#gradientArrow)"
-                strokeWidth="2.5"
+                d="M 15 56 Q 10 65 5 74"
+                stroke="var(--violet)"
+                strokeWidth="0.3"
                 fill="none"
                 markerEnd="url(#arrowhead)"
                 opacity="0.6"
@@ -143,9 +146,9 @@ export default function SimulationManagement() {
 
               {/* CHOICE A to END 2 (Scholar) */}
               <path
-                d="M 15% 290 Q 20% 330 25% 370"
-                stroke="url(#gradientArrow)"
-                strokeWidth="2.5"
+                d="M 15 56 Q 20 65 25 74"
+                stroke="var(--violet)"
+                strokeWidth="0.3"
                 fill="none"
                 markerEnd="url(#arrowhead)"
                 opacity="0.6"
@@ -154,9 +157,9 @@ export default function SimulationManagement() {
 
               {/* CHOICE B to END 3 (Tech Lab) */}
               <path
-                d="M 85% 290 Q 80% 330 75% 370"
-                stroke="url(#gradientArrow)"
-                strokeWidth="2.5"
+                d="M 85 56 Q 80 65 75 74"
+                stroke="var(--violet)"
+                strokeWidth="0.3"
                 fill="none"
                 markerEnd="url(#arrowhead)"
                 opacity="0.6"
@@ -165,9 +168,9 @@ export default function SimulationManagement() {
 
               {/* CHOICE B to END 4 (Social) */}
               <path
-                d="M 85% 290 Q 90% 330 95% 370"
-                stroke="url(#gradientArrow)"
-                strokeWidth="2.5"
+                d="M 85 56 Q 90 65 95 74"
+                stroke="var(--violet)"
+                strokeWidth="0.3"
                 fill="none"
                 markerEnd="url(#arrowhead)"
                 opacity="0.6"

@@ -212,7 +212,7 @@ export const EventsPage: React.FC = () => {
                                             <div key={round} className={styles.round}>
                                                 <h4 className={styles.roundTitle}>{round === 1 ? 'Quarter-Finals' : round === 2 ? 'Semi-Finals' : 'Grand Finals'}</h4>
                                                 <div className={styles.matches}>
-                                                    {bracket.filter(m => m.round === round).map((match, idx) => {
+                                                    {bracket.filter(m => m.round === round && m.eventId === selectedEvent.id).map((match, idx) => {
                                                         const isFinished = match.winner !== undefined;
                                                         const isLive = !isFinished && match.team1 !== 'TBD' && match.team2 !== 'TBD';
                                                         
@@ -279,7 +279,7 @@ export const EventsPage: React.FC = () => {
                                                 <div key={round} className={styles.round}>
                                                     <h4 className={styles.roundTitle}>{round === 1 ? 'Quarter-Finals' : round === 2 ? 'Semi-Finals' : 'Grand Finals'}</h4>
                                                     <div className={styles.matches}>
-                                                    {bracket.filter(m => m.round === round).map((match, idx) => {
+                                                    {bracket.filter(m => m.round === round && m.eventId === selectedEvent.id).map((match, idx) => {
                                                         const isFinished = match.winner !== undefined;
                                                         const isLive = !isFinished && match.team1 !== 'TBD' && match.team2 !== 'TBD';
                                                         
