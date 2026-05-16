@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   Search, Plus, Download, Eye, Pencil,
   Trash2, X, Users, UserCheck, UserX, Clock,
@@ -10,6 +10,8 @@ import s from './UserManagement.module.css';
 import AddUserModal from './AddUserModal';
 import ConfirmModal from './ConfirmModal';
 import { useToast } from '../../context/ToastContext';
+import { useAuth } from '../../context/AuthContext';
+import { User } from '../../data/users';
 
 /* ===== MOCK DATA ===== */
 interface UserRecord {
@@ -20,13 +22,13 @@ interface UserRecord {
 
 const USERS: UserRecord[] = [
   { id:1,firstName:'Juan',lastName:'Cruz',username:'phantom_j',email:'juan@plp.edu.ph',studentId:'2024-0001',games:['Valorant','CS2'],reputation:92,role:'admin',status:'active',verified:true,lastActive:'2 min ago',color:'#e8334a' },
-  { id:2,firstName:'Maria',lastName:'Santos',username:'m_santos',email:'maria@plp.edu.ph',studentId:'2024-0012',games:['League of Legends'],reputation:88,role:'moderator',status:'active',verified:true,lastActive:'5 min ago',color:'#9b6dff' },
+  { id:2,firstName:'Maria',lastName:'Santos',username:'m_santos',email:'maria@plp.edu.ph',studentId:'2024-0012',games:['League of Legends'],reputation:88,role:'user',status:'active',verified:true,lastActive:'5 min ago',color:'#9b6dff' },
   { id:3,firstName:'Carlo',lastName:'Reyes',username:'carlo_rx',email:'carlo@plp.edu.ph',studentId:'2024-0034',games:['Dota 2','Valorant'],reputation:75,role:'user',status:'active',verified:true,lastActive:'12 min ago',color:'#00c9e0' },
   { id:4,firstName:'Ana',lastName:'Garcia',username:'ana_gg',email:'ana@plp.edu.ph',studentId:'2024-0045',games:['Apex Legends'],reputation:60,role:'user',status:'suspended',verified:true,lastActive:'1 day ago',color:'#f0a500' },
   { id:5,firstName:'Miguel',lastName:'Torres',username:'ghost99',email:'miguel@plp.edu.ph',studentId:'2024-0056',games:['CS2','Valorant'],reputation:25,role:'user',status:'banned',verified:false,lastActive:'3 days ago',color:'#e8334a' },
-  { id:6,firstName:'Sofia',lastName:'Lim',username:'sofi_lim',email:'sofia@plp.edu.ph',studentId:'2024-0078',games:['League of Legends','Dota 2'],reputation:95,role:'organizer',status:'active',verified:true,lastActive:'30 min ago',color:'#22c55e' },
+  { id:6,firstName:'Sofia',lastName:'Lim',username:'sofi_lim',email:'sofia@plp.edu.ph',studentId:'2024-0078',games:['League of Legends','Dota 2'],reputation:95,role:'user',status:'active',verified:true,lastActive:'30 min ago',color:'#22c55e' },
   { id:7,firstName:'Diego',lastName:'Ramos',username:'d_ramos',email:'diego@plp.edu.ph',studentId:'2024-0089',games:['Valorant'],reputation:70,role:'user',status:'active',verified:false,lastActive:'1 hr ago',color:'#9b6dff' },
-  { id:8,firstName:'Isabella',lastName:'Morales',username:'isa_m',email:'isabella@plp.edu.ph',studentId:'2024-0091',games:['Apex Legends','CS2'],reputation:83,role:'moderator',status:'active',verified:true,lastActive:'15 min ago',color:'#00c9e0' },
+  { id:8,firstName:'Isabella',lastName:'Morales',username:'isa_m',email:'isabella@plp.edu.ph',studentId:'2024-0091',games:['Apex Legends','CS2'],reputation:83,role:'user',status:'active',verified:true,lastActive:'15 min ago',color:'#00c9e0' },
   { id:9,firstName:'Rafael',lastName:'Dela Cruz',username:'raf_dc',email:'rafael@plp.edu.ph',studentId:'2024-0102',games:['Dota 2'],reputation:45,role:'user',status:'pending',verified:false,lastActive:'5 days ago',color:'#f0a500' },
   { id:10,firstName:'Camille',lastName:'Aquino',username:'cam_q',email:'camille@plp.edu.ph',studentId:'2024-0113',games:['Valorant','League of Legends','CS2'],reputation:98,role:'admin',status:'active',verified:true,lastActive:'Just now',color:'#e8334a' },
   { id:11,firstName:'Ethan',lastName:'Bautista',username:'eth_b',email:'ethan@plp.edu.ph',studentId:'2024-0124',games:['Valorant'],reputation:55,role:'user',status:'active',verified:true,lastActive:'2 hr ago',color:'#22c55e' },
@@ -128,7 +130,8 @@ function UserDrawer({ user, onClose, onEdit }: { user: UserRecord; onClose: () =
 
 /* ===== MAIN COMPONENT ===== */
 export default function UserManagement() {
-  const { success, error } = useToast();
+  const { success, error: toastError } = useToast();
+  const { allUsers } = useAuth();
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -138,11 +141,51 @@ export default function UserManagement() {
   const [userToEdit, setUserToEdit] = useState<UserRecord | null>(null);
   const [userToDelete, setUserToDelete] = useState<UserRecord | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [userList, setUserList] = useState<UserRecord[]>(USERS);
   const [page, setPage] = useState(1);
 
+  // Merge mock USERS with AuthContext allUsers
+  const userList = useMemo(() => {
+    // Start with empty list to prepend new users
+    const newList: UserRecord[] = [];
+    
+    // Add users from AuthContext that aren't already in the mock list by username
+    // We reverse allUsers to get the most recently registered ones first
+    [...allUsers].reverse().forEach((u: User, idx: number) => {
+      // If NOT in mock USERS, add to top
+      if (!USERS.find(mock => mock.username === u.username)) {
+        const [firstName, ...rest] = u.fullName.split(' ');
+        const lastName = rest.join(' ') || 'User';
+        newList.push({
+          id: 2000 + idx,
+          firstName,
+          lastName,
+          username: u.username,
+          email: `${u.username}@plp.edu.ph`,
+          studentId: `2024-${(300 + idx).toString().padStart(4, '0')}`,
+          games: [],
+          reputation: 100,
+          role: u.role,
+          status: 'active',
+          verified: true,
+          lastActive: 'Just now',
+          color: '#00c9e0'
+        });
+      }
+    });
+    
+    // Combine new users at top with mock users
+    return [...newList, ...USERS];
+  }, [allUsers]);
+
+  const [localUserList, setLocalUserList] = useState<UserRecord[]>([]);
+
+  // Initialize or sync local list
+  useEffect(() => {
+    setLocalUserList(userList);
+  }, [userList]);
+
   const filtered = useMemo(() => {
-    return userList.filter(u => {
+    return localUserList.filter(u => {
       const q = search.toLowerCase();
       const matchSearch = !q || u.firstName.toLowerCase().includes(q) || u.lastName.toLowerCase().includes(q) || u.username.toLowerCase().includes(q) || u.email.toLowerCase().includes(q) || u.studentId.includes(q);
       const matchRole = roleFilter === 'all' || u.role === roleFilter;
@@ -151,23 +194,22 @@ export default function UserManagement() {
       const matchVerify = verifyFilter === 'all' || (verifyFilter === 'verified' ? u.verified : !u.verified);
       return matchSearch && matchRole && matchStatus && matchGame && matchVerify;
     });
-  }, [search, roleFilter, statusFilter, gameFilter, verifyFilter, userList]);
+  }, [search, roleFilter, statusFilter, gameFilter, verifyFilter, localUserList]);
 
   const handleAddUser = (newUser: UserRecord) => {
-    setUserList(prev => [newUser, ...prev]);
+    setLocalUserList(prev => [newUser, ...prev]);
     success('User created successfully!');
   };
 
   const handleUpdateUser = (updatedUser: UserRecord) => {
-    setUserList(prev => prev.map(u => u.id === updatedUser.id ? updatedUser : u));
+    setLocalUserList(prev => prev.map(u => u.id === updatedUser.id ? updatedUser : u));
     setUserToEdit(null);
     setShowAddModal(false);
-    // Only show generic toast for form-save; admin action buttons handle their own toast
   };
 
   const handleDeleteUser = () => {
     if (!userToDelete) return;
-    setUserList(prev => prev.filter(u => u.id !== userToDelete.id));
+    setLocalUserList(prev => prev.filter(u => u.id !== userToDelete.id));
     success(`${userToDelete.firstName} ${userToDelete.lastName} has been deleted.`);
     setUserToDelete(null);
   };
@@ -179,10 +221,10 @@ export default function UserManagement() {
   };
 
   const counts = {
-    total: userList.length,
-    active: userList.filter(u => u.status === 'active').length,
-    banned: userList.filter(u => u.status === 'banned').length,
-    pending: userList.filter(u => !u.verified).length
+    total: localUserList.length,
+    active: localUserList.filter(u => u.status === 'active').length,
+    banned: localUserList.filter(u => u.status === 'banned').length,
+    pending: localUserList.filter(u => !u.verified).length
   };
 
   return (
@@ -202,7 +244,7 @@ export default function UserManagement() {
           <input className={s.searchInput} placeholder="Search by name, username, email, ID..." value={search} onChange={e=>setSearch(e.target.value)} />
         </div>
         <select className={s.filterSelect} value={roleFilter} onChange={e=>setRoleFilter(e.target.value)}>
-          <option value="all">All Roles</option><option value="admin">Admin</option><option value="moderator">Moderator</option><option value="organizer">Organizer</option><option value="user">User</option>
+          <option value="all">All Roles</option><option value="admin">Admin</option><option value="user">User</option>
         </select>
         <select className={s.filterSelect} value={statusFilter} onChange={e=>setStatusFilter(e.target.value)}>
           <option value="all">All Status</option><option value="active">Active</option><option value="suspended">Suspended</option><option value="banned">Banned</option><option value="pending">Pending</option>
@@ -263,7 +305,7 @@ export default function UserManagement() {
 
         {/* Pagination */}
         <div className={s.pagination}>
-          <span className={s.pageInfo}>Showing {filtered.length} of {userList.length} users</span>
+          <span className={s.pageInfo}>Showing {filtered.length} of {localUserList.length} users</span>
           <div className={s.pageButtons}>
             {[1,2,3].map(p=>(
               <button key={p} className={`${s.pageBtn} ${page===p?s.activePage:''}`} onClick={()=>setPage(p)}>{p}</button>
